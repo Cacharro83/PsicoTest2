@@ -67,7 +67,6 @@ public class LayoutBasico {
         pintarSeparador();
 
         pintarRespuestas(item);
-        //pintarTablaPrueba();
 
 
 
@@ -84,31 +83,6 @@ public class LayoutBasico {
         return relativeLayout;
     }
 
-    private void pintarTablaPrueba() {
-        TableLayout tableLayout = new TableLayout(contexto);
-        final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams (TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
-
-
-        parametros.addRule(RelativeLayout.BELOW, id_anterior);
-        id_actual = ++id_anterior;
-        tableLayout.setId(id_actual);
-
-        //Fila 1
-        TableRow tableRow1 = new TableRow(contexto);
-        tableRow1.setLayoutParams(tableRowParams);
-        TextView texto1A = new TextView(contexto);
-        texto1A.setText("-");
-        texto1A.setTextColor(COLOR_RESPUESTA);
-        tableRow1.addView(texto1A);
-        TextView texto1B = new TextView(contexto);
-        texto1B.setText("PRESENCIAL");
-        texto1B.setTextColor(COLOR_RESPUESTA);
-        tableRow1.addView(texto1B);
-        tableLayout.addView(tableRow1);
-
-        relativeLayout.addView(tableLayout, parametros);
-    }
 
     private void pintarRespuestas(Item item) {
         //Sacamos las respuestas por el ID de la pregunta
@@ -123,12 +97,14 @@ public class LayoutBasico {
         int id_pregunta_tipo = item.getIdTipo();
         radioGroup = new RadioGroup(contexto);
         for(int numeroRespuesta=0; numeroRespuesta<numeroRespuestas; numeroRespuesta++) {
+            siguiente = item.getRespuestas().get(numeroRespuesta).getSiguiente();
+
             switch (id_pregunta_tipo) {
                 case 1: //Contador
                     pintarCajaTexto();
                     break;
                 case 2: //Radiobutton
-                    pintarRadioButton(numeroRespuesta, item);
+                    pintarRadioButton(numeroRespuesta, item);   //'item' necesario para obtener los valores
                     break;
                 case 3: //Fecha
                     pintarFecha();
@@ -158,7 +134,6 @@ public class LayoutBasico {
     private void pintarTablaVida() {
         TableLayout tableLayout = new TableLayout(contexto);
         final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
 
         TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams (TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
         tableRowParams.setMargins(3, 3, 2, 10);
@@ -397,7 +372,6 @@ public class LayoutBasico {
         id_actual = id_anterior + 1;
         radioButton.setId(id_actual + 100); //para que no solape con el 'Siguiente' y se trabe el radioGroup
         float valor = item.getRespuestas().get(numeroRespuesta).getValor();
-        siguiente = item.getRespuestas().get(numeroRespuesta).getSiguiente();
         radioButton.setText("radioButton ID:" + id_actual + " VALOR: " + valor + " | " + item.getRespuestas().get(numeroRespuesta).getTextoRespuesta());
 
         RespuestaValor respuestaValor = new RespuestaValor(radioButton.getId(), valor, siguiente);
@@ -461,13 +435,23 @@ public class LayoutBasico {
     private void pintarNuevaPregunta() {
         LayoutBasico layoutBasico = new LayoutBasico(activity);
 
+        //Opción para desarrollo, por si no hay respuestas
         if (siguiente == 0) {
             siguiente = idPregunta + 1;
         }
-        relativeLayout = layoutBasico.pintarVista(contexto, siguiente);
-        ScrollView scrollView = new ScrollView(contexto);
-        scrollView.addView(relativeLayout);
-        activity.setContentView(scrollView);
+
+        //Casos especiales de redireccionamiento
+        switch (siguiente) {
+            case 10:
+                pintarTablaVida();
+                break;
+            default:
+                relativeLayout = layoutBasico.pintarVista(contexto, siguiente);
+                ScrollView scrollView = new ScrollView(contexto);
+                scrollView.addView(relativeLayout);
+                activity.setContentView(scrollView);
+                break;
+        }
     }
 
     private void grabarRespuestas() {
@@ -509,13 +493,13 @@ public class LayoutBasico {
                     }
             }
         }
-        return false;
+        return true;    //Si es de tipo fecha siempre coge un valor por defecto
     }
 
     private void pintarPregunta(Item item) {
         TextView pregunta = new TextView(contexto);
         pregunta.setId(id_actual);
-        pregunta.setText(item.getTextoPregunta() + " | tipoPregunta: " + item.getIdTipo());
+        pregunta.setText(item.getIdPregunta() + ") | " + item.getTextoPregunta() + " | tipoPregunta: " + item.getIdTipo());
         pregunta.setTextColor(Color.BLACK);
         pregunta.setTextSize(30);
         pregunta.setTypeface(null, Typeface.BOLD);
