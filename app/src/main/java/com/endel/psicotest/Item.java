@@ -6,6 +6,7 @@ public class Item {
 	
 	private String texto_pregunta;
 	private int id;
+	private int idTipo;
 	private ArrayList<RespuestaRellenada> respuestas;
 		
 	public String getTextoPregunta(){
@@ -17,6 +18,14 @@ public class Item {
 	public int getIdPregunta(){
 		return id;
 	}
+	public int getIdTipo(){
+		return idTipo;
+	}
+
+	public void setIdTipo(int idTipo){
+		this.idTipo=idTipo;
+	}
+
 	public void setIdPregunta(int id_pregunta){
 		id=id_pregunta;
 	}

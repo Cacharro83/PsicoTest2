@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class LayoutBasico {
     public final int COLOR_RESPUESTA = Color.BLUE;
-    public int id_actual = 1, id_anterior = 1, siguiente;
+    public int id_actual = 1, id_anterior = 1, siguiente, idPregunta;
     public RelativeLayout relativeLayout;
     public RadioGroup radioGroup;
     public Context contexto;
@@ -78,7 +78,7 @@ public class LayoutBasico {
         pintarSeparador();
 
         //Siguiente
-        pintarBotonSiguiente();
+        pintarBotonSiguiente(item);
 
 
         return relativeLayout;
@@ -87,8 +87,6 @@ public class LayoutBasico {
     private void pintarTablaPrueba() {
         TableLayout tableLayout = new TableLayout(contexto);
         final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-
         TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams (TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
 
 
@@ -113,39 +111,40 @@ public class LayoutBasico {
     }
 
     private void pintarRespuestas(Item item) {
-
         //Sacamos las respuestas por el ID de la pregunta
-        int idPregunta = item.getIdPregunta();
+        idPregunta = item.getIdPregunta();
 
         int numeroRespuestas = item.getRespuestas().size();
 
 
         //Respuestas
-        //1.texto | 2.checkbox | 3.radiobutton | 4.fecha
-        int id_pregunta_tipo = 3;
+        //1-Contadores | 2-RadioButton | 3-Fecha | 4-TextView | 5-CheckBox
+        // ANTES 1.texto | 2.checkbox | 3.radiobutton | 4.fecha
+        int id_pregunta_tipo = item.getIdTipo();
         radioGroup = new RadioGroup(contexto);
-        for(int numeroRespuesta=0; numeroRespuesta<numeroRespuestas; numeroRespuesta++)
-        {
+        for(int numeroRespuesta=0; numeroRespuesta<numeroRespuestas; numeroRespuesta++) {
             switch (id_pregunta_tipo) {
-                case 1: //Caja de texto
+                case 1: //Contador
                     pintarCajaTexto();
                     break;
-                case 2: //Checkbox
-                    pintarCheckBox();
-                    break;
-                case 3: //Radiobutton
+                case 2: //Radiobutton
                     pintarRadioButton(numeroRespuesta, item);
                     break;
-                case 4: //Fecha
+                case 3: //Fecha
                     pintarFecha();
                     break;
-
+                case 4: //Caja de texto
+                    pintarCajaTexto();
+                    break;
+                case 5: //Checkbox
+                    pintarCheckBox();
+                    break;
             }
             id_anterior = id_actual;
         }
 
         //Si son unos radio buttons al final hay que añadir el radioGroup
-        if (id_pregunta_tipo == 3) {
+        if (id_pregunta_tipo == 2) {
             final RelativeLayout.LayoutParams parametrosRadioButton = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             id_anterior = 2;
             parametrosRadioButton.addRule(RelativeLayout.BELOW, id_anterior);
@@ -258,7 +257,6 @@ public class LayoutBasico {
         tableRow4.addView(tableRow4E);
         tableLayout.addView(tableRow4);
 
-
         //Fila 5
         TableRow tableRow5 = new TableRow(contexto);
         TextView tableRow5A = new TextView(contexto);
@@ -298,7 +296,6 @@ public class LayoutBasico {
         tableRow6E.setTextColor(COLOR_RESPUESTA);
         tableRow6.addView(tableRow6E);
         tableLayout.addView(tableRow6);
-
 
         //Fila 7
         TableRow tableRow7 = new TableRow(contexto);
@@ -380,9 +377,6 @@ public class LayoutBasico {
         tableRow10.addView(tableRow10E);
         tableLayout.addView(tableRow10);
 
-
-
-
         relativeLayout.addView(tableLayout, parametros);
     }
 
@@ -391,8 +385,6 @@ public class LayoutBasico {
         final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         id_actual = id_anterior + 1;
         datePicker.setId(id_actual);
-        //datePicker.setText("cajita. ID:" + id_actual);
-        //datePicker.setTextColor(COLOR_RESPUESTA);
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
         relativeLayout.addView(datePicker, parametros);
     }
@@ -440,7 +432,7 @@ public class LayoutBasico {
         relativeLayout.addView(separador);
     }
 
-    private void pintarBotonSiguiente() {
+    private void pintarBotonSiguiente(final Item item) {
         final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
         final Button botonSiguiente = new Button(contexto);
@@ -456,7 +448,7 @@ public class LayoutBasico {
         botonSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validarRespuestas()) {
+                if (validarRespuestas(item)) {
                     grabarRespuestas();
                     pintarNuevaPregunta();
                 }
@@ -468,6 +460,10 @@ public class LayoutBasico {
 
     private void pintarNuevaPregunta() {
         LayoutBasico layoutBasico = new LayoutBasico(activity);
+
+        if (siguiente == 0) {
+            siguiente = idPregunta + 1;
+        }
         relativeLayout = layoutBasico.pintarVista(contexto, siguiente);
         ScrollView scrollView = new ScrollView(contexto);
         scrollView.addView(relativeLayout);
@@ -479,7 +475,7 @@ public class LayoutBasico {
 
         //Cogemos su valor
         boolean buscando = true;
-        for (int i=0; buscando; i++) {
+        for (int i=0; listaValorRespuestas.size()>0 && buscando; i++) {
             RespuestaValor respuestaValor = listaValorRespuestas.get(i);
             if (respuestaValor.getId() == opcionEscogida) {
                 buscando = false;
@@ -488,19 +484,38 @@ public class LayoutBasico {
         }
     }
 
-    private boolean validarRespuestas(){
-        if (radioGroup.getCheckedRadioButtonId() == -1) {
-            Toast.makeText(contexto, "Debes escoger una de las opciones", Toast.LENGTH_LONG).show();
-            return false;
-        } else {
-            return true;
+    private boolean validarRespuestas(Item item) {
+        int id_pregunta_tipo = item.getIdTipo();
+        int numeroRespuestas = item.getRespuestas().size();
+        for(int numeroRespuesta=0; numeroRespuesta<numeroRespuestas; numeroRespuesta++) {
+            //1-Contadores | 2-RadioButton | 3-Fecha | 4-TextView | 5-CheckBox
+            switch (id_pregunta_tipo) {
+                case 1: //Contador
+                    TextView textView = (TextView) activity.findViewById(numeroRespuesta + 3);  //1 es pregunta y 2 es el separador
+                    String valor = textView.getText().toString();
+
+                    if (valor.equals("")) {
+                        Toast.makeText(contexto, "Debes completar todos los campos", Toast.LENGTH_LONG).show();
+                        return false;
+                    } else {
+                        return true;
+                    }
+                case 2: //RadioButton
+                    if (radioGroup.getCheckedRadioButtonId() == -1) {
+                        Toast.makeText(contexto, "Debes escoger una de las opciones", Toast.LENGTH_LONG).show();
+                        return false;
+                    } else {
+                        return true;
+                    }
+            }
         }
+        return false;
     }
 
     private void pintarPregunta(Item item) {
         TextView pregunta = new TextView(contexto);
         pregunta.setId(id_actual);
-        pregunta.setText(item.getTextoPregunta());
+        pregunta.setText(item.getTextoPregunta() + " | tipoPregunta: " + item.getIdTipo());
         pregunta.setTextColor(Color.BLACK);
         pregunta.setTextSize(30);
         pregunta.setTypeface(null, Typeface.BOLD);

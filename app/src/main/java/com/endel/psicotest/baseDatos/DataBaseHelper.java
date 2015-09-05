@@ -197,29 +197,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	
 	public Item GetItemId(Integer Id) {
 		Log.i("ENTRO", "GetItemId");
-		Cursor c = null;
+		Cursor cursor = null;
 		Item item_relleno = new Item();
 		
 		String error = new String();
 		
 		item_relleno.setIdPregunta(Id);
 
-		String[] atributos = new String[1];
+		String[] atributos = new String[2];
 		atributos[0] = "Texto";
+		atributos[1] = "IdTipo";
 
-		String[] args = new String[1];
-		args[0] = String.valueOf(Id);
+		String[] parametros = new String[1];
+		parametros[0] = String.valueOf(Id);
 
 		ArrayList<RespuestaRellenada> respuestas = new ArrayList<RespuestaRellenada>();
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		
 		try {
-
-			c = db.query("itemtexto", atributos, "IdItem=?", args, null, null,
-					null);
-			while(c.moveToNext())
-				item_relleno.setTextoPregunta(c.getString(0));
+			cursor = db.query("itemtexto", atributos, "IdItem=?", parametros, null, null, null);
+			while(cursor.moveToNext()) {
+				item_relleno.setTextoPregunta(cursor.getString(0));
+				item_relleno.setIdTipo(cursor.getInt(1));
+			}
 		}
 
 		catch (Exception e) {
@@ -227,22 +228,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		}
 
 		try {
-			String[] atributos_respuestas = new String[3];
-			atributos_respuestas[0] = "IdRespuesta";
-			atributos_respuestas[1] = "IdItemSiguiente";
-			atributos_respuestas[2] = "Valor";
+			String[] camposAPedir = new String[3];
+			camposAPedir[0] = "IdRespuesta";
+			camposAPedir[1] = "IdItemSiguiente";
+			camposAPedir[2] = "Valor";
 
-			c = db.query("itemrespuestas", atributos_respuestas, "IdItem=?",
-					args, null, null, null);
+			cursor = db.query("itemrespuestas", camposAPedir, "IdItem=?", parametros, null, null, null);
 
-			c.moveToFirst();
-			for (int i = 0; i < c.getCount(); i++) {
+			cursor.moveToFirst();
+			for (int i=0; i<cursor.getCount(); i++) {
 				RespuestaRellenada respu = new RespuestaRellenada();
 
-				int id_respuesta = Integer.parseInt(c.getString(0));
-
-				respu.setSiguiente(Integer.parseInt(c.getString(1)));
-				respu.setValor(Float.valueOf(c.getString(2)));
+				int id_respuesta = Integer.parseInt(cursor.getString(0));
+				respu.setSiguiente(Integer.parseInt(cursor.getString(1)));
+				respu.setValor(Float.valueOf(cursor.getString(2)));
 
 				try {
 					atributos[0] = "Texto";
@@ -265,7 +264,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 					atributos[0] = "IdError";
 					String[] args_b = new String[2];
 					args_b[0] = String.valueOf(id_respuesta);
-					args_b[1] = args[0];
+					args_b[1] = parametros[0];
 
 					Cursor c3 = db.query("error", atributos,
 							"IdRespuesta=? AND IdItem=?", args_b, null, null,
@@ -298,9 +297,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 					e.printStackTrace();;
 				}
 				respuestas.add(respu);
-				c.moveToNext();
+				cursor.moveToNext();
 			}
-			c.close();
+			cursor.close();
 			db.close();
 		}
 

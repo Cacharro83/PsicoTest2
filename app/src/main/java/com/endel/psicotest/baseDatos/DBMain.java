@@ -18,7 +18,7 @@ import java.io.OutputStream;
 public class DBMain extends SQLiteOpenHelper {
     private static String DB_PATH; //= "data/data/com.endel.proyectodecero/databases/";
     //private static String DB_NAME = "Banking";
-    public static String DB_NAME = "psico";
+    public static String DB_NAME = "psicoVF";
     public static int DB_VERSION = 177;
     private SQLiteDatabase dbObj;
     private final Context context;
