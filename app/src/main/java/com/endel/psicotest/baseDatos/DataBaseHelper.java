@@ -1,0 +1,357 @@
+package com.endel.psicotest.baseDatos;
+
+
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.endel.psicotest.Colegio;
+import com.endel.psicotest.Item;
+import com.endel.psicotest.RespuestaRellenada;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+
+public class DataBaseHelper extends SQLiteOpenHelper {
+	
+	// The Android's default system path of your application database.
+	// Context.getFilesDir().getPath()
+	private static String DB_PATH = "/data/data/com.example.psicotestv1/databases/";
+	//private static String DB_NAME = "psico";
+
+	private SQLiteDatabase myDataBase;
+	private final Context myContext;
+	
+	public final String TABLA_CENTROS = "centros";
+	public final String ID_CENTRO = "IdCentro";
+	public final String NOMBRE_CENTRO = "Nombre";
+	
+	public final String TABLA_RESPUESTAUSUARIO = "respuestasusuario";
+	public final String RESPUESTAUSUARIODELAY = "respuestausuariodelay";
+	public final String PAISES = "paisestexto";
+	
+	public final String TABLA_PREGUNTAS = "itemtexto";
+	public final String ID_ITEM = "IdItem";
+	public final String TEXTO = "Texto";
+	
+	public final String TABLA_RESPUESTAUSUARIODELAY = "respuestausuariodelay";
+	public final String ID = "id";
+	public final String INDEXLOTE = "IndexLote";
+	public final String INDEXGLOBAL = "IndexGlobal";
+	public final String MIN = "Min";
+	public final String MAX = "Max";
+	public final String ELECCION = "Eleccion";
+	
+	public final String TABLA_RESPUESTATEXTO = "respuestatexto";
+	public final String ID_RESPUESTA = "IdRespuesta";
+	public final String FOTO = "Foto";
+	
+	public final String TABLA_ERRORES = "errortexto";
+	public final String ID_ERROR = "IdError";
+	
+	public final String TABLA_AVISOS = "avisostexto";
+	public final String ID_AVISO = "IdAviso";
+	
+	public final String TABLA_PAISES = "paisestexto";
+	public final String ID_PAIS = "IdPais";
+	
+	public final String TABLA_STROOPTEXTO = "strooptexto";
+	public final String ID_STROOP = "IdStroop";
+	
+	public final String TABLA_DELAYTEXTO = "delaytexto";
+	public final String ID_DELAY = "IdDelay";
+	
+	public final String TABLA_IDIOMA = "idioma";
+	public final String ID_IDIOMA = "IdIdiomaActual";
+	public final String NOMBRE = "Nombre";
+
+	public DataBaseHelper(Context context) {
+		super(context, DBMain.DB_NAME, null, DBMain.DB_VERSION);
+		this.myContext = context;
+	}
+
+	/**
+	 * Creates a empty database on the system and rewrites it with your own
+	 * database.
+	 * */
+	public void createDataBase() throws IOException {
+		boolean dbExist = checkDataBase();
+		if (dbExist) {
+			// do nothing - database already exist
+		} else {
+			// By calling this method and empty database will be created into
+			// the default system path
+			// of your application so we are gonna be able to overwrite that
+			// database with our database.
+			this.getReadableDatabase();
+			try {
+				copyDataBase();
+			} catch (IOException e) {
+				throw new Error("Error copying database");
+			}
+		}
+	}
+
+	/**
+	 * Check if the database already exist to avoid re-copying the file each
+	 * time you open the application.
+	 * 
+	 * @return true if it exists, false if it doesn't
+	 */
+	private boolean checkDataBase() {
+
+		SQLiteDatabase checkDB = null;
+		try {
+			String myPath = DB_PATH + DBMain.DB_NAME;
+			checkDB = SQLiteDatabase.openDatabase(myPath, null,
+					SQLiteDatabase.OPEN_READONLY);
+
+		} catch (SQLiteException e) {
+			// database does't exist yet.
+		}
+
+		if (checkDB != null) {
+			checkDB.close();
+		}
+		return checkDB != null ? true : false;
+	}
+
+	/**
+	 * Copies your database from your local assets-folder to the just created
+	 * empty database in the system folder, from where it can be accessed and
+	 * handled. This is done by transfering bytestream.
+	 * */
+	private void copyDataBase() throws IOException {
+		// Open your local db as the input stream
+		InputStream myInput = myContext.getAssets().open(DBMain.DB_NAME);
+		// Path to the just created empty db
+		String outFileName = DB_PATH + DBMain.DB_NAME;
+		// Open the empty db as the output stream
+		OutputStream myOutput = new FileOutputStream(outFileName);
+		// transfer bytes from the inputfile to the outputfile
+		byte[] buffer = new byte[1024];
+		int length;
+		while ((length = myInput.read(buffer)) > 0) {
+			myOutput.write(buffer, 0, length);
+		}
+		// Close the streams
+		myOutput.flush();
+		myOutput.close();
+		myInput.close();
+
+	}
+
+	public void openDataBase() throws SQLException {
+		// Open the database
+		String myPath = DB_PATH + DBMain.DB_NAME;
+		myDataBase = SQLiteDatabase.openDatabase(myPath, null,
+				SQLiteDatabase.OPEN_READONLY);
+
+	}
+
+	@Override
+	public synchronized void close() {
+
+		if (myDataBase != null)
+			myDataBase.close();
+
+		try{
+			super.close();
+		}
+		catch(SQLiteException e){
+			e.printStackTrace();
+		}
+		
+
+	}
+
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+	}
+	
+	public String queryItem(int id){
+		
+		String selectQuery = "SELECT IdItem FROM items WHERE IdItem = " + String.valueOf(id);
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = null;
+		cursor = db.rawQuery(selectQuery, null);
+		
+		cursor.moveToFirst();
+		
+		String aux = cursor.getString(0);
+		return aux;
+	}
+	
+	public Item GetItemId(Integer Id) {
+		Log.i("ENTRO", "GetItemId");
+		Cursor c = null;
+		Item item_relleno = new Item();
+		
+		String error = new String();
+		
+		item_relleno.setIdPregunta(Id);
+
+		String[] atributos = new String[1];
+		atributos[0] = "Texto";
+
+		String[] args = new String[1];
+		args[0] = String.valueOf(Id);
+
+		ArrayList<RespuestaRellenada> respuestas = new ArrayList<RespuestaRellenada>();
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		
+		try {
+
+			c = db.query("itemtexto", atributos, "IdItem=?", args, null, null,
+					null);
+			while(c.moveToNext())
+				item_relleno.setTextoPregunta(c.getString(0));
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
+			String[] atributos_respuestas = new String[3];
+			atributos_respuestas[0] = "IdRespuesta";
+			atributos_respuestas[1] = "IdItemSiguiente";
+			atributos_respuestas[2] = "Valor";
+
+			c = db.query("itemrespuestas", atributos_respuestas, "IdItem=?",
+					args, null, null, null);
+
+			c.moveToFirst();
+			for (int i = 0; i < c.getCount(); i++) {
+				RespuestaRellenada respu = new RespuestaRellenada();
+
+				int id_respuesta = Integer.parseInt(c.getString(0));
+
+				respu.setSiguiente(Integer.parseInt(c.getString(1)));
+				respu.setValor(Float.valueOf(c.getString(2)));
+
+				try {
+					atributos[0] = "Texto";
+					String[] args_b = new String[1];
+					args_b[0] = String.valueOf(id_respuesta);
+
+					Cursor c2 = db.query("respuestatexto", atributos, "IdRespuesta=?",
+							args_b, null, null, null);
+
+					while(c2.moveToNext())
+						respu.setTextoRespuesta(c2.getString(0));
+					c2.close();
+				}
+
+				catch (Exception e) {
+					e.printStackTrace();;
+				}
+
+				try {
+					atributos[0] = "IdError";
+					String[] args_b = new String[2];
+					args_b[0] = String.valueOf(id_respuesta);
+					args_b[1] = args[0];
+
+					Cursor c3 = db.query("error", atributos,
+							"IdRespuesta=? AND IdItem=?", args_b, null, null,
+							null);
+
+					while(c3.moveToNext()){
+						error = c3.getString(0);
+						try {
+							atributos[0] = "Texto";
+							String[] args_c = new String[1];
+							args_c[0] = error;
+
+							Cursor c4 = db.query("errortexto", atributos, "IdError=?", args_c,
+									null, null, null);
+
+							while(c4.moveToNext())
+								respu.setTextoError(c4.getString(0));
+							c4.close();
+							
+						}
+
+						catch (Exception e) {
+							e.printStackTrace();;
+						}
+					}
+					c3.close();
+				}
+
+				catch (Exception e) {
+					e.printStackTrace();;
+				}
+				respuestas.add(respu);
+				c.moveToNext();
+			}
+			c.close();
+			db.close();
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();;
+		}
+		
+		item_relleno.setRespuestas(respuestas);
+		Log.i("SALGO", "GetItemId");
+		return item_relleno;
+	}
+	
+	public String getAviso(int i) {
+		Log.i("ENTRO", "getAviso");
+		SQLiteDatabase db = this.getReadableDatabase();
+		
+		Cursor cursor = db.query(TABLA_AVISOS, new String[] { TEXTO }, "IdAviso" + "=?",
+	            new String[] { String.valueOf(i) }, null, null, null, null);
+		
+		String aux = new String();
+		
+	    if (cursor != null){
+	        cursor.moveToFirst();
+	        aux = cursor.getString(0);
+	        cursor.close();
+	        Log.i("SALGO", "getAviso");
+	        return aux;
+	    }
+	    else{
+	    	db.close();
+	    	Log.i("SALGO", "getAviso");
+	    	return "";
+	    }
+	}
+	
+public ArrayList <Colegio> getListaColegios(){
+		
+		Log.i("ENTRO", "getListaColegios");
+		
+		ArrayList<Colegio> listaColegios = new ArrayList<Colegio>();
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query(TABLA_CENTROS, new String[] {"IdCentro", "Nombre"}, null, null, null, null, null);
+		while(cursor.moveToNext()){
+			listaColegios.add(new Colegio(cursor.getInt(0), cursor.getString(1)));
+		}
+//		db.close();
+		cursor.close();
+		Log.i("SALGO", "getListaColegios");
+		return listaColegios;
+		
+	}
+
+}
+

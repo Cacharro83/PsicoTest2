@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Test de evaluación 2</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- LAYOUT BÁSICO DE PREGUNTAS -->
+    <string name="layoutBasico_botonSiguiente">Siguiente >> </string>
+</resources>
