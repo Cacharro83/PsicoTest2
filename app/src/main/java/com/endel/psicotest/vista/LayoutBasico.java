@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -45,33 +48,31 @@ public class LayoutBasico {
 
     public RelativeLayout pintarVista(Context contexto, int idPregunta) {
         this.contexto = contexto;
+        relativeLayout = new RelativeLayout(contexto);
+        relativeLayout.setPadding(10, 20, 10, 20);
+        relativeLayout.setBackgroundColor(Color.LTGRAY);
 
         DataBaseHelper myDbHelper = new DataBaseHelper(contexto);
         Item item = myDbHelper.GetItemId(idPregunta);
         myDbHelper.close();
 
-
-
-        relativeLayout = new RelativeLayout(contexto);
-        relativeLayout.setPadding(10, 20, 10, 20);
-        relativeLayout.setBackgroundColor(Color.LTGRAY);
-
-        //id_actual = 1;
-
         //Pregunta
         pintarPregunta(item);
-
-
 
         //Separador
         pintarSeparador();
 
-        pintarRespuestas(item);
-
-
-
-        //pintarTablaVida();
-
+        //Casos especiales de redireccionamiento
+        switch (item.getIdPregunta()) {
+            case 11:    //Tabla vida
+                pintarTablaVida();
+                valorarRespuestasTablaVida();
+                siguiente = 257;
+                break;
+            default:
+                pintarRespuestas(item);
+                break;
+        }
 
         //Separador
         pintarSeparador();
@@ -79,8 +80,10 @@ public class LayoutBasico {
         //Siguiente
         pintarBotonSiguiente(item);
 
-
         return relativeLayout;
+    }
+
+    private void valorarRespuestasTablaVida() {
     }
 
 
@@ -89,7 +92,6 @@ public class LayoutBasico {
         idPregunta = item.getIdPregunta();
 
         int numeroRespuestas = item.getRespuestas().size();
-
 
         //Respuestas
         //1-Contadores | 2-RadioButton | 3-Fecha | 4-TextView | 5-CheckBox
@@ -132,12 +134,19 @@ public class LayoutBasico {
     }
 
     private void pintarTablaVida() {
+        //borde de una celda (ojo, en la tablet se rellenan de negro porque sí, sólo aplicado a 'presencial' y 'online'
+        final GradientDrawable gd = new GradientDrawable();
+        gd.setCornerRadius(5);          //esquinas
+        gd.setStroke(1, Color.WHITE);   //borde
+
         TableLayout tableLayout = new TableLayout(contexto);
         final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        final TableRow.LayoutParams parametrosCelda = new TableRow.LayoutParams(0, AbsListView.LayoutParams.WRAP_CONTENT, 1); //ancho normal
+        final TableRow.LayoutParams parametrosCeldaDoble = new TableRow.LayoutParams(0, AbsListView.LayoutParams.WRAP_CONTENT, 2); //ancho doble
 
-        TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams (TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
-        tableRowParams.setMargins(3, 3, 2, 10);
-        //tableRow.LayoutParameters = tableRowParams;
+        //no los pilla
+        parametrosCeldaDoble.gravity = Gravity.CENTER_HORIZONTAL;
+        parametrosCeldaDoble.gravity = Gravity.CENTER_VERTICAL;
 
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
         id_actual = ++id_anterior;
@@ -145,215 +154,164 @@ public class LayoutBasico {
 
         //Fila 1
         TableRow tableRow1 = new TableRow(contexto);
-        tableRow1.setLayoutParams(tableRowParams);
-        TextView texto1A = new TextView(contexto);
-        texto1A.setText("-");
-        texto1A.setTextColor(COLOR_RESPUESTA);
-        tableRow1.addView(texto1A);
-        TextView texto1B = new TextView(contexto);
-        texto1B.setText("PRESENCIAL");
-        texto1B.setTextColor(COLOR_RESPUESTA);
-        tableRow1.addView(texto1B);
-        TextView texto1C = new TextView(contexto);
-        texto1C.setText("-");
-        texto1C.setTextColor(COLOR_RESPUESTA);
-        tableRow1.addView(texto1C);
-        TextView texto1D = new TextView(contexto);
-        texto1D.setText("ONLINE");
-        texto1D.setTextColor(COLOR_RESPUESTA);
-        tableRow1.addView(texto1D);
-        TextView texto1E = new TextView(contexto);
-        texto1E.setText("-");
-        texto1E.setTextColor(COLOR_RESPUESTA);
-        tableRow1.addView(texto1E);
+        tableRow1.setLayoutParams(parametros);
+
+
+        TextView celda1A = new TextView(contexto);
+        tableRow1.addView(celda1A, parametrosCeldaDoble);
+        tableRow1.addView(pintarCabeceraPrincipalTablaVida("PRESENCIAL"), parametrosCeldaDoble);
+        tableRow1.addView(pintarCabeceraPrincipalTablaVida("ONLINE"), parametrosCeldaDoble);
         tableLayout.addView(tableRow1);
 
         //Fila 2
         TableRow tableRow2 = new TableRow(contexto);
-        TextView tableRow2A = new TextView(contexto);
-        tableRow2A.setText("-");
-        tableRow2A.setTextColor(COLOR_RESPUESTA);
-        tableRow2.addView(tableRow2A);
-        TextView tableRow2B = new TextView(contexto);
-        tableRow2B.setText("  CON DINERO  ");
-        tableRow2B.setTextColor(COLOR_RESPUESTA);
-        tableRow2.addView(tableRow2B);
-        TextView tableRow2C = new TextView(contexto);
-        tableRow2C.setText("  SIN DINERO  ");
-        tableRow2C.setTextColor(COLOR_RESPUESTA);
-        tableRow2.addView(tableRow2C);
-        TextView tableRow2D = new TextView(contexto);
-        tableRow2D.setText("  CON DINERO  ");
-        tableRow2D.setTextColor(COLOR_RESPUESTA);
-        tableRow2.addView(tableRow2D);
-        TextView tableRow2E = new TextView(contexto);
-        tableRow2E.setText("  SIN DINERO  ");
-        tableRow2E.setTextColor(COLOR_RESPUESTA);
-        tableRow2.addView(tableRow2E);
+        tableRow2.addView(pintarCabeceraTablaVida("", false), parametrosCeldaDoble);
+        tableRow2.addView(pintarCabeceraTablaVida("CON DINERO", true), parametrosCelda);
+        tableRow2.addView(pintarCabeceraTablaVida("SIN DINERO", true), parametrosCelda);
+        tableRow2.addView(pintarCabeceraTablaVida("CON DINERO", true), parametrosCelda);
+        tableRow2.addView(pintarCabeceraTablaVida("SIN DINERO", true), parametrosCelda);
         tableLayout.addView(tableRow2);
 
         //Fila 3
         TableRow tableRow3 = new TableRow(contexto);
-        TextView tableRow3A = new TextView(contexto);
-        tableRow3A.setText("Bingo");
-        tableRow3A.setTextColor(COLOR_RESPUESTA);
-        tableRow3.addView(tableRow3A);
-        CheckBox tableRow3B = new CheckBox(contexto);
-        tableRow3B.setTextColor(COLOR_RESPUESTA);
-        tableRow3.addView(tableRow3B);
-        CheckBox tableRow3C = new CheckBox(contexto);
-        tableRow3C.setTextColor(COLOR_RESPUESTA);
-        tableRow3.addView(tableRow3C);
-        CheckBox tableRow3D = new CheckBox(contexto);
-        tableRow3D.setTextColor(COLOR_RESPUESTA);
-        tableRow3.addView(tableRow3D);
-        CheckBox tableRow3E = new CheckBox(contexto);
-        tableRow3E.setTextColor(COLOR_RESPUESTA);
-        tableRow3.addView(tableRow3E);
+        tableRow3.addView(pintarCabeceraTablaVida("Bingo", false), parametrosCeldaDoble);
+        CheckBox celda3B = new CheckBox(contexto);
+        celda3B.setTextColor(COLOR_RESPUESTA);
+        tableRow3.addView(celda3B, parametrosCelda);
+        CheckBox celda3C = new CheckBox(contexto);
+        celda3C.setTextColor(COLOR_RESPUESTA);
+        tableRow3.addView(celda3C, parametrosCelda);
+        CheckBox celda3D = new CheckBox(contexto);
+        celda3D.setTextColor(COLOR_RESPUESTA);
+        tableRow3.addView(celda3D, parametrosCelda);
+        CheckBox celda3E = new CheckBox(contexto);
+        celda3E.setTextColor(COLOR_RESPUESTA);
+        tableRow3.addView(celda3E, parametrosCelda);
         tableLayout.addView(tableRow3);
 
         //Fila 4
         TableRow tableRow4 = new TableRow(contexto);
-        TextView tableRow4A = new TextView(contexto);
-        tableRow4A.setText("Keno");
-        tableRow4A.setTextColor(COLOR_RESPUESTA);
-        tableRow4.addView(tableRow4A);
-        CheckBox tableRow4B = new CheckBox(contexto);
-        tableRow4B.setTextColor(COLOR_RESPUESTA);
-        tableRow4.addView(tableRow4B);
-        CheckBox tableRow4C = new CheckBox(contexto);
-        tableRow4C.setTextColor(COLOR_RESPUESTA);
-        tableRow4.addView(tableRow4C);
-        CheckBox tableRow4D = new CheckBox(contexto);
-        tableRow4D.setTextColor(COLOR_RESPUESTA);
-        tableRow4.addView(tableRow4D);
-        CheckBox tableRow4E = new CheckBox(contexto);
-        tableRow4E.setTextColor(COLOR_RESPUESTA);
-        tableRow4.addView(tableRow4E);
+        tableRow4.addView(pintarCabeceraTablaVida("Keno", false), parametrosCeldaDoble);
+        CheckBox celda4B = new CheckBox(contexto);
+        celda4B.setTextColor(COLOR_RESPUESTA);
+        tableRow4.addView(celda4B, parametrosCelda);
+        CheckBox celda4C = new CheckBox(contexto);
+        celda4C.setTextColor(COLOR_RESPUESTA);
+        tableRow4.addView(celda4C, parametrosCelda);
+        CheckBox celda4D = new CheckBox(contexto);
+        celda4D.setTextColor(COLOR_RESPUESTA);
+        tableRow4.addView(celda4D, parametrosCelda);
+        CheckBox celda4E = new CheckBox(contexto);
+        celda4E.setTextColor(COLOR_RESPUESTA);
+        tableRow4.addView(celda4E, parametrosCelda);
         tableLayout.addView(tableRow4);
 
         //Fila 5
         TableRow tableRow5 = new TableRow(contexto);
-        TextView tableRow5A = new TextView(contexto);
-        tableRow5A.setText("Póker");
-        tableRow5A.setTextColor(COLOR_RESPUESTA);
-        tableRow5.addView(tableRow5A);
-        CheckBox tableRow5B = new CheckBox(contexto);
-        tableRow5B.setTextColor(COLOR_RESPUESTA);
-        tableRow5.addView(tableRow5B);
-        CheckBox tableRow5C = new CheckBox(contexto);
-        tableRow5C.setTextColor(COLOR_RESPUESTA);
-        tableRow5.addView(tableRow5C);
-        CheckBox tableRow5D = new CheckBox(contexto);
-        tableRow5D.setTextColor(COLOR_RESPUESTA);
-        tableRow5.addView(tableRow5D);
-        CheckBox tableRow5E = new CheckBox(contexto);
-        tableRow5E.setTextColor(COLOR_RESPUESTA);
-        tableRow5.addView(tableRow5E);
+        tableRow5.addView(pintarCabeceraTablaVida("Póker", false), parametrosCeldaDoble);
+        CheckBox celda5B = new CheckBox(contexto);
+        celda5B.setTextColor(COLOR_RESPUESTA);
+        tableRow5.addView(celda5B, parametrosCelda);
+        CheckBox celda5C = new CheckBox(contexto);
+        celda5C.setTextColor(COLOR_RESPUESTA);
+        tableRow5.addView(celda5C, parametrosCelda);
+        CheckBox celda5D = new CheckBox(contexto);
+        celda5D.setTextColor(COLOR_RESPUESTA);
+        tableRow5.addView(celda5D, parametrosCelda);
+        CheckBox celda5E = new CheckBox(contexto);
+        celda5E.setTextColor(COLOR_RESPUESTA);
+        tableRow5.addView(celda5E, parametrosCelda);
         tableLayout.addView(tableRow5);
 
         //Fila 6
         TableRow tableRow6 = new TableRow(contexto);
-        TextView tableRow6A = new TextView(contexto);
-        tableRow6A.setText("Juegos casino (sin incluir Póker)\n(p. ej.: ruleta, blackjack)");
-        tableRow6A.setTextColor(COLOR_RESPUESTA);
-        tableRow6.addView(tableRow6A);
-        CheckBox tableRow6B = new CheckBox(contexto);
-        tableRow6B.setTextColor(COLOR_RESPUESTA);
-        tableRow6.addView(tableRow6B);
-        CheckBox tableRow6C = new CheckBox(contexto);
-        tableRow6C.setTextColor(COLOR_RESPUESTA);
-        tableRow6.addView(tableRow6C);
-        CheckBox tableRow6D = new CheckBox(contexto);
-        tableRow6D.setTextColor(COLOR_RESPUESTA);
-        tableRow6.addView(tableRow6D);
-        CheckBox tableRow6E = new CheckBox(contexto);
-        tableRow6E.setTextColor(COLOR_RESPUESTA);
-        tableRow6.addView(tableRow6E);
+        tableRow6.addView(pintarCabeceraTablaVida("Juegos casino (sin incluir Póker) (p. ej.: ruleta, blackjack)", false), parametrosCeldaDoble);
+
+        CheckBox celda6B = new CheckBox(contexto);
+        celda6B.setTextColor(COLOR_RESPUESTA);
+        tableRow6.addView(celda6B, parametrosCelda);
+        CheckBox celda6C = new CheckBox(contexto);
+        celda6C.setTextColor(COLOR_RESPUESTA);
+        tableRow6.addView(celda6C, parametrosCelda);
+        CheckBox celda6D = new CheckBox(contexto);
+        celda6D.setTextColor(COLOR_RESPUESTA);
+        tableRow6.addView(celda6D, parametrosCelda);
+        CheckBox celda6E = new CheckBox(contexto);
+        celda6E.setTextColor(COLOR_RESPUESTA);
+        tableRow6.addView(celda6E, parametrosCelda);
         tableLayout.addView(tableRow6);
 
         //Fila 7
         TableRow tableRow7 = new TableRow(contexto);
-        TextView tableRow7A = new TextView(contexto);
-        tableRow7A.setText("Apuestas deportivas\n(p. ej.: fútbol, caballos)");
-        tableRow7A.setTextColor(COLOR_RESPUESTA);
-        tableRow7.addView(tableRow7A);
-        CheckBox tableRow7B = new CheckBox(contexto);
-        tableRow7B.setTextColor(COLOR_RESPUESTA);
-        tableRow7.addView(tableRow7B);
-        CheckBox tableRow7C = new CheckBox(contexto);
-        tableRow7C.setTextColor(COLOR_RESPUESTA);
-        tableRow7.addView(tableRow7C);
-        CheckBox tableRow7D = new CheckBox(contexto);
-        tableRow7D.setTextColor(COLOR_RESPUESTA);
-        tableRow7.addView(tableRow7D);
-        CheckBox tableRow7E = new CheckBox(contexto);
-        tableRow7E.setTextColor(COLOR_RESPUESTA);
-        tableRow7.addView(tableRow7E);
+        tableRow7.addView(pintarCabeceraTablaVida("Apuestas deportivas (p. ej.: fútbol, caballos)", false), parametrosCeldaDoble);
+        CheckBox celda7B = new CheckBox(contexto);
+        celda7B.setTextColor(COLOR_RESPUESTA);
+        tableRow7.addView(celda7B, parametrosCelda);
+        CheckBox celda7C = new CheckBox(contexto);
+        celda7C.setTextColor(COLOR_RESPUESTA);
+        tableRow7.addView(celda7C, parametrosCelda);
+        CheckBox celda7D = new CheckBox(contexto);
+        celda7D.setTextColor(COLOR_RESPUESTA);
+        tableRow7.addView(celda7D, parametrosCelda);
+        CheckBox celda7E = new CheckBox(contexto);
+        celda7E.setTextColor(COLOR_RESPUESTA);
+        tableRow7.addView(celda7E, parametrosCelda);
         tableLayout.addView(tableRow7);
 
         //Fila 8
         TableRow tableRow8 = new TableRow(contexto);
-        TextView tableRow8A = new TextView(contexto);
-        tableRow8A.setText("Loterías");
-        tableRow8A.setTextColor(COLOR_RESPUESTA);
-        tableRow8.addView(tableRow8A);
-        CheckBox tableRow8B = new CheckBox(contexto);
-        tableRow8B.setTextColor(COLOR_RESPUESTA);
-        tableRow8.addView(tableRow8B);
-        CheckBox tableRow8C = new CheckBox(contexto);
-        tableRow8C.setTextColor(COLOR_RESPUESTA);
-        tableRow8.addView(tableRow8C);
-        CheckBox tableRow8D = new CheckBox(contexto);
-        tableRow8D.setTextColor(COLOR_RESPUESTA);
-        tableRow8.addView(tableRow8D);
-        CheckBox tableRow8E = new CheckBox(contexto);
-        tableRow8E.setTextColor(COLOR_RESPUESTA);
-        tableRow8.addView(tableRow8E);
+        tableRow8.addView(pintarCabeceraTablaVida("Loterías", false), parametrosCeldaDoble);
+        CheckBox celda8B = new CheckBox(contexto);
+        celda8B.setTextColor(COLOR_RESPUESTA);
+        tableRow8.addView(celda8B, parametrosCelda);
+        CheckBox celda8C = new CheckBox(contexto);
+        celda8C.setTextColor(COLOR_RESPUESTA);
+        tableRow8.addView(celda8C, parametrosCelda);
+        CheckBox celda8D = new CheckBox(contexto);
+        celda8D.setTextColor(COLOR_RESPUESTA);
+        tableRow8.addView(celda8D, parametrosCelda);
+        CheckBox celda8E = new CheckBox(contexto);
+        celda8E.setTextColor(COLOR_RESPUESTA);
+        tableRow8.addView(celda8E, parametrosCelda);
         tableLayout.addView(tableRow8);
 
         //Fila 9
         TableRow tableRow9 = new TableRow(contexto);
-        TextView tableRow9A = new TextView(contexto);
-        tableRow9A.setText("Rascas");
-        tableRow9A.setTextColor(COLOR_RESPUESTA);
-        tableRow9.addView(tableRow9A);
-        CheckBox tableRow9B = new CheckBox(contexto);
-        tableRow9B.setTextColor(COLOR_RESPUESTA);
-        tableRow9.addView(tableRow9B);
-        CheckBox tableRow9C = new CheckBox(contexto);
-        tableRow9C.setTextColor(COLOR_RESPUESTA);
-        tableRow9.addView(tableRow9C);
-        CheckBox tableRow9D = new CheckBox(contexto);
-        tableRow9D.setTextColor(COLOR_RESPUESTA);
-        tableRow9.addView(tableRow9D);
-        CheckBox tableRow9E = new CheckBox(contexto);
-        tableRow9E.setTextColor(COLOR_RESPUESTA);
-        tableRow9.addView(tableRow9E);
+        tableRow9.addView(pintarCabeceraTablaVida("Rascas", false), parametrosCeldaDoble);
+        CheckBox celda9B = new CheckBox(contexto);
+        celda9B.setTextColor(COLOR_RESPUESTA);
+        tableRow9.addView(celda9B, parametrosCelda);
+        CheckBox celda9C = new CheckBox(contexto);
+        celda9C.setTextColor(COLOR_RESPUESTA);
+        tableRow9.addView(celda9C, parametrosCelda);
+        CheckBox celda9D = new CheckBox(contexto);
+        celda9D.setTextColor(COLOR_RESPUESTA);
+        tableRow9.addView(celda9D, parametrosCelda);
+        CheckBox celda9E = new CheckBox(contexto);
+        celda9E.setTextColor(COLOR_RESPUESTA);
+        tableRow9.addView(celda9E, parametrosCelda);
         tableLayout.addView(tableRow9);
 
         //Fila 10
         TableRow tableRow10 = new TableRow(contexto);
-        TextView tableRow10A = new TextView(contexto);
-        tableRow10A.setText("Máquinas tragaperras");
-        tableRow10A.setTextColor(COLOR_RESPUESTA);
-        tableRow10.addView(tableRow10A);
-        CheckBox tableRow10B = new CheckBox(contexto);
-        tableRow10B.setTextColor(COLOR_RESPUESTA);
-        tableRow10.addView(tableRow10B);
-        CheckBox tableRow10C = new CheckBox(contexto);
-        tableRow10C.setTextColor(COLOR_RESPUESTA);
-        tableRow10.addView(tableRow10C);
-        CheckBox tableRow10D = new CheckBox(contexto);
-        tableRow10D.setTextColor(COLOR_RESPUESTA);
-        tableRow10.addView(tableRow10D);
-        CheckBox tableRow10E = new CheckBox(contexto);
-        tableRow10E.setTextColor(COLOR_RESPUESTA);
-        tableRow10.addView(tableRow10E);
+        tableRow10.addView(pintarCabeceraTablaVida("Máquinas tragaperras", false), parametrosCeldaDoble);
+        CheckBox celda10B = new CheckBox(contexto);
+        celda10B.setTextColor(COLOR_RESPUESTA);
+        tableRow10.addView(celda10B, parametrosCelda);
+        CheckBox celda10C = new CheckBox(contexto);
+        celda10C.setTextColor(COLOR_RESPUESTA);
+        tableRow10.addView(celda10C, parametrosCelda);
+        CheckBox celda10D = new CheckBox(contexto);
+        celda10D.setTextColor(COLOR_RESPUESTA);
+        tableRow10.addView(celda10D, parametrosCelda);
+        CheckBox celda10E = new CheckBox(contexto);
+        celda10E.setTextColor(COLOR_RESPUESTA);
+        tableRow10.addView(celda10E, parametrosCelda);
         tableLayout.addView(tableRow10);
 
         relativeLayout.addView(tableLayout, parametros);
     }
+
 
     private void pintarFecha() {
         DatePicker datePicker = new DatePicker(contexto);
@@ -423,8 +381,8 @@ public class LayoutBasico {
             @Override
             public void onClick(View v) {
                 if (validarRespuestas(item)) {
-                    grabarRespuestas();
-                    pintarNuevaPregunta();
+                    grabarRespuestas(item);
+                    pintarNuevaPregunta(item);
                 }
             }
         });
@@ -432,7 +390,7 @@ public class LayoutBasico {
         relativeLayout.addView(botonSiguiente, parametros);
     }
 
-    private void pintarNuevaPregunta() {
+    private void pintarNuevaPregunta(Item item) {
         LayoutBasico layoutBasico = new LayoutBasico(activity);
 
         //Opción para desarrollo, por si no hay respuestas
@@ -440,32 +398,36 @@ public class LayoutBasico {
             siguiente = idPregunta + 1;
         }
 
-        //Casos especiales de redireccionamiento
-        switch (siguiente) {
-            case 10:
-                pintarTablaVida();
-                break;
-            default:
-                relativeLayout = layoutBasico.pintarVista(contexto, siguiente);
-                ScrollView scrollView = new ScrollView(contexto);
-                scrollView.addView(relativeLayout);
-                activity.setContentView(scrollView);
-                break;
-        }
+        relativeLayout = layoutBasico.pintarVista(contexto, siguiente);
+        ScrollView scrollView = new ScrollView(contexto);
+        scrollView.addView(relativeLayout);
+        activity.setContentView(scrollView);
     }
 
-    private void grabarRespuestas() {
-        int opcionEscogida = radioGroup.getCheckedRadioButtonId();
+    private void grabarRespuestas(Item item) {
+        switch (item.getIdTipo()) {
+            case 1: //Contador
+                break;
+            case 2: //RadioButton
+                int opcionEscogida = radioGroup.getCheckedRadioButtonId();
 
-        //Cogemos su valor
-        boolean buscando = true;
-        for (int i=0; listaValorRespuestas.size()>0 && buscando; i++) {
-            RespuestaValor respuestaValor = listaValorRespuestas.get(i);
-            if (respuestaValor.getId() == opcionEscogida) {
-                buscando = false;
-                Toast.makeText(contexto, String.valueOf("ID: " + respuestaValor.getId() + " | VALOR: " + respuestaValor.getValor() + " | SIGUIENTE: " + respuestaValor.getSiguiente()), Toast.LENGTH_LONG).show();
-            }
+                //Cogemos su valor
+                boolean buscando = true;
+                for (int i=0; listaValorRespuestas.size()>0 && buscando; i++) {
+                    RespuestaValor respuestaValor = listaValorRespuestas.get(i);
+                    if (respuestaValor.getId() == opcionEscogida) {
+                        buscando = false;
+                        Toast.makeText(contexto, String.valueOf("ID: " + respuestaValor.getId() + " | VALOR: " + respuestaValor.getValor() + " | SIGUIENTE: " + respuestaValor.getSiguiente()), Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
         }
+
+
+
+
+
+
     }
 
     private boolean validarRespuestas(Item item) {
@@ -520,5 +482,37 @@ public class LayoutBasico {
         editText.setTypeface(null, Typeface.ITALIC);
         editText.setLayoutParams(parametros);
         relativeLayout.addView(editText, parametros);
+    }
+
+    private TextView pintarCabeceraPrincipalTablaVida(String texto) {
+        final GradientDrawable gd = new GradientDrawable();
+        gd.setCornerRadius(5);
+        gd.setStroke(1, 0xFF000000);
+
+        texto = "\t\t\t\t\t\t\t" + texto;
+        TextView celda = new TextView(contexto);
+        celda.setTypeface(null, Typeface.BOLD_ITALIC);
+        celda.setTextColor(Color.WHITE);
+        celda.setBackgroundDrawable(gd);
+        celda.setTextSize(28);
+        celda.setText(texto);
+        //celda.setTextAlignment(View.TEXT_ALIGNMENT_CENTER); //para la tablet no lo pilla por su API vieja
+        return celda;
+    }
+
+    private TextView pintarCabeceraTablaVida(String texto, boolean esCabecera) {
+        TextView celda = new TextView(contexto);
+        celda.setTypeface(null, Typeface.BOLD_ITALIC);
+        celda.setTextColor(COLOR_RESPUESTA);
+
+        //con/sin dinero
+        if (esCabecera) {
+            celda.setTextSize(23);
+        } else {
+            //ludopatías
+            celda.setTextSize(16);
+        }
+        celda.setText(texto);
+        return celda;
     }
 }
