@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AbsListView;
@@ -23,10 +24,16 @@ import android.widget.Toast;
 
 import com.endel.psicotest.R;
 import com.endel.psicotest.Item;
+import com.endel.psicotest.VariablesGlobales;
 import com.endel.psicotest.baseDatos.DataBaseHelper;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -34,12 +41,18 @@ import java.util.List;
  */
 public class LayoutBasico {
     public final int COLOR_RESPUESTA = Color.BLUE;
-    public int id_actual = 1, id_anterior = 1, siguiente, idPregunta;
+    public int id_actual = 1, id_anterior = 1, siguiente, idPregunta, contadorIDsTablaVida = 11;;
     public RelativeLayout relativeLayout;
     public RadioGroup radioGroup;
     public Context contexto;
     public Activity activity;
-    public List<RespuestaValor> listaValorRespuestas = new ArrayList();
+    public List<RespuestaValor> listaRespuestasRadioButton = new ArrayList();
+    public List<RespuestaValor> listaRespuestasTablaVida = new ArrayList();
+    public HashMap<Integer, Integer> mapaRespuestasTablaVida = new HashMap<>();
+
+    RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+    final TableRow.LayoutParams parametrosCelda = new TableRow.LayoutParams(0, AbsListView.LayoutParams.WRAP_CONTENT, 1); //ancho normal
+    final TableRow.LayoutParams parametrosCeldaDoble = new TableRow.LayoutParams(0, AbsListView.LayoutParams.WRAP_CONTENT, 2); //ancho doble
 
     public LayoutBasico (Activity _activity) {
         this.activity = _activity;
@@ -66,7 +79,6 @@ public class LayoutBasico {
         switch (item.getIdPregunta()) {
             case 11:    //Tabla vida
                 pintarTablaVida();
-                valorarRespuestasTablaVida();
                 siguiente = 257;
                 break;
             default:
@@ -84,6 +96,17 @@ public class LayoutBasico {
     }
 
     private void valorarRespuestasTablaVida() {
+        RespuestaValor respuestaValor;
+        for (int i=11; i<43; i++) {
+            CheckBox checkBox = (CheckBox) activity.findViewById(i);
+            boolean escogido = checkBox.isChecked();
+            int escogidoEntero = (escogido)?1:0;
+            mapaRespuestasTablaVida.put(Integer.valueOf(i), Integer.valueOf(escogidoEntero));
+        }
+
+
+
+
     }
 
 
@@ -140,9 +163,7 @@ public class LayoutBasico {
         gd.setStroke(1, Color.WHITE);   //borde
 
         TableLayout tableLayout = new TableLayout(contexto);
-        final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        final TableRow.LayoutParams parametrosCelda = new TableRow.LayoutParams(0, AbsListView.LayoutParams.WRAP_CONTENT, 1); //ancho normal
-        final TableRow.LayoutParams parametrosCeldaDoble = new TableRow.LayoutParams(0, AbsListView.LayoutParams.WRAP_CONTENT, 2); //ancho doble
+
 
         //no los pilla
         parametrosCeldaDoble.gravity = Gravity.CENTER_HORIZONTAL;
@@ -155,8 +176,6 @@ public class LayoutBasico {
         //Fila 1
         TableRow tableRow1 = new TableRow(contexto);
         tableRow1.setLayoutParams(parametros);
-
-
         TextView celda1A = new TextView(contexto);
         tableRow1.addView(celda1A, parametrosCeldaDoble);
         tableRow1.addView(pintarCabeceraPrincipalTablaVida("PRESENCIAL"), parametrosCeldaDoble);
@@ -172,144 +191,31 @@ public class LayoutBasico {
         tableRow2.addView(pintarCabeceraTablaVida("SIN DINERO", true), parametrosCelda);
         tableLayout.addView(tableRow2);
 
-        //Fila 3
-        TableRow tableRow3 = new TableRow(contexto);
-        tableRow3.addView(pintarCabeceraTablaVida("Bingo", false), parametrosCeldaDoble);
-        CheckBox celda3B = new CheckBox(contexto);
-        celda3B.setTextColor(COLOR_RESPUESTA);
-        tableRow3.addView(celda3B, parametrosCelda);
-        CheckBox celda3C = new CheckBox(contexto);
-        celda3C.setTextColor(COLOR_RESPUESTA);
-        tableRow3.addView(celda3C, parametrosCelda);
-        CheckBox celda3D = new CheckBox(contexto);
-        celda3D.setTextColor(COLOR_RESPUESTA);
-        tableRow3.addView(celda3D, parametrosCelda);
-        CheckBox celda3E = new CheckBox(contexto);
-        celda3E.setTextColor(COLOR_RESPUESTA);
-        tableRow3.addView(celda3E, parametrosCelda);
-        tableLayout.addView(tableRow3);
-
-        //Fila 4
-        TableRow tableRow4 = new TableRow(contexto);
-        tableRow4.addView(pintarCabeceraTablaVida("Keno", false), parametrosCeldaDoble);
-        CheckBox celda4B = new CheckBox(contexto);
-        celda4B.setTextColor(COLOR_RESPUESTA);
-        tableRow4.addView(celda4B, parametrosCelda);
-        CheckBox celda4C = new CheckBox(contexto);
-        celda4C.setTextColor(COLOR_RESPUESTA);
-        tableRow4.addView(celda4C, parametrosCelda);
-        CheckBox celda4D = new CheckBox(contexto);
-        celda4D.setTextColor(COLOR_RESPUESTA);
-        tableRow4.addView(celda4D, parametrosCelda);
-        CheckBox celda4E = new CheckBox(contexto);
-        celda4E.setTextColor(COLOR_RESPUESTA);
-        tableRow4.addView(celda4E, parametrosCelda);
-        tableLayout.addView(tableRow4);
-
-        //Fila 5
-        TableRow tableRow5 = new TableRow(contexto);
-        tableRow5.addView(pintarCabeceraTablaVida("Póker", false), parametrosCeldaDoble);
-        CheckBox celda5B = new CheckBox(contexto);
-        celda5B.setTextColor(COLOR_RESPUESTA);
-        tableRow5.addView(celda5B, parametrosCelda);
-        CheckBox celda5C = new CheckBox(contexto);
-        celda5C.setTextColor(COLOR_RESPUESTA);
-        tableRow5.addView(celda5C, parametrosCelda);
-        CheckBox celda5D = new CheckBox(contexto);
-        celda5D.setTextColor(COLOR_RESPUESTA);
-        tableRow5.addView(celda5D, parametrosCelda);
-        CheckBox celda5E = new CheckBox(contexto);
-        celda5E.setTextColor(COLOR_RESPUESTA);
-        tableRow5.addView(celda5E, parametrosCelda);
-        tableLayout.addView(tableRow5);
-
-        //Fila 6
-        TableRow tableRow6 = new TableRow(contexto);
-        tableRow6.addView(pintarCabeceraTablaVida("Juegos casino (sin incluir Póker) (p. ej.: ruleta, blackjack)", false), parametrosCeldaDoble);
-
-        CheckBox celda6B = new CheckBox(contexto);
-        celda6B.setTextColor(COLOR_RESPUESTA);
-        tableRow6.addView(celda6B, parametrosCelda);
-        CheckBox celda6C = new CheckBox(contexto);
-        celda6C.setTextColor(COLOR_RESPUESTA);
-        tableRow6.addView(celda6C, parametrosCelda);
-        CheckBox celda6D = new CheckBox(contexto);
-        celda6D.setTextColor(COLOR_RESPUESTA);
-        tableRow6.addView(celda6D, parametrosCelda);
-        CheckBox celda6E = new CheckBox(contexto);
-        celda6E.setTextColor(COLOR_RESPUESTA);
-        tableRow6.addView(celda6E, parametrosCelda);
-        tableLayout.addView(tableRow6);
-
-        //Fila 7
-        TableRow tableRow7 = new TableRow(contexto);
-        tableRow7.addView(pintarCabeceraTablaVida("Apuestas deportivas (p. ej.: fútbol, caballos)", false), parametrosCeldaDoble);
-        CheckBox celda7B = new CheckBox(contexto);
-        celda7B.setTextColor(COLOR_RESPUESTA);
-        tableRow7.addView(celda7B, parametrosCelda);
-        CheckBox celda7C = new CheckBox(contexto);
-        celda7C.setTextColor(COLOR_RESPUESTA);
-        tableRow7.addView(celda7C, parametrosCelda);
-        CheckBox celda7D = new CheckBox(contexto);
-        celda7D.setTextColor(COLOR_RESPUESTA);
-        tableRow7.addView(celda7D, parametrosCelda);
-        CheckBox celda7E = new CheckBox(contexto);
-        celda7E.setTextColor(COLOR_RESPUESTA);
-        tableRow7.addView(celda7E, parametrosCelda);
-        tableLayout.addView(tableRow7);
-
-        //Fila 8
-        TableRow tableRow8 = new TableRow(contexto);
-        tableRow8.addView(pintarCabeceraTablaVida("Loterías", false), parametrosCeldaDoble);
-        CheckBox celda8B = new CheckBox(contexto);
-        celda8B.setTextColor(COLOR_RESPUESTA);
-        tableRow8.addView(celda8B, parametrosCelda);
-        CheckBox celda8C = new CheckBox(contexto);
-        celda8C.setTextColor(COLOR_RESPUESTA);
-        tableRow8.addView(celda8C, parametrosCelda);
-        CheckBox celda8D = new CheckBox(contexto);
-        celda8D.setTextColor(COLOR_RESPUESTA);
-        tableRow8.addView(celda8D, parametrosCelda);
-        CheckBox celda8E = new CheckBox(contexto);
-        celda8E.setTextColor(COLOR_RESPUESTA);
-        tableRow8.addView(celda8E, parametrosCelda);
-        tableLayout.addView(tableRow8);
-
-        //Fila 9
-        TableRow tableRow9 = new TableRow(contexto);
-        tableRow9.addView(pintarCabeceraTablaVida("Rascas", false), parametrosCeldaDoble);
-        CheckBox celda9B = new CheckBox(contexto);
-        celda9B.setTextColor(COLOR_RESPUESTA);
-        tableRow9.addView(celda9B, parametrosCelda);
-        CheckBox celda9C = new CheckBox(contexto);
-        celda9C.setTextColor(COLOR_RESPUESTA);
-        tableRow9.addView(celda9C, parametrosCelda);
-        CheckBox celda9D = new CheckBox(contexto);
-        celda9D.setTextColor(COLOR_RESPUESTA);
-        tableRow9.addView(celda9D, parametrosCelda);
-        CheckBox celda9E = new CheckBox(contexto);
-        celda9E.setTextColor(COLOR_RESPUESTA);
-        tableRow9.addView(celda9E, parametrosCelda);
-        tableLayout.addView(tableRow9);
-
-        //Fila 10
-        TableRow tableRow10 = new TableRow(contexto);
-        tableRow10.addView(pintarCabeceraTablaVida("Máquinas tragaperras", false), parametrosCeldaDoble);
-        CheckBox celda10B = new CheckBox(contexto);
-        celda10B.setTextColor(COLOR_RESPUESTA);
-        tableRow10.addView(celda10B, parametrosCelda);
-        CheckBox celda10C = new CheckBox(contexto);
-        celda10C.setTextColor(COLOR_RESPUESTA);
-        tableRow10.addView(celda10C, parametrosCelda);
-        CheckBox celda10D = new CheckBox(contexto);
-        celda10D.setTextColor(COLOR_RESPUESTA);
-        tableRow10.addView(celda10D, parametrosCelda);
-        CheckBox celda10E = new CheckBox(contexto);
-        celda10E.setTextColor(COLOR_RESPUESTA);
-        tableRow10.addView(celda10E, parametrosCelda);
-        tableLayout.addView(tableRow10);
+        //Pintamos las celdas
+        String[] listaVicios = {"Bingo", "Keno", "Póker", "Juegos casino (sin incluir Póker) (p. ej.: ruleta, blackjack)", "Apuestas deportivas (p. ej.: fútbol, caballos)", "Loterías", "Rascas", "Máquinas tragaperras"};
+        for (int i=0; i<listaVicios.length; i++) {
+            tableLayout.addView(crearFila(listaVicios[i]));
+        }
 
         relativeLayout.addView(tableLayout, parametros);
+    }
+
+    private TableRow crearFila(String titulo) {
+        TableRow tableRow3 = new TableRow(contexto);
+        tableRow3.addView(pintarCabeceraTablaVida(titulo, false), parametrosCeldaDoble);
+
+        //Pintar celdas
+        for (int i=0; i<4; i++) {
+            tableRow3.addView(crearCelda(contexto), parametrosCelda);
+        }
+        return tableRow3;
+    }
+
+    private CheckBox crearCelda(Context contexto) {
+        CheckBox celda = new CheckBox(contexto);
+        celda.setId(contadorIDsTablaVida++);
+        celda.setTextColor(COLOR_RESPUESTA);
+        return celda;
     }
 
 
@@ -323,7 +229,6 @@ public class LayoutBasico {
     }
 
     private void pintarRadioButton(int numeroRespuesta, Item item) {
-        final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         parametros.addRule(RelativeLayout.BELOW, 1);
         final RadioButton radioButton = new RadioButton(contexto);
         radioButton.setTextColor(COLOR_RESPUESTA);
@@ -334,7 +239,7 @@ public class LayoutBasico {
 
         RespuestaValor respuestaValor = new RespuestaValor(radioButton.getId(), valor, siguiente);
 
-        listaValorRespuestas.add(respuestaValor);
+        listaRespuestasRadioButton.add(respuestaValor);
 
         radioGroup.addView(radioButton, parametros);
     }
@@ -352,7 +257,7 @@ public class LayoutBasico {
 
     private void pintarSeparador() {
         View separador = new View(contexto);
-        final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT); //Aunque se repita no quitar pues se desmaqueta completamente
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
         id_actual = ++id_anterior;
         separador.setId(id_actual);
@@ -365,7 +270,7 @@ public class LayoutBasico {
     }
 
     private void pintarBotonSiguiente(final Item item) {
-        final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT); //no quitar, casca
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
         final Button botonSiguiente = new Button(contexto);
         id_actual = ++id_anterior;
@@ -375,7 +280,6 @@ public class LayoutBasico {
         botonSiguiente.setTextSize(20);
         botonSiguiente.setTypeface(null, Typeface.ITALIC);
         botonSiguiente.setLayoutParams(parametros);
-
 
         botonSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -405,6 +309,13 @@ public class LayoutBasico {
     }
 
     private void grabarRespuestas(Item item) {
+        //Si viene de la tabla vida
+        if (item.getIdPregunta() == 11) {
+            valorarRespuestasTablaVida();
+            return;
+        }
+
+
         switch (item.getIdTipo()) {
             case 1: //Contador
                 break;
@@ -413,8 +324,8 @@ public class LayoutBasico {
 
                 //Cogemos su valor
                 boolean buscando = true;
-                for (int i=0; listaValorRespuestas.size()>0 && buscando; i++) {
-                    RespuestaValor respuestaValor = listaValorRespuestas.get(i);
+                for (int i=0; listaRespuestasRadioButton.size()>0 && buscando; i++) {
+                    RespuestaValor respuestaValor = listaRespuestasRadioButton.get(i);
                     if (respuestaValor.getId() == opcionEscogida) {
                         buscando = false;
                         Toast.makeText(contexto, String.valueOf("ID: " + respuestaValor.getId() + " | VALOR: " + respuestaValor.getValor() + " | SIGUIENTE: " + respuestaValor.getSiguiente()), Toast.LENGTH_LONG).show();
@@ -422,18 +333,13 @@ public class LayoutBasico {
                 }
                 break;
         }
-
-
-
-
-
-
     }
 
     private boolean validarRespuestas(Item item) {
         int id_pregunta_tipo = item.getIdTipo();
         int numeroRespuestas = item.getRespuestas().size();
-        for(int numeroRespuesta=0; numeroRespuesta<numeroRespuestas; numeroRespuesta++) {
+
+        for (int numeroRespuesta=0; numeroRespuesta<numeroRespuestas; numeroRespuesta++) {
             //1-Contadores | 2-RadioButton | 3-Fecha | 4-TextView | 5-CheckBox
             switch (id_pregunta_tipo) {
                 case 1: //Contador
@@ -470,7 +376,6 @@ public class LayoutBasico {
 
     private void pintarCajaTexto() {
         final EditText editText = new EditText(contexto);
-        final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
 
         id_actual = id_anterior + 1;
