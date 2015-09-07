@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AbsListView;
@@ -22,18 +21,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.endel.psicotest.Logica;
 import com.endel.psicotest.R;
 import com.endel.psicotest.Item;
-import com.endel.psicotest.VariablesGlobales;
 import com.endel.psicotest.baseDatos.DataBaseHelper;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -41,13 +36,13 @@ import java.util.Set;
  */
 public class LayoutBasico {
     public final int COLOR_RESPUESTA = Color.BLUE;
-    public int id_actual = 1, id_anterior = 1, siguiente, idPregunta, contadorIDsTablaVida = 11;;
+    public int id_actual = 1, id_anterior = 1, siguiente, idPregunta, contadorIDsTablaVida = 11;
+    public boolean algunVicio = false;
     public RelativeLayout relativeLayout;
     public RadioGroup radioGroup;
     public Context contexto;
     public Activity activity;
     public List<RespuestaValor> listaRespuestasRadioButton = new ArrayList();
-    public List<RespuestaValor> listaRespuestasTablaVida = new ArrayList();
     public HashMap<Integer, Integer> mapaRespuestasTablaVida = new HashMap<>();
 
     RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -95,20 +90,6 @@ public class LayoutBasico {
         return relativeLayout;
     }
 
-    private void valorarRespuestasTablaVida() {
-        RespuestaValor respuestaValor;
-        for (int i=11; i<43; i++) {
-            CheckBox checkBox = (CheckBox) activity.findViewById(i);
-            boolean escogido = checkBox.isChecked();
-            int escogidoEntero = (escogido)?1:0;
-            mapaRespuestasTablaVida.put(Integer.valueOf(i), Integer.valueOf(escogidoEntero));
-        }
-
-
-
-
-    }
-
 
     private void pintarRespuestas(Item item) {
         //Sacamos las respuestas por el ID de la pregunta
@@ -118,7 +99,6 @@ public class LayoutBasico {
 
         //Respuestas
         //1-Contadores | 2-RadioButton | 3-Fecha | 4-TextView | 5-CheckBox
-        // ANTES 1.texto | 2.checkbox | 3.radiobutton | 4.fecha
         int id_pregunta_tipo = item.getIdTipo();
         radioGroup = new RadioGroup(contexto);
         for(int numeroRespuesta=0; numeroRespuesta<numeroRespuestas; numeroRespuesta++) {
@@ -164,7 +144,6 @@ public class LayoutBasico {
 
         TableLayout tableLayout = new TableLayout(contexto);
 
-
         //no los pilla
         parametrosCeldaDoble.gravity = Gravity.CENTER_HORIZONTAL;
         parametrosCeldaDoble.gravity = Gravity.CENTER_VERTICAL;
@@ -194,24 +173,24 @@ public class LayoutBasico {
         //Pintamos las celdas
         String[] listaVicios = {"Bingo", "Keno", "Póker", "Juegos casino (sin incluir Póker) (p. ej.: ruleta, blackjack)", "Apuestas deportivas (p. ej.: fútbol, caballos)", "Loterías", "Rascas", "Máquinas tragaperras"};
         for (int i=0; i<listaVicios.length; i++) {
-            tableLayout.addView(crearFila(listaVicios[i]));
+            tableLayout.addView(pintarFila(listaVicios[i]));
         }
 
         relativeLayout.addView(tableLayout, parametros);
     }
 
-    private TableRow crearFila(String titulo) {
+    private TableRow pintarFila(String titulo) {
         TableRow tableRow3 = new TableRow(contexto);
         tableRow3.addView(pintarCabeceraTablaVida(titulo, false), parametrosCeldaDoble);
 
         //Pintar celdas
         for (int i=0; i<4; i++) {
-            tableRow3.addView(crearCelda(contexto), parametrosCelda);
+            tableRow3.addView(pintarCelda(contexto), parametrosCelda);
         }
         return tableRow3;
     }
 
-    private CheckBox crearCelda(Context contexto) {
+    private CheckBox pintarCelda(Context contexto) {
         CheckBox celda = new CheckBox(contexto);
         celda.setId(contadorIDsTablaVida++);
         celda.setTextColor(COLOR_RESPUESTA);
@@ -285,7 +264,7 @@ public class LayoutBasico {
             @Override
             public void onClick(View v) {
                 if (validarRespuestas(item)) {
-                    grabarRespuestas(item);
+                    algunVicio = Logica.grabarRespuestas(item, radioGroup, listaRespuestasRadioButton, contexto, activity, algunVicio, mapaRespuestasTablaVida);
                     pintarNuevaPregunta(item);
                 }
             }
@@ -302,38 +281,15 @@ public class LayoutBasico {
             siguiente = idPregunta + 1;
         }
 
+        //Casos especiales
+        siguiente = Logica.averiguarSiguiente(item, mapaRespuestasTablaVida, siguiente, algunVicio);
+
         relativeLayout = layoutBasico.pintarVista(contexto, siguiente);
         ScrollView scrollView = new ScrollView(contexto);
         scrollView.addView(relativeLayout);
         activity.setContentView(scrollView);
     }
 
-    private void grabarRespuestas(Item item) {
-        //Si viene de la tabla vida
-        if (item.getIdPregunta() == 11) {
-            valorarRespuestasTablaVida();
-            return;
-        }
-
-
-        switch (item.getIdTipo()) {
-            case 1: //Contador
-                break;
-            case 2: //RadioButton
-                int opcionEscogida = radioGroup.getCheckedRadioButtonId();
-
-                //Cogemos su valor
-                boolean buscando = true;
-                for (int i=0; listaRespuestasRadioButton.size()>0 && buscando; i++) {
-                    RespuestaValor respuestaValor = listaRespuestasRadioButton.get(i);
-                    if (respuestaValor.getId() == opcionEscogida) {
-                        buscando = false;
-                        Toast.makeText(contexto, String.valueOf("ID: " + respuestaValor.getId() + " | VALOR: " + respuestaValor.getValor() + " | SIGUIENTE: " + respuestaValor.getSiguiente()), Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;
-        }
-    }
 
     private boolean validarRespuestas(Item item) {
         int id_pregunta_tipo = item.getIdTipo();
@@ -367,7 +323,7 @@ public class LayoutBasico {
     private void pintarPregunta(Item item) {
         TextView pregunta = new TextView(contexto);
         pregunta.setId(id_actual);
-        pregunta.setText(item.getIdPregunta() + ") | " + item.getTextoPregunta() + " | tipoPregunta: " + item.getIdTipo());
+        pregunta.setText(item.getIdPregunta() + ") " + item.getTextoPregunta() + " | tipoPregunta: " + item.getIdTipo());
         pregunta.setTextColor(Color.BLACK);
         pregunta.setTextSize(30);
         pregunta.setTypeface(null, Typeface.BOLD);
