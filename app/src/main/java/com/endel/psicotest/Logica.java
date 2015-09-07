@@ -5,6 +5,7 @@ import android.content.Context;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.endel.psicotest.vista.RespuestaValor;
@@ -77,5 +78,33 @@ public class Logica {
     }
 
 
+    public static boolean validarRespuestas(Item item, Activity activity, Context contexto, RadioGroup radioGroup) {
+        int id_pregunta_tipo = item.getIdTipo();
+        int numeroRespuestas = item.getRespuestas().size();
+
+        for (int numeroRespuesta=0; numeroRespuesta<numeroRespuestas; numeroRespuesta++) {
+            //1-Contadores | 2-RadioButton | 3-Fecha | 4-TextView | 5-CheckBox
+            switch (id_pregunta_tipo) {
+                case 1: //Contador
+                    TextView textView = (TextView) activity.findViewById(numeroRespuesta + 3);  //1 es pregunta y 2 es el separador
+                    String valor = textView.getText().toString();
+
+                    if (valor.equals("")) {
+                        VariablesGlobales.PublicToast(contexto, "Debes completar todos los campos");
+                        return false;
+                    } else {
+                        return true;
+                    }
+                case 2: //RadioButton
+                    if (radioGroup.getCheckedRadioButtonId() == -1) {
+                        VariablesGlobales.PublicToast(contexto, "Debes escoger una de las opciones");
+                        return false;
+                    } else {
+                        return true;
+                    }
+            }
+        }
+        return true;    //Si es de tipo fecha siempre coge un valor por defecto
+    }
 }
 

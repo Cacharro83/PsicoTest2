@@ -19,7 +19,6 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.endel.psicotest.Logica;
 import com.endel.psicotest.R;
@@ -263,7 +262,7 @@ public class LayoutBasico {
         botonSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validarRespuestas(item)) {
+                if (Logica.validarRespuestas(item, activity, contexto, radioGroup)) {
                     algunVicio = Logica.grabarRespuestas(item, radioGroup, listaRespuestasRadioButton, contexto, activity, algunVicio, mapaRespuestasTablaVida);
                     pintarNuevaPregunta(item);
                 }
@@ -288,36 +287,6 @@ public class LayoutBasico {
         ScrollView scrollView = new ScrollView(contexto);
         scrollView.addView(relativeLayout);
         activity.setContentView(scrollView);
-    }
-
-
-    private boolean validarRespuestas(Item item) {
-        int id_pregunta_tipo = item.getIdTipo();
-        int numeroRespuestas = item.getRespuestas().size();
-
-        for (int numeroRespuesta=0; numeroRespuesta<numeroRespuestas; numeroRespuesta++) {
-            //1-Contadores | 2-RadioButton | 3-Fecha | 4-TextView | 5-CheckBox
-            switch (id_pregunta_tipo) {
-                case 1: //Contador
-                    TextView textView = (TextView) activity.findViewById(numeroRespuesta + 3);  //1 es pregunta y 2 es el separador
-                    String valor = textView.getText().toString();
-
-                    if (valor.equals("")) {
-                        Toast.makeText(contexto, "Debes completar todos los campos", Toast.LENGTH_LONG).show();
-                        return false;
-                    } else {
-                        return true;
-                    }
-                case 2: //RadioButton
-                    if (radioGroup.getCheckedRadioButtonId() == -1) {
-                        Toast.makeText(contexto, "Debes escoger una de las opciones", Toast.LENGTH_LONG).show();
-                        return false;
-                    } else {
-                        return true;
-                    }
-            }
-        }
-        return true;    //Si es de tipo fecha siempre coge un valor por defecto
     }
 
     private void pintarPregunta(Item item) {
