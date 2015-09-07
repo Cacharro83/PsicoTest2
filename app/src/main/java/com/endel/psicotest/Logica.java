@@ -7,6 +7,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.endel.psicotest.baseDatos.DataBaseHelper;
 import com.endel.psicotest.vista.RespuestaValor;
 
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import java.util.List;
  * Created by Javier on 07/09/2015.
  */
 public class Logica {
-    public static int ultimoVicioParaGambling12Meses;
+    public static int ultimoVicioParaGambling12Meses, idUsuario = 1;
 
     public static int averiguarSiguiente(Item item, HashMap<Integer, Integer> mapaRespuestasTablaVida, int siguiente, boolean algunVicio) {
         Integer respuesta;
@@ -66,6 +67,8 @@ public class Logica {
 
 
     public static boolean grabarRespuestas(Item item, RadioGroup radioGroup, List<RespuestaValor> listaRespuestasRadioButton, Context contexto, Activity activity, boolean algunVicio, HashMap<Integer, Integer> mapaRespuestasTablaVida) {
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
+
         //Si viene de la tabla vida
         if (item.getIdPregunta() == 11) {
             algunVicio = guardarRespuestasTablaVida(activity, algunVicio, mapaRespuestasTablaVida);
@@ -75,6 +78,8 @@ public class Logica {
 
         switch (item.getIdTipo()) {
             case 1: //Contador
+                TextView textView = (TextView) activity.findViewById(3);  //ojo en el caso de los 2 contadores
+                dataBaseHelper.insertarRespuestaUsuario(item, idUsuario, textView.getText().toString());
                 break;
             case 2: //RadioButton
                 int opcionSeleccionada = radioGroup.getCheckedRadioButtonId();
@@ -86,10 +91,13 @@ public class Logica {
                     if (respuestaValor.getId() == opcionSeleccionada) {
                         buscando = false;
                         Toast.makeText(contexto, String.valueOf("ID: " + respuestaValor.getId() + " | VALOR: " + respuestaValor.getValor() + " | SIGUIENTE: " + respuestaValor.getSiguiente()), Toast.LENGTH_LONG).show();
+                        dataBaseHelper.insertarRespuestaUsuario(item, idUsuario, String.valueOf(respuestaValor.getValor()));
                     }
                 }
                 break;
         }
+
+        dataBaseHelper.aumentarUltimaPregunta(idUsuario, item.getIdPregunta());
         return algunVicio;
     }
 

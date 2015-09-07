@@ -1,6 +1,7 @@
 package com.endel.psicotest.baseDatos;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -324,6 +325,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		if (cursor!=null && cursor.moveToFirst()) {
 			 ultimaPregunta = cursor.getInt(0);
 		} else {
+			insertarUsuarioNuevo(idUsuario);
 			ultimaPregunta = 1;
 		}
 		db.close();
@@ -331,7 +333,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 		return ultimaPregunta;
 	}
-	
+
+
 	public String getAviso(int i) {
 		Log.i("ENTRO", "getAviso");
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -356,7 +359,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	}
 	
 public ArrayList <Colegio> getListaColegios(){
-		
 		Log.i("ENTRO", "getListaColegios");
 		
 		ArrayList<Colegio> listaColegios = new ArrayList<Colegio>();
@@ -370,6 +372,53 @@ public ArrayList <Colegio> getListaColegios(){
 		Log.i("SALGO", "getListaColegios");
 		return listaColegios;
 		
+	}
+
+
+	private void insertarUsuarioNuevo(int idUsuario) {
+		Log.i("ENTRO", "insertarUsuarioNuevo");
+
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues campos = new ContentValues();
+		campos.put("IdUsuario", idUsuario);
+		campos.put("ultimaPregunta", 1);
+		db.insert("usuarios", null, campos);
+
+		db.close();
+		Log.i("SALGO", "insertarUsuarioNuevo");
+	}
+
+	public void insertarRespuestaUsuario(Item item, int idUsuario, String valor) {
+		Log.i("ENTRO", "insertarRespuestaUsuario");
+
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put("IdRespuesta", item.getIdPregunta());
+		values.put("IdUsuario", idUsuario);
+		values.put("valor", valor);
+		db.insert("respuestasUsuarioNM", null, values);
+
+		db.close();
+		Log.i("SALGO", "insertarRespuestaUsuario");
+	}
+
+	public void aumentarUltimaPregunta(int idUsuario, int idPregunta) {
+		Log.i("ENTRO", "aumentarUltimaPregunta");
+
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put("ultimaPregunta", idPregunta);
+
+		String[] parametros = new String[1];
+		parametros[0] = Integer.toString(idUsuario);
+
+		db.update("usuarios", values, "IdUsuario=?", parametros);
+
+		db.close();
+		Log.i("SALGO", "aumentarUltimaPregunta");
 	}
 }
 

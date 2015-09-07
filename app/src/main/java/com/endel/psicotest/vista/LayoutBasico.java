@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class LayoutBasico {
     public final int COLOR_RESPUESTA = Color.BLUE;
-    public int id_actual = 1, id_anterior = 1, siguiente, idPregunta, contadorIDsTablaVida = 11;
+    public int id_actual = 1, id_anterior = 1, siguiente, idPregunta, contadorIDsTablaVida = 11, idUsuario;
     public boolean algunVicio = false;
     public RelativeLayout relativeLayout;
     public RadioGroup radioGroup;
