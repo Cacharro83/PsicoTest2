@@ -7,14 +7,13 @@ package com.endel.psicotest;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.endel.psicotest.baseDatos.DBMain;
+import com.endel.psicotest.baseDatos.DataBaseHelper;
 import com.endel.psicotest.vista.LayoutBasico;
 
 public class MainActivity extends Activity {
@@ -30,7 +29,10 @@ public class MainActivity extends Activity {
         LayoutBasico layoutBasico = new LayoutBasico(this);
 
         int idPregunta = 1;
-        relativeLayout = layoutBasico.pintarVista(contexto, idPregunta);
+        int idUsuario = 1;
+
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
+        relativeLayout = layoutBasico.pintarVista(contexto, dataBaseHelper.getUltimaPreguntaSegunUsuario(idUsuario));
         scrollView.addView(relativeLayout);
 
         super.onCreate(savedInstanceState);

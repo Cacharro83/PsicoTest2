@@ -13,6 +13,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
+ * http://www.c-sharpcorner.com/UploadFile/e14021/importing-database-in-android-studio/
+ *
  * Created by vivek on 6/24/13.
  */
 public class DBMain extends SQLiteOpenHelper {

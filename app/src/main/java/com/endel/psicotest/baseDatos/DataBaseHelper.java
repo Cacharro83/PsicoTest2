@@ -314,13 +314,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		Log.i("SALGO", "GetItemId");
 		return item_relleno;
 	}
+
+	public int getUltimaPreguntaSegunUsuario(int idUsuario) {
+		Log.i("ENTRO", "getUltimaPreguntaSegunUsuario");
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query("usuarios", new String[]{"ultimaPregunta"}, "IdUsuario" + "=?",
+				new String[]{String.valueOf(idUsuario)}, null, null, null, null);
+		int ultimaPregunta;
+		if (cursor!=null && cursor.moveToFirst()) {
+			 ultimaPregunta = cursor.getInt(0);
+		} else {
+			ultimaPregunta = 1;
+		}
+		db.close();
+		cursor.close();
+
+		return ultimaPregunta;
+	}
 	
 	public String getAviso(int i) {
 		Log.i("ENTRO", "getAviso");
 		SQLiteDatabase db = this.getReadableDatabase();
 		
-		Cursor cursor = db.query(TABLA_AVISOS, new String[] { TEXTO }, "IdAviso" + "=?",
-	            new String[] { String.valueOf(i) }, null, null, null, null);
+		Cursor cursor = db.query(TABLA_AVISOS, new String[]{TEXTO}, "IdAviso" + "=?",
+				new String[]{String.valueOf(i)}, null, null, null, null);
 		
 		String aux = new String();
 		
@@ -354,6 +371,5 @@ public ArrayList <Colegio> getListaColegios(){
 		return listaColegios;
 		
 	}
-
 }
 
