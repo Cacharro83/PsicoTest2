@@ -3,7 +3,6 @@ package com.endel.psicotest;
 import android.app.Activity;
 import android.content.Context;
 import android.widget.CheckBox;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,23 +16,54 @@ import java.util.List;
  * Created by Javier on 07/09/2015.
  */
 public class Logica {
+    public static int ultimoVicioParaGambling12Meses;
+
     public static int averiguarSiguiente(Item item, HashMap<Integer, Integer> mapaRespuestasTablaVida, int siguiente, boolean algunVicio) {
+        Integer respuesta;
+
         switch (item.getIdPregunta()) {
-            case 11:    //Tabla de vida
+            case 11:    //Tabla de vida - Inicio
                 //Valoramos primero si no tiene vicios
                 if (!algunVicio) {
-                    siguiente = 107;
+                    return 107;
                 } else {
-                    //Lógica de la pregunta 11
-                    Integer respuesta = mapaRespuestasTablaVida.get(Integer.valueOf(11));
-                    if (respuesta.intValue() > 0) {
-                        siguiente = 43; //Gambling edad
+                    //En función del vicio te redirige al primer 'Gambling edad' adecuado
+                    for (int i=11; i<43; i++) {
+                        respuesta = mapaRespuestasTablaVida.get(Integer.valueOf(i));
+                        if (respuesta.intValue() > 0) {
+                            return i + 32;  //Gambling edad
+                        }
                     }
                 }
                 break;
+
+            /*
+             *  Si contesta 0 para todos los items del 75 al 106 inclusive, pasa al item 107.
+             *  Si contesta mayor que 0, pasa al item 108, 140, 172, 204, 220-231, 232-240, 241-256
+             */
+            case 75:case 76:case 77:case 78:case 79:case 80:case 81:case 82:case 83:case 84:case 85:
+            case 86:case 87:case 88:case 89:case 90:case 91:case 92:case 93:case 94:case 95:case 96:
+            case 97:case 98:case 99:case 100:case 101:case 102:case 103:case 104:case 105:case 106:
+                //Si es el último vicio y al final se "arrepiente" de tener vicios
+                if (item.getIdPregunta() == ultimoVicioParaGambling12Meses && Logica.finalmenteSinVicios()) {
+                    return 107;
+                }
+                break;
         }
-        return siguiente;
+        return siguiente;   //Si no hay ningún cambio 'siguiente' sigue como estaba
     }
+
+    /**
+     * Cuando finaliza el 'Gambling 12 meses' puede darse el caso de que al final se arrepienta de
+     * "no tener vicios". Es decir, que primero diga en 'Tabla vida' que tiene algún vicio pero que
+     * a la hora de valorarlo por tiempos en 'Gambling 12 meses' diga que no haya jugado nunca
+     *
+     * @return booleano  Si tiene algún vicio o ninguno
+     */
+    private static boolean finalmenteSinVicios() {
+        return false;
+    }
+
 
     public static boolean grabarRespuestas(Item item, RadioGroup radioGroup, List<RespuestaValor> listaRespuestasRadioButton, Context contexto, Activity activity, boolean algunVicio, HashMap<Integer, Integer> mapaRespuestasTablaVida) {
         //Si viene de la tabla vida
@@ -51,7 +81,7 @@ public class Logica {
 
                 //Buscamos el radio button seleccionado
                 boolean buscando = true;
-                for (int i = 0; listaRespuestasRadioButton.size() > 0 && buscando; i++) {
+                for (int i=0; listaRespuestasRadioButton.size()>0&&buscando; i++) {
                     RespuestaValor respuestaValor = listaRespuestasRadioButton.get(i);
                     if (respuestaValor.getId() == opcionSeleccionada) {
                         buscando = false;
@@ -65,12 +95,13 @@ public class Logica {
 
 
     private static boolean guardarRespuestasTablaVida(Activity activity, boolean algunVicio, HashMap<Integer, Integer> mapaRespuestasTablaVida) {
-        for (int i = 11; i < 43; i++) {
+        for (int i=11; i<43; i++) {
             CheckBox checkBox = (CheckBox) activity.findViewById(i);
             boolean escogido = checkBox.isChecked();
             int escogidoEntero = (escogido) ? 1 : 0;
             if (escogido) {
                 algunVicio = true;
+                ultimoVicioParaGambling12Meses = i + 64;
             }
             mapaRespuestasTablaVida.put(Integer.valueOf(i), Integer.valueOf(escogidoEntero));
         }
