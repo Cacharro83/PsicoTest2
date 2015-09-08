@@ -240,9 +240,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			for (int i=0; i<cursor.getCount(); i++) {
 				RespuestaRellenada respu = new RespuestaRellenada();
 
-				int id_respuesta = Integer.parseInt(cursor.getString(0));
+				int id_respuesta;
+				if(cursor.getString(0) == null) {
+					id_respuesta = -1;
+				} else {
+					id_respuesta = Integer.parseInt(cursor.getString(0));
+				}
+
 				respu.setSiguiente(Integer.parseInt(cursor.getString(1)));
-				respu.setValor(Float.valueOf(cursor.getString(2)));
+				if (cursor.getString(2) == null) {
+					respu.setValor(0f);
+				} else {
+					respu.setValor(Float.valueOf(cursor.getString(2)));
+				}
 
 				String[] camposRespuestaTexto = new String[1];
 				camposRespuestaTexto[0] = "Texto";
