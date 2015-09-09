@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.endel.psicotest.baseDatos.DataBaseHelper;
+import com.endel.psicotest.vista.LayoutBasico;
 import com.endel.psicotest.vista.RespuestaValor;
 
 import java.util.HashMap;
@@ -17,9 +18,9 @@ import java.util.List;
  * Created by Javier on 07/09/2015.
  */
 public class Logica {
-    public static int ultimoVicioParaGambling12Meses, idUsuario = 1;
+    public static int ultimoVicio, vicioActual, idUsuario = 1;
 
-    public static int averiguarSiguiente(Item item, HashMap<Integer, Integer> mapaRespuestasTablaVida, int siguiente, boolean algunVicio) {
+    public static int averiguarSiguiente(Item item, int siguiente, boolean algunVicio) {
         Integer respuesta;
 
         switch (item.getIdPregunta()) {
@@ -30,8 +31,9 @@ public class Logica {
                 } else {
                     //En función del vicio te redirige al primer 'Gambling edad' adecuado
                     for (int i=11; i<43; i++) {
-                        respuesta = mapaRespuestasTablaVida.get(Integer.valueOf(i));
+                        respuesta = LayoutBasico.mapaRespuestasTablaVida.get(Integer.valueOf(i));
                         if (respuesta.intValue() > 0) {
+                            vicioActual = i;
                             return i + 32;  //Gambling edad
                         }
                     }
@@ -46,12 +48,37 @@ public class Logica {
             case 86:case 87:case 88:case 89:case 90:case 91:case 92:case 93:case 94:case 95:case 96:
             case 97:case 98:case 99:case 100:case 101:case 102:case 103:case 104:case 105:case 106:
                 //Si es el último vicio y al final se "arrepiente" de tener vicios
-                if (item.getIdPregunta() == ultimoVicioParaGambling12Meses && Logica.finalmenteSinVicios()) {
+                if (item.getIdPregunta() == ultimoVicio+64 && Logica.finalmenteSinVicios()) {
                     return 107;
                 }
                 break;
+
+            /*
+             * Si llega al 'Gambling Compañía' (172-203) no debe saltar a la siguiente sección
+             * 'Gambling Motives' a no ser que sea el último vicio, debería recorrer el siguiente
+             * vicio
+             */
+            case 172:case 173:case 174:case 175:case 176:case 177:case 178:case 179:case 180:
+            case 181:case 182:case 183:case 184:case 185:case 186:case 187:case 188:case 189:
+            case 190:case 191:case 192:case 193:case 194:case 195:case 196:case 197:case 198:
+            case 199:case 200:case 201:case 202:case 203:
+                if (item.getIdPregunta() != ultimoVicio+161) {
+                    return buscarSiguienteVicio();
+                }
         }
         return siguiente;   //Si no hay ningún cambio 'siguiente' sigue como estaba
+    }
+
+    private static int buscarSiguienteVicio() {
+        int respuesta;
+        for (int i=vicioActual+1; i<43; i++) {
+            respuesta = LayoutBasico.mapaRespuestasTablaVida.get(Integer.valueOf(i));
+            if (respuesta > 0) {
+                vicioActual = i;
+                return i + 32;  //Gambling edad
+            }
+        }
+        return 0;   //Caso improbable
     }
 
     /**
@@ -66,12 +93,12 @@ public class Logica {
     }
 
 
-    public static boolean grabarRespuestas(Item item, RadioGroup radioGroup, List<RespuestaValor> listaRespuestasRadioButton, Context contexto, Activity activity, boolean algunVicio, HashMap<Integer, Integer> mapaRespuestasTablaVida) {
+    public static boolean grabarRespuestas(Item item, RadioGroup radioGroup, List<RespuestaValor> listaRespuestasRadioButton, Context contexto, Activity activity, boolean algunVicio) {
         DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
 
         //Si viene de la tabla vida
         if (item.getIdPregunta() == 11) {
-            algunVicio = guardarRespuestasTablaVida(activity, algunVicio, mapaRespuestasTablaVida);
+            algunVicio = guardarRespuestasTablaVida(activity, algunVicio, LayoutBasico.mapaRespuestasTablaVida);
             return algunVicio;
         }
 
@@ -109,7 +136,7 @@ public class Logica {
             int escogidoEntero = (escogido) ? 1 : 0;
             if (escogido) {
                 algunVicio = true;
-                ultimoVicioParaGambling12Meses = i + 64;
+                ultimoVicio = i;
             }
             mapaRespuestasTablaVida.put(Integer.valueOf(i), Integer.valueOf(escogidoEntero));
         }

@@ -342,7 +342,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		cursor.close();
 
 
-		//ultimaPregunta = 75; //desarrollo
+		//ultimaPregunta = 11; //desarrollo
 		return ultimaPregunta;
 	}
 

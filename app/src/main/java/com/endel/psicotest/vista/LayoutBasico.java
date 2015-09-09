@@ -42,7 +42,7 @@ public class LayoutBasico {
     public Context contexto;
     public Activity activity;
     public List<RespuestaValor> listaRespuestasRadioButton = new ArrayList();
-    public HashMap<Integer, Integer> mapaRespuestasTablaVida = new HashMap<>();
+    public static HashMap<Integer, Integer> mapaRespuestasTablaVida = new HashMap<>();
 
     RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
     final TableRow.LayoutParams parametrosCelda = new TableRow.LayoutParams(0, AbsListView.LayoutParams.WRAP_CONTENT, 1); //ancho normal
@@ -263,7 +263,7 @@ public class LayoutBasico {
             @Override
             public void onClick(View v) {
                 if (Logica.validarRespuestas(item, activity, contexto, radioGroup)) {
-                    algunVicio = Logica.grabarRespuestas(item, radioGroup, listaRespuestasRadioButton, contexto, activity, algunVicio, mapaRespuestasTablaVida);
+                    algunVicio = Logica.grabarRespuestas(item, radioGroup, listaRespuestasRadioButton, contexto, activity, algunVicio);
                     pintarNuevaPregunta(item);
                 }
             }
@@ -281,7 +281,7 @@ public class LayoutBasico {
         }
 
         //Casos especiales
-        siguiente = Logica.averiguarSiguiente(item, mapaRespuestasTablaVida, siguiente, algunVicio);
+        siguiente = Logica.averiguarSiguiente(item, siguiente, algunVicio);
 
         relativeLayout = layoutBasico.pintarVista(contexto, siguiente);
         ScrollView scrollView = new ScrollView(contexto);
@@ -340,7 +340,7 @@ public class LayoutBasico {
         if (esCabecera) {
             celda.setTextSize(23);
         } else {
-            //ludopatías
+            //vicios
             celda.setTextSize(16);
         }
         celda.setText(texto);
