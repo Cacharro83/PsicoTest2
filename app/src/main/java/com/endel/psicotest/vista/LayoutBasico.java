@@ -300,6 +300,7 @@ public class LayoutBasico {
     }
 
     private void pintarCajaTexto() {
+        RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT, AbsListView.LayoutParams.WRAP_CONTENT);   //no quitar, casca
         final EditText editText = new EditText(contexto);
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
 
