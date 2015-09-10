@@ -253,7 +253,11 @@ public class LayoutBasico {
         final Button botonSiguiente = new Button(contexto);
         id_actual = ++id_anterior;
         botonSiguiente.setId(id_actual);
-        botonSiguiente.setText(contexto.getResources().getText(R.string.layoutBasico_botonSiguiente) + Integer.toString(id_anterior));
+        if (item.getIdPregunta() == 999) {
+            botonSiguiente.setText(contexto.getResources().getText(R.string.layoutBasico_botonSiguienteFIN));
+        } else {
+            botonSiguiente.setText(contexto.getResources().getText(R.string.layoutBasico_botonSiguiente));
+        }
         botonSiguiente.setTextColor(COLOR_RESPUESTA);
         botonSiguiente.setTextSize(20);
         botonSiguiente.setTypeface(null, Typeface.ITALIC);
@@ -262,10 +266,15 @@ public class LayoutBasico {
         botonSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Logica.validarRespuestas(item, activity, contexto, radioGroup)) {
-                    algunVicio = Logica.grabarRespuestas(item, radioGroup, listaRespuestasRadioButton, contexto, activity, algunVicio);
-                    pintarNuevaPregunta(item);
+                //Si dio al botón de 'Finalizar test'
+                if (item.getIdPregunta() == 999) {
+                    System.exit(0);
                 }
+
+                    if (Logica.validarRespuestas(item, activity, contexto, radioGroup)) {
+                        algunVicio = Logica.grabarRespuestas(item, radioGroup, listaRespuestasRadioButton, contexto, activity, algunVicio);
+                        pintarNuevaPregunta(item);
+                    }
             }
         });
 

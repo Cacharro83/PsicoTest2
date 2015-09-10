@@ -6,4 +6,5 @@
 
     <!-- LAYOUT BÁSICO DE PREGUNTAS -->
     <string name="layoutBasico_botonSiguiente">Siguiente >> </string>
+    <string name="layoutBasico_botonSiguienteFIN">FINALIZAR TEST</string>
 </resources>
