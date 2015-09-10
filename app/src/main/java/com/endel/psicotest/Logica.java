@@ -128,7 +128,7 @@ public class Logica {
 
         //Si viene de la tabla vida
         if (item.getIdPregunta() == 11) {
-            algunVicio = guardarRespuestasTablaVida(activity, algunVicio, LayoutBasico.mapaRespuestasTablaVida);
+            algunVicio = guardarRespuestasTablaVida(activity, algunVicio, LayoutBasico.mapaRespuestasTablaVida, contexto);
             return algunVicio;
         }
 
@@ -136,7 +136,7 @@ public class Logica {
         switch (item.getIdTipo()) {
             case 1: //Contador
                 TextView textView = (TextView) activity.findViewById(3);  //ojo en el caso de los 2 contadores
-                dataBaseHelper.insertarRespuestaUsuario(item, idUsuario, textView.getText().toString());
+                dataBaseHelper.insertarRespuestaUsuario(item.getIdPregunta(), idUsuario, textView.getText().toString());
                 break;
             case 2: //RadioButton
                 int opcionSeleccionada = radioGroup.getCheckedRadioButtonId();
@@ -148,7 +148,7 @@ public class Logica {
                     if (respuestaValor.getId() == opcionSeleccionada) {
                         buscando = false;
                         Toast.makeText(contexto, String.valueOf("ID: " + respuestaValor.getId() + " | VALOR: " + respuestaValor.getValor() + " | SIGUIENTE: " + respuestaValor.getSiguiente()), Toast.LENGTH_LONG).show();
-                        dataBaseHelper.insertarRespuestaUsuario(item, idUsuario, String.valueOf(respuestaValor.getValor()));
+                        dataBaseHelper.insertarRespuestaUsuario(item.getIdPregunta(), idUsuario, String.valueOf(respuestaValor.getValor()));
                     }
                 }
                 break;
@@ -159,7 +159,8 @@ public class Logica {
     }
 
 
-    private static boolean guardarRespuestasTablaVida(Activity activity, boolean algunVicio, HashMap<Integer, Integer> mapaRespuestasTablaVida) {
+    private static boolean guardarRespuestasTablaVida(Activity activity, boolean algunVicio, HashMap<Integer, Integer> mapaRespuestasTablaVida, Context contexto) {
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
         for (int i=11; i<43; i++) {
             CheckBox checkBox = (CheckBox) activity.findViewById(i);
             boolean escogido = checkBox.isChecked();
@@ -168,7 +169,8 @@ public class Logica {
                 algunVicio = true;
                 ultimoVicio = i;
             }
-            mapaRespuestasTablaVida.put(Integer.valueOf(i), Integer.valueOf(escogidoEntero));
+            mapaRespuestasTablaVida.put(Integer.valueOf(i), Integer.valueOf(escogidoEntero));   //debería de desaparecer
+            dataBaseHelper.insertarRespuestaUsuario(Integer.valueOf(i), idUsuario, Integer.valueOf(escogidoEntero).toString());
         }
         return algunVicio;
     }

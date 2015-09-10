@@ -343,7 +343,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		cursor.close();
 
 
-		ultimaPregunta = 283; //desarrollo
+		//ultimaPregunta = 11; //desarrollo
 		return ultimaPregunta;
 	}
 
@@ -406,13 +406,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		Log.i("SALGO", "insertarUsuarioNuevo");
 	}
 
-	public void insertarRespuestaUsuario(Item item, int idUsuario, String valor) {
+	public void insertarRespuestaUsuario(int idPregunta, int idUsuario, String valor) {
 		Log.i("ENTRO", "insertarRespuestaUsuario");
 
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put("IdRespuesta", item.getIdPregunta());
+		values.put("IdRespuesta", idPregunta);
 		values.put("IdUsuario", idUsuario);
 		values.put("valor", valor);
 		db.insert("respuestasUsuarioNM", null, values);
