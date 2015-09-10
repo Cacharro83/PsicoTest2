@@ -2,6 +2,7 @@ package com.endel.psicotest;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -19,8 +20,16 @@ import java.util.List;
  */
 public class Logica {
     public static int ultimoVicio, vicioActual, idUsuario = 1;
+    public static boolean hayViciosConDinero = false;
 
-    public static int averiguarSiguiente(Item item, int siguiente, boolean algunVicio, Context contexto) {
+    public static int averiguarSiguiente(Item item, int siguiente, boolean algunVicio, Context contexto, View viewById) {
+        String respuestaDada = "";
+        if (item.getIdTipo() == 1) {
+            TextView campo = (TextView) viewById;
+            respuestaDada = campo.getText().toString();
+        }
+
+
         Integer respuesta;
 
         switch (item.getIdPregunta()) {
@@ -34,6 +43,12 @@ public class Logica {
                         respuesta = LayoutBasico.mapaRespuestasTablaVida.get(Integer.valueOf(i));
                         if (respuesta.intValue() > 0) {
                             vicioActual = i;
+
+                            //Si hay vicio impar hay que hacer preguntas 220-240
+                            if (vicioActual%2!=0) {
+                                hayViciosConDinero = true;
+                            }
+
                             return i + 32;  //Gambling edad
                         }
                     }
@@ -49,9 +64,26 @@ public class Logica {
             case 97:case 98:case 99:case 100:case 101:case 102:case 103:case 104:case 105:case 106:
                 //Si es el último vicio y al final se "arrepiente" de tener vicios
                 DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
-                if (item.getIdPregunta() == ultimoVicio+64 && dataBaseHelper.finalmenteSinVicios(idUsuario, contexto)) {
+                if (esUltimoVicio(item, ultimoVicio) && dataBaseHelper.finalmenteSinVicios(idUsuario, contexto)) {
                     return 107;
                 }
+
+                //Si responde '0' no tiene sentido llevar a la siguiente asignada (108-139)
+                //Se le lleva al próximo vicio
+                if (respuestaDada.equals("0")) {
+                    if (esUltimoVicio(item, ultimoVicio)) {
+                        //Si hay vicios con dinero hay que ir a los SOGS-RA y DSM-IV-MR-J
+                        if (hayViciosConDinero) {
+                            return 220; //SOGS-RA y DSM-IV-MR-J
+                        } else {
+                            return 241; //Gambling motives
+                        }
+
+                    } else {
+                        return buscarSiguienteVicio();
+                    }
+                }
+
                 break;
 
             /*
@@ -68,6 +100,14 @@ public class Logica {
                 }
         }
         return siguiente;   //Si no hay ningún cambio 'siguiente' sigue como estaba
+    }
+
+    private static boolean esUltimoVicio(Item item, int ultimoVicio) {
+        if (item.getIdPregunta()==ultimoVicio+64) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private static int buscarSiguienteVicio() {

@@ -281,7 +281,7 @@ public class LayoutBasico {
         }
 
         //Casos especiales
-        siguiente = Logica.averiguarSiguiente(item, siguiente, algunVicio, contexto);
+        siguiente = Logica.averiguarSiguiente(item, siguiente, algunVicio, contexto, activity.findViewById(3));
 
         relativeLayout = layoutBasico.pintarVista(contexto, siguiente);
         ScrollView scrollView = new ScrollView(contexto);
