@@ -147,7 +147,7 @@ public class Logica {
                     RespuestaValor respuestaValor = listaRespuestasRadioButton.get(i);
                     if (respuestaValor.getId() == opcionSeleccionada) {
                         buscando = false;
-                        Toast.makeText(contexto, String.valueOf("ID: " + respuestaValor.getId() + " | VALOR: " + respuestaValor.getValor() + " | SIGUIENTE: " + respuestaValor.getSiguiente()), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(contexto, String.valueOf("ID: " + respuestaValor.getId() + " | VALOR: " + respuestaValor.getValor() + " | SIGUIENTE: " + respuestaValor.getSiguiente()), Toast.LENGTH_LONG).show();
                         dataBaseHelper.insertarRespuestaUsuario(item.getIdPregunta(), idUsuario, String.valueOf(respuestaValor.getValor()));
                     }
                 }

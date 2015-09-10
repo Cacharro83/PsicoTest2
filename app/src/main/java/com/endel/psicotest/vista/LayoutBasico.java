@@ -213,7 +213,8 @@ public class LayoutBasico {
         id_actual = id_anterior + 1;
         radioButton.setId(id_actual + 100); //para que no solape con el 'Siguiente' y se trabe el radioGroup
         float valor = item.getRespuestas().get(numeroRespuesta).getValor();
-        radioButton.setText("radioButton ID:" + id_actual + " VALOR: " + valor + " | " + item.getRespuestas().get(numeroRespuesta).getTextoRespuesta());
+        //radioButton.setText("radioButton ID:" + id_actual + " VALOR: " + valor + " | " + item.getRespuestas().get(numeroRespuesta).getTextoRespuesta());
+        radioButton.setText(item.getRespuestas().get(numeroRespuesta).getTextoRespuesta());
 
         RespuestaValor respuestaValor = new RespuestaValor(radioButton.getId(), valor, siguiente);
 
@@ -227,7 +228,7 @@ public class LayoutBasico {
         final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         id_actual = id_anterior + 1;
         checkBox.setId(id_actual);
-        checkBox.setText("cajita. ID:" + id_actual);
+        //checkBox.setText("cajita. ID:" + id_actual);
         checkBox.setTextColor(COLOR_RESPUESTA);
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
         relativeLayout.addView(checkBox, parametros);
@@ -270,7 +271,6 @@ public class LayoutBasico {
                 if (item.getIdPregunta() == 999) {
                     System.exit(0);
                 }
-
                     if (Logica.validarRespuestas(item, activity, contexto, radioGroup)) {
                         algunVicio = Logica.grabarRespuestas(item, radioGroup, listaRespuestasRadioButton, contexto, activity, algunVicio);
                         pintarNuevaPregunta(item);
@@ -301,7 +301,8 @@ public class LayoutBasico {
     private void pintarPregunta(Item item) {
         TextView pregunta = new TextView(contexto);
         pregunta.setId(id_actual);
-        pregunta.setText(item.getIdPregunta() + ") " + item.getTextoPregunta() + " | tipoPregunta: " + item.getIdTipo());
+        //pregunta.setText(item.getIdPregunta() + ") " + item.getTextoPregunta() + " | tipoPregunta: " + item.getIdTipo());
+        pregunta.setText(item.getIdPregunta() + ") " + item.getTextoPregunta());
         pregunta.setTextColor(Color.BLACK);
         pregunta.setTextSize(30);
         pregunta.setTypeface(null, Typeface.BOLD);
