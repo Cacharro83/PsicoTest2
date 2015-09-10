@@ -20,7 +20,7 @@ import java.util.List;
 public class Logica {
     public static int ultimoVicio, vicioActual, idUsuario = 1;
 
-    public static int averiguarSiguiente(Item item, int siguiente, boolean algunVicio) {
+    public static int averiguarSiguiente(Item item, int siguiente, boolean algunVicio, Context contexto) {
         Integer respuesta;
 
         switch (item.getIdPregunta()) {
@@ -48,7 +48,8 @@ public class Logica {
             case 86:case 87:case 88:case 89:case 90:case 91:case 92:case 93:case 94:case 95:case 96:
             case 97:case 98:case 99:case 100:case 101:case 102:case 103:case 104:case 105:case 106:
                 //Si es el último vicio y al final se "arrepiente" de tener vicios
-                if (item.getIdPregunta() == ultimoVicio+64 && Logica.finalmenteSinVicios()) {
+                DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
+                if (item.getIdPregunta() == ultimoVicio+64 && dataBaseHelper.finalmenteSinVicios(idUsuario, contexto)) {
                     return 107;
                 }
                 break;
@@ -79,17 +80,6 @@ public class Logica {
             }
         }
         return 0;   //Caso improbable
-    }
-
-    /**
-     * Cuando finaliza el 'Gambling 12 meses' puede darse el caso de que al final se arrepienta de
-     * "no tener vicios". Es decir, que primero diga en 'Tabla vida' que tiene algún vicio pero que
-     * a la hora de valorarlo por tiempos en 'Gambling 12 meses' diga que no haya jugado nunca
-     *
-     * @return booleano  Si tiene algún vicio o ninguno
-     */
-    private static boolean finalmenteSinVicios() {
-        return false;
     }
 
 

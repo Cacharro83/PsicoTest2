@@ -13,6 +13,7 @@ import android.util.Log;
 import com.endel.psicotest.Colegio;
 import com.endel.psicotest.Item;
 import com.endel.psicotest.RespuestaRellenada;
+import com.endel.psicotest.vista.LayoutBasico;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,7 +22,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
-	
+
 	// The Android's default system path of your application database.
 	// Context.getFilesDir().getPath()
 	private static String DB_PATH = "/data/data/com.example.psicotestv1/databases/";
@@ -29,19 +30,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 	private SQLiteDatabase myDataBase;
 	private final Context myContext;
-	
+
 	public final String TABLA_CENTROS = "centros";
 	public final String ID_CENTRO = "IdCentro";
 	public final String NOMBRE_CENTRO = "Nombre";
-	
+
 	public final String TABLA_RESPUESTAUSUARIO = "respuestasusuario";
 	public final String RESPUESTAUSUARIODELAY = "respuestausuariodelay";
 	public final String PAISES = "paisestexto";
-	
+
 	public final String TABLA_PREGUNTAS = "itemtexto";
 	public final String ID_ITEM = "IdItem";
 	public final String TEXTO = "Texto";
-	
+
 	public final String TABLA_RESPUESTAUSUARIODELAY = "respuestausuariodelay";
 	public final String ID = "id";
 	public final String INDEXLOTE = "IndexLote";
@@ -49,26 +50,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	public final String MIN = "Min";
 	public final String MAX = "Max";
 	public final String ELECCION = "Eleccion";
-	
+
 	public final String TABLA_RESPUESTATEXTO = "respuestatexto";
 	public final String ID_RESPUESTA = "IdRespuesta";
 	public final String FOTO = "Foto";
-	
+
 	public final String TABLA_ERRORES = "errortexto";
 	public final String ID_ERROR = "IdError";
-	
+
 	public final String TABLA_AVISOS = "avisostexto";
 	public final String ID_AVISO = "IdAviso";
-	
+
 	public final String TABLA_PAISES = "paisestexto";
 	public final String ID_PAIS = "IdPais";
-	
+
 	public final String TABLA_STROOPTEXTO = "strooptexto";
 	public final String ID_STROOP = "IdStroop";
-	
+
 	public final String TABLA_DELAYTEXTO = "delaytexto";
 	public final String ID_DELAY = "IdDelay";
-	
+
 	public final String TABLA_IDIOMA = "idioma";
 	public final String ID_IDIOMA = "IdIdiomaActual";
 	public final String NOMBRE = "Nombre";
@@ -103,7 +104,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	/**
 	 * Check if the database already exist to avoid re-copying the file each
 	 * time you open the application.
-	 * 
+	 *
 	 * @return true if it exists, false if it doesn't
 	 */
 	private boolean checkDataBase() {
@@ -169,7 +170,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		catch(SQLiteException e){
 			e.printStackTrace();
 		}
-		
+
 
 	}
 
@@ -182,27 +183,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
 	}
-	
+
 	public String queryItem(int id){
-		
+
 		String selectQuery = "SELECT IdItem FROM items WHERE IdItem = " + String.valueOf(id);
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = null;
 		cursor = db.rawQuery(selectQuery, null);
-		
+
 		cursor.moveToFirst();
-		
+
 		String aux = cursor.getString(0);
 		return aux;
 	}
-	
+
 	public Item GetItemId(Integer Id) {
 		Log.i("ENTRO", "GetItemId");
 		Cursor cursor = null;
 		Item item_relleno = new Item();
-		
+
 		String error = new String();
-		
+
 		item_relleno.setIdPregunta(Id);
 
 		String[] camposAPedirItemTexto = new String[2];
@@ -215,7 +216,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		ArrayList<RespuestaRellenada> respuestas = new ArrayList<RespuestaRellenada>();
 
 		SQLiteDatabase db = this.getReadableDatabase();
-		
+
 		try {
 			cursor = db.query("itemtexto", camposAPedirItemTexto, "IdItem=?", parametros, null, null, null);
 			while(cursor.moveToNext()) {
@@ -297,7 +298,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 							while(c4.moveToNext())
 								respu.setTextoError(c4.getString(0));
 							c4.close();
-							
+
 						}
 
 						catch (Exception e) {
@@ -320,7 +321,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		catch (Exception e) {
 			e.printStackTrace();;
 		}
-		
+
 		item_relleno.setRespuestas(respuestas);
 		Log.i("SALGO", "GetItemId");
 		return item_relleno;
@@ -333,7 +334,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 				new String[]{String.valueOf(idUsuario)}, null, null, null, null);
 		int ultimaPregunta;
 		if (cursor!=null && cursor.moveToFirst()) {
-			 ultimaPregunta = cursor.getInt(0);
+			ultimaPregunta = cursor.getInt(0);
 		} else {
 			insertarUsuarioNuevo(idUsuario);
 			ultimaPregunta = 1;
@@ -342,48 +343,52 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		cursor.close();
 
 
-		//ultimaPregunta = 11; //desarrollo
+		ultimaPregunta = 11; //desarrollo
 		return ultimaPregunta;
 	}
 
-
+	/*
 	public String getAviso(int i) {
 		Log.i("ENTRO", "getAviso");
 		SQLiteDatabase db = this.getReadableDatabase();
-		
+
+		String[] parametros = new String[1];
+		parametros[0] = String.valueOf(Id);
+
 		Cursor cursor = db.query(TABLA_AVISOS, new String[]{TEXTO}, "IdAviso" + "=?",
 				new String[]{String.valueOf(i)}, null, null, null, null);
-		
+
 		String aux = new String();
-		
-	    if (cursor != null){
-	        cursor.moveToFirst();
-	        aux = cursor.getString(0);
-	        cursor.close();
-	        Log.i("SALGO", "getAviso");
-	        return aux;
-	    }
-	    else{
-	    	db.close();
-	    	Log.i("SALGO", "getAviso");
-	    	return "";
-	    }
+
+		if (cursor != null){
+			cursor.moveToFirst();
+			aux = cursor.getString(0);
+			cursor.close();
+			Log.i("SALGO", "getAviso");
+			return aux;
+		}
+		else{
+			db.close();
+			Log.i("SALGO", "getAviso");
+			return "";
+		}
 	}
-	
-public ArrayList <Colegio> getListaColegios(){
+	*/
+
+	public ArrayList <Colegio> getListaColegios(){
 		Log.i("ENTRO", "getListaColegios");
-		
+
 		ArrayList<Colegio> listaColegios = new ArrayList<Colegio>();
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.query(TABLA_CENTROS, new String[] {"IdCentro", "Nombre"}, null, null, null, null, null);
 		while(cursor.moveToNext()){
 			listaColegios.add(new Colegio(cursor.getInt(0), cursor.getString(1)));
 		}
-//		db.close();
+//    db.close();
 		cursor.close();
 		Log.i("SALGO", "getListaColegios");
 		return listaColegios;
-		
+
 	}
 
 
@@ -432,5 +437,51 @@ public ArrayList <Colegio> getListaColegios(){
 		db.close();
 		Log.i("SALGO", "aumentarUltimaPregunta");
 	}
+
+
+	/**
+	 * Cuando finaliza el 'Gambling 12 meses' puede darse el caso de que al final se arrepienta de
+	 * "no tener vicios". Es decir, que primero diga en 'Tabla vida' que tiene algún vicio pero que
+	 * a la hora de valorarlo por tiempos en 'Gambling 12 meses' diga que no haya jugado nunca
+	 *
+	 * cuando contesta 0 en todos los respuestas del 75 al 106.
+	 *
+	 * @return booleano  Si tiene algún vicio o ninguno
+	 */
+	public boolean finalmenteSinVicios(int idUsuario, Context contexto) {
+		Log.i("ENTRO", "finalmenteSinVicios");
+		boolean finalmenteSinVicios;
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query("respuestasUsuarioNM", new String[]{"valor"}, "IdUsuario" + "=? AND IdRespuesta BETWEEN 75 AND 106 AND valor!=0",
+				new String[]{String.valueOf(idUsuario)}, null, null, null, null);
+		if (cursor!=null && cursor.moveToFirst()) {
+			finalmenteSinVicios = false;
+		} else {
+			finalmenteSinVicios = true;
+		}
+		db.close();
+		cursor.close();
+
+      /*
+            SELECT * FROM respuestasUsuarioNM
+            WHERE IdUsuario = 1
+               AND IdRespuesta BETWEEN 75 AND 106
+               AND valor != 0
+       */
+
+		Log.i("SALGO", "finalmenteSinVicios");
+		return finalmenteSinVicios;
+	}
 }
 
+   /*
+      Cursor c = db.query(
+            "Quotes",  //Nombre de la tabla
+            null,  //Lista de Columnas a consultar
+            null,  //Columnas para la clausula WHERE
+            null,  //Valores a comparar con las columnas del WHERE
+            null,  //Agrupar con GROUP BY
+            null,  //Condición HAVING para GROUP BY
+            null  //Clausula ORDER BY
+      );
+   */

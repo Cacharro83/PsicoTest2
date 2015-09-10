@@ -281,7 +281,7 @@ public class LayoutBasico {
         }
 
         //Casos especiales
-        siguiente = Logica.averiguarSiguiente(item, siguiente, algunVicio);
+        siguiente = Logica.averiguarSiguiente(item, siguiente, algunVicio, contexto);
 
         relativeLayout = layoutBasico.pintarVista(contexto, siguiente);
         ScrollView scrollView = new ScrollView(contexto);
@@ -306,7 +306,7 @@ public class LayoutBasico {
 
         id_actual = id_anterior + 1;
         editText.setId(id_actual);
-        editText.setText("Texto. ID: " + id_actual);
+        editText.setText("0");
 
         editText.setTextColor(COLOR_RESPUESTA);
         editText.setTextSize(23);
