@@ -16,6 +16,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -29,12 +30,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.R.layout.simple_spinner_item;
+
 
 /**
  * Created by JavierH on 25/08/2015.
  */
 public class LayoutBasico {
-    public final int COLOR_RESPUESTA = Color.BLUE;
+    public static final int COLOR_RESPUESTA = Color.BLUE, TAMANO_RESPUESTA = 20;
     public int id_actual = 1, id_anterior = 1, siguiente, idPregunta, contadorIDsTablaVida = 11, idUsuario;
     public boolean algunVicio = false;
     public RelativeLayout relativeLayout;
@@ -105,7 +108,7 @@ public class LayoutBasico {
 
             switch (id_pregunta_tipo) {
                 case 1: //Contador
-                    pintarCajaTexto();
+                    pintarCombo();
                     break;
                 case 2: //Radiobutton
                     pintarRadioButton(numeroRespuesta, item);   //'item' necesario para obtener los valores
@@ -133,6 +136,32 @@ public class LayoutBasico {
             relativeLayout.addView(radioGroup, parametrosRadioButton);
             id_anterior = id_actual;
         }
+    }
+
+    private void pintarCombo() {
+        RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT, AbsListView.LayoutParams.WRAP_CONTENT);   //no quitar, casca
+        Spinner spinner = new Spinner(contexto);
+        int valorMinimo=0, valorMaximo=50;
+        String[] valores = rellenarSpinner(valorMinimo, valorMaximo);
+
+        parametros.addRule(RelativeLayout.BELOW, id_anterior);
+        id_actual = id_anterior + 1;
+
+        AdaptadorPersonalizado<CharSequence> adapter = new AdaptadorPersonalizado<CharSequence>(contexto, simple_spinner_item, valores);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setMinimumWidth(100);
+        spinner.setId(id_actual);
+        spinner.setAdapter(adapter);
+        relativeLayout.addView(spinner, parametros);
+
+    }
+
+    private String[] rellenarSpinner(int valorMinimo, int valorMaximo) {
+        String[] camposSpinner = new String[(valorMaximo+1)-valorMinimo];
+        for (int i=valorMinimo, indice=0; i<=valorMaximo; i++) {
+            camposSpinner[indice++] = String.valueOf(i);
+        }
+        return camposSpinner;
     }
 
     private void pintarTablaVida() {
@@ -179,14 +208,14 @@ public class LayoutBasico {
     }
 
     private TableRow pintarFila(String titulo) {
-        TableRow tableRow3 = new TableRow(contexto);
-        tableRow3.addView(pintarCabeceraTablaVida(titulo, false), parametrosCeldaDoble);
+        TableRow fila = new TableRow(contexto);
+        fila.addView(pintarCabeceraTablaVida(titulo, false), parametrosCeldaDoble);
 
         //Pintar celdas
         for (int i=0; i<4; i++) {
-            tableRow3.addView(pintarCelda(contexto), parametrosCelda);
+            fila.addView(pintarCelda(contexto), parametrosCelda);
         }
-        return tableRow3;
+        return fila;
     }
 
     private CheckBox pintarCelda(Context contexto) {
@@ -215,6 +244,7 @@ public class LayoutBasico {
         float valor = item.getRespuestas().get(numeroRespuesta).getValor();
         //radioButton.setText("radioButton ID:" + id_actual + " VALOR: " + valor + " | " + item.getRespuestas().get(numeroRespuesta).getTextoRespuesta());
         radioButton.setText(item.getRespuestas().get(numeroRespuesta).getTextoRespuesta());
+        radioButton.setTextSize(TAMANO_RESPUESTA);
 
         RespuestaValor respuestaValor = new RespuestaValor(radioButton.getId(), valor, siguiente);
 
@@ -260,7 +290,7 @@ public class LayoutBasico {
             botonSiguiente.setText(contexto.getResources().getText(R.string.layoutBasico_botonSiguiente));
         }
         botonSiguiente.setTextColor(COLOR_RESPUESTA);
-        botonSiguiente.setTextSize(20);
+        botonSiguiente.setTextSize(TAMANO_RESPUESTA);
         botonSiguiente.setTypeface(null, Typeface.ITALIC);
         botonSiguiente.setLayoutParams(parametros);
 
@@ -319,7 +349,7 @@ public class LayoutBasico {
         editText.setText("0");
 
         editText.setTextColor(COLOR_RESPUESTA);
-        editText.setTextSize(23);
+        editText.setTextSize(TAMANO_RESPUESTA);
         editText.setTypeface(null, Typeface.ITALIC);
         editText.setLayoutParams(parametros);
         relativeLayout.addView(editText, parametros);

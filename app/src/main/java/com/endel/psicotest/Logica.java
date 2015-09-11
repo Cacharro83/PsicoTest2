@@ -5,8 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.Spinner;
 
 import com.endel.psicotest.baseDatos.DataBaseHelper;
 import com.endel.psicotest.vista.LayoutBasico;
@@ -25,8 +24,8 @@ public class Logica {
     public static int averiguarSiguiente(Item item, int siguiente, boolean algunVicio, Context contexto, View viewById) {
         String respuestaDada = "";
         if (item.getIdTipo() == 1) {
-            TextView campo = (TextView) viewById;
-            respuestaDada = campo.getText().toString();
+            Spinner spinner = (Spinner) viewById;
+            respuestaDada = spinner.getSelectedItem().toString();
         }
 
 
@@ -135,8 +134,8 @@ public class Logica {
 
         switch (item.getIdTipo()) {
             case 1: //Contador
-                TextView textView = (TextView) activity.findViewById(3);  //ojo en el caso de los 2 contadores
-                dataBaseHelper.insertarRespuestaUsuario(item.getIdPregunta(), idUsuario, textView.getText().toString());
+                Spinner spinner = (Spinner) activity.findViewById(3);  //ojo en el caso de los 2 contadores
+                dataBaseHelper.insertarRespuestaUsuario(item.getIdPregunta(), idUsuario, spinner.getSelectedItem().toString());
                 break;
             case 2: //RadioButton
                 int opcionSeleccionada = radioGroup.getCheckedRadioButtonId();
@@ -183,16 +182,6 @@ public class Logica {
         for (int numeroRespuesta=0; numeroRespuesta<numeroRespuestas; numeroRespuesta++) {
             //1-Contadores | 2-RadioButton | 3-Fecha | 4-TextView | 5-CheckBox
             switch (id_pregunta_tipo) {
-                case 1: //Contador
-                    TextView textView = (TextView) activity.findViewById(numeroRespuesta + 3);  //1 es pregunta y 2 es el separador
-                    String valor = textView.getText().toString();
-
-                    if (valor.equals("")) {
-                        VariablesGlobales.PublicToast(contexto, "Debes completar todos los campos");
-                        return false;
-                    } else {
-                        return true;
-                    }
                 case 2: //RadioButton
                     if (radioGroup.getCheckedRadioButtonId() == -1) {
                         VariablesGlobales.PublicToast(contexto, "Debes escoger una de las opciones");
