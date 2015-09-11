@@ -108,7 +108,7 @@ public class LayoutBasico {
 
             switch (id_pregunta_tipo) {
                 case 1: //Contador
-                    pintarCombo();
+                    pintarCombo(idPregunta);
                     break;
                 case 2: //Radiobutton
                     pintarRadioButton(numeroRespuesta, item);   //'item' necesario para obtener los valores
@@ -138,7 +138,7 @@ public class LayoutBasico {
         }
     }
 
-    private void pintarCombo() {
+    private void pintarCombo(int idPregunta) {
         RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT, AbsListView.LayoutParams.WRAP_CONTENT);   //no quitar, casca
         Spinner spinner = new Spinner(contexto);
         int valorMinimo=0, valorMaximo=50;
@@ -154,7 +154,56 @@ public class LayoutBasico {
         spinner.setAdapter(adapter);
         relativeLayout.addView(spinner, parametros);
 
+        relativeLayout = insertarHoraYMinutos(relativeLayout, idPregunta);
+
+        }
+
+    private RelativeLayout insertarHoraYMinutos(RelativeLayout relativeLayout, int idPregunta) {
+        //Comprobamos que esté en las preguntas pertinentes de hora y minutos
+        if (idPregunta>=140 && idPregunta<=171) {
+            //Dos puntos
+            id_actual++;id_anterior++;
+            final RelativeLayout.LayoutParams parametrosDosPuntos = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            TextView tvDosPuntos = new TextView(contexto);
+            tvDosPuntos.setId(44);
+            tvDosPuntos.setText(":");
+            tvDosPuntos.setTextColor(COLOR_RESPUESTA);
+            tvDosPuntos.setTextSize(33);
+            parametrosDosPuntos.addRule(RelativeLayout.TEXT_ALIGNMENT_CENTER, 3);
+            parametrosDosPuntos.addRule(RelativeLayout.RIGHT_OF, 3);
+            id_actual++;id_anterior++;
+            relativeLayout.addView(tvDosPuntos, parametrosDosPuntos);
+
+            //Spinner de los minutos
+            RelativeLayout.LayoutParams parametrosMinutos = new RelativeLayout.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT, AbsListView.LayoutParams.WRAP_CONTENT);   //no quitar, casca
+            Spinner spinner = new Spinner(contexto);
+            spinner.setId(55);
+            int valorMinimo=0, valorMaximo=60;
+            String[] valores = rellenarSpinner(valorMinimo, valorMaximo);
+            parametrosMinutos.addRule(RelativeLayout.TEXT_ALIGNMENT_CENTER, 44);
+            parametrosMinutos.addRule(RelativeLayout.RIGHT_OF, 44);
+            AdaptadorPersonalizado<CharSequence> adapter = new AdaptadorPersonalizado<CharSequence>(contexto, simple_spinner_item, valores);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setMinimumWidth(100);
+            spinner.setAdapter(adapter);
+            id_actual++;id_anterior++;
+            relativeLayout.addView(spinner, parametrosMinutos);
+
+            //Leyenda
+            final RelativeLayout.LayoutParams parametrosLeyenda = new RelativeLayout.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT, AbsListView.LayoutParams.WRAP_CONTENT);
+            TextView tvLeyenda = new TextView(contexto);
+            tvLeyenda.setId(66);
+            tvLeyenda.setText("(horas y minutos) ID:" + id_actual);
+            tvLeyenda.setTextColor(COLOR_RESPUESTA);
+            tvLeyenda.setTextSize(TAMANO_RESPUESTA);
+            parametrosLeyenda.addRule(RelativeLayout.TEXT_ALIGNMENT_CENTER, 55);
+            parametrosLeyenda.addRule(RelativeLayout.RIGHT_OF, 55);
+            id_anterior=3;id_actual=3;  //hace referencia al campo de las horas
+            relativeLayout.addView(tvLeyenda, parametrosLeyenda);
+        }
+        return relativeLayout;
     }
+
 
     private String[] rellenarSpinner(int valorMinimo, int valorMaximo) {
         String[] camposSpinner = new String[(valorMaximo+1)-valorMinimo];
