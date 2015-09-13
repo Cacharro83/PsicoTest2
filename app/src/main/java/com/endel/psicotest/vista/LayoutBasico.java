@@ -378,11 +378,6 @@ public class LayoutBasico {
     private void pintarNuevaPregunta(Item item) {
         LayoutBasico layoutBasico = new LayoutBasico(activity);
 
-        //Opción para desarrollo, por si no hay respuestas
-        if (siguiente == 0) {
-            siguiente = idPregunta + 1;
-        }
-
         //Casos especiales
         siguiente = Logica.averiguarSiguiente(item, siguiente, algunVicio, contexto, activity.findViewById(3));
         relativeLayout = layoutBasico.pintarVista(contexto, siguiente);
