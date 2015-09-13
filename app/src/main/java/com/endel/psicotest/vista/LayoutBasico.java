@@ -385,7 +385,6 @@ public class LayoutBasico {
 
         //Casos especiales
         siguiente = Logica.averiguarSiguiente(item, siguiente, algunVicio, contexto, activity.findViewById(3));
-
         relativeLayout = layoutBasico.pintarVista(contexto, siguiente);
         ScrollView scrollView = new ScrollView(contexto);
         scrollView.addView(relativeLayout);
@@ -404,16 +403,15 @@ public class LayoutBasico {
     }
 
     private void pintarCajaTexto() {
-        RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT, AbsListView.LayoutParams.WRAP_CONTENT);   //no quitar, casca
+        RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);   //no quitar, casca
         final EditText editText = new EditText(contexto);
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
 
         id_actual = id_anterior + 1;
         editText.setId(id_actual);
-        editText.setText("0");
-
         editText.setTextColor(COLOR_RESPUESTA);
         editText.setTextSize(TAMANO_RESPUESTA);
+        editText.setBackgroundColor(Color.WHITE);
         editText.setTypeface(null, Typeface.ITALIC);
         editText.setLayoutParams(parametros);
         relativeLayout.addView(editText, parametros);
