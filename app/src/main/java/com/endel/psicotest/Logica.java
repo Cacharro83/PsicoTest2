@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class Logica {
     public static int ultimoVicio, vicioActual, idUsuario = 1;
-    public static boolean hayViciosConDinero = false;
+    public static boolean hayViciosConDinero = false, esHoraYMinutos = false;
 
     public static int averiguarSiguiente(Item item, int siguiente, boolean algunVicio, Context contexto, View viewById) {
         String respuestaDada = "";
@@ -135,7 +135,14 @@ public class Logica {
         switch (item.getIdTipo()) {
             case 1: //Contador
                 Spinner spinner = (Spinner) activity.findViewById(3);  //ojo en el caso de los 2 contadores
-                dataBaseHelper.insertarRespuestaUsuario(item.getIdPregunta(), idUsuario, spinner.getSelectedItem().toString());
+                if (Logica.esHoraYMinutos) {
+                    Spinner spinnerMinutos = (Spinner) activity.findViewById(55);
+                    int horas = Integer.valueOf(spinner.getSelectedItem().toString());
+                    int minutos = Integer.valueOf(spinnerMinutos.getSelectedItem().toString());
+                    dataBaseHelper.insertarRespuestaUsuario(item.getIdPregunta(), idUsuario, Integer.valueOf(horas*60+minutos).toString());
+                } else {
+                    dataBaseHelper.insertarRespuestaUsuario(item.getIdPregunta(), idUsuario, spinner.getSelectedItem().toString());
+                }
                 break;
             case 2: //RadioButton
                 int opcionSeleccionada = radioGroup.getCheckedRadioButtonId();
