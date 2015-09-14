@@ -12,8 +12,8 @@ import android.util.Log;
 
 import com.endel.psicotest.Colegio;
 import com.endel.psicotest.Item;
+import com.endel.psicotest.Logica;
 import com.endel.psicotest.RespuestaRellenada;
-import com.endel.psicotest.vista.LayoutBasico;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -266,13 +266,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 					Cursor c2 = db.query("respuestatexto", camposRespuestaTexto, "IdRespuesta=?",
 							args_b, null, null, null);
 
-					while(c2.moveToNext())
-						respu.setTextoRespuesta(c2.getString(0));
+					while(c2.moveToNext()) {
+						switch (id_respuesta) {
+							case 46:	//Entre hoy y [acontecimiento 1 mes]
+								respu.setTextoRespuesta("Entre hoy y " + devolverAcontecimiento(257));
+								break;
+							case 47:	//Entre [acontecimiento 1 mes] y [acontecimiento 3 meses]
+								respu.setTextoRespuesta("Entre " + devolverAcontecimiento(257) + " y " + devolverAcontecimiento(258));
+								break;
+							case 48:	//Entre [acontecimiento 3 meses] y [acontecimiento 1 año]
+								respu.setTextoRespuesta("Entre " + devolverAcontecimiento(258) + " y " + devolverAcontecimiento(259));
+								break;
+							case 49:	//Antes de [acontecimiento 1 año]
+								respu.setTextoRespuesta("Antes de " + devolverAcontecimiento(259));
+								break;
+							default:
+								respu.setTextoRespuesta(c2.getString(0));
+								break;
+						}
+					}
 					c2.close();
 				}
 
 				catch (Exception e) {
-					e.printStackTrace();;
+					e.printStackTrace();
 				}
 
 				try {
@@ -327,6 +344,25 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		return item_relleno;
 	}
 
+	private String devolverAcontecimiento(int acontecimiento) {
+		Log.i("ENTRO", "devolverAcontecimiento");
+		String[] parametrosValores = new String[2];
+		parametrosValores[0] = String.valueOf(acontecimiento);
+		parametrosValores[1] = String.valueOf(Logica.idUsuario);
+
+		String respuesta = null;
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query("respuestasUsuarioNM", new String[]{"valor"}, "IdRespuesta=? AND IdUsuario=?",
+				parametrosValores, null, null, null, null);
+		if (cursor!=null && cursor.moveToFirst()) {
+			respuesta = cursor.getString(0);
+		}
+		db.close();
+		cursor.close();
+
+		return respuesta;
+	}
+
 	public int getUltimaPreguntaSegunUsuario(int idUsuario) {
 		Log.i("ENTRO", "getUltimaPreguntaSegunUsuario");
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -343,7 +379,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		cursor.close();
 
 
-		//ultimaPregunta = 140; //desarrollo
+		//ultimaPregunta = 257; //desarrollo
 		return ultimaPregunta;
 	}
 
@@ -448,7 +484,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	 *
 	 * @return booleano  Si tiene algún vicio o ninguno
 	 */
-	public boolean finalmenteSinVicios(int idUsuario, Context contexto) {
+	public boolean finalmenteSinVicios(int idUsuario) {
 		Log.i("ENTRO", "finalmenteSinVicios");
 		boolean finalmenteSinVicios;
 		SQLiteDatabase db = this.getReadableDatabase();

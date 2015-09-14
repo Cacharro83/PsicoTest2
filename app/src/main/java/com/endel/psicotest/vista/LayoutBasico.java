@@ -365,10 +365,10 @@ public class LayoutBasico {
                 if (item.getIdPregunta() == 999) {
                     System.exit(0);
                 }
-                    if (Logica.validarRespuestas(item, activity, contexto, radioGroup)) {
-                        algunVicio = Logica.grabarRespuestas(item, radioGroup, listaRespuestasRadioButton, contexto, activity, algunVicio);
-                        pintarNuevaPregunta(item);
-                    }
+                if (Logica.validarRespuestas(item, activity, contexto, radioGroup)) {
+                    algunVicio = Logica.grabarRespuestas(item, radioGroup, listaRespuestasRadioButton, contexto, activity, algunVicio);
+                    pintarNuevaPregunta(item);
+                }
             }
         });
 

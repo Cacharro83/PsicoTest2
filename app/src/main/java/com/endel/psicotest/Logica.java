@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.endel.psicotest.baseDatos.DataBaseHelper;
 import com.endel.psicotest.vista.LayoutBasico;
@@ -63,7 +65,7 @@ public class Logica {
             case 97:case 98:case 99:case 100:case 101:case 102:case 103:case 104:case 105:case 106:
                 //Si es el último vicio y al final se "arrepiente" de tener vicios
                 DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
-                if (esUltimoVicio(item, ultimoVicio) && dataBaseHelper.finalmenteSinVicios(idUsuario, contexto)) {
+                if (esUltimoVicio(item, ultimoVicio) && dataBaseHelper.finalmenteSinVicios(idUsuario)) {
                     return 107;
                 }
 
@@ -133,7 +135,7 @@ public class Logica {
 
 
         switch (item.getIdTipo()) {
-            case 1: //Contador
+            case 1:     //Contador
                 Spinner spinner = (Spinner) activity.findViewById(3);  //ojo en el caso de los 2 contadores
                 if (Logica.esHoraYMinutos) {
                     Spinner spinnerMinutos = (Spinner) activity.findViewById(55);
@@ -144,7 +146,7 @@ public class Logica {
                     dataBaseHelper.insertarRespuestaUsuario(item.getIdPregunta(), idUsuario, spinner.getSelectedItem().toString());
                 }
                 break;
-            case 2: //RadioButton
+            case 2:     //RadioButton
                 int opcionSeleccionada = radioGroup.getCheckedRadioButtonId();
 
                 //Buscamos el radio button seleccionado
@@ -157,6 +159,20 @@ public class Logica {
                         dataBaseHelper.insertarRespuestaUsuario(item.getIdPregunta(), idUsuario, String.valueOf(respuestaValor.getValor()));
                     }
                 }
+                break;
+            case 3:     //3-Fecha
+                DatePicker datePicker = (DatePicker) activity.findViewById(3);
+                int day = datePicker.getDayOfMonth();
+                int month = datePicker.getMonth() + 1;
+                int year = datePicker.getYear();
+                String fecha = Integer.toString(day).toString() + "/" + Integer.toString(month).toString() + "/" + Integer.toString(year).toString();
+                dataBaseHelper.insertarRespuestaUsuario(item.getIdPregunta(), idUsuario, fecha);
+                break;
+            case 4:     //TextView
+                TextView textView = (TextView) activity.findViewById(3);
+                dataBaseHelper.insertarRespuestaUsuario(item.getIdPregunta(), idUsuario, textView.getText().toString());
+                break;
+            case 5:     //CheckBox
                 break;
         }
 
