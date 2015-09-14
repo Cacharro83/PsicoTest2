@@ -160,7 +160,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public synchronized void close() {
-
 		if (myDataBase != null)
 			myDataBase.close();
 
@@ -170,8 +169,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		catch(SQLiteException e){
 			e.printStackTrace();
 		}
-
-
 	}
 
 	@Override
@@ -263,10 +260,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 					String[] args_b = new String[1];
 					args_b[0] = String.valueOf(id_respuesta);
 
-					Cursor c2 = db.query("respuestatexto", camposRespuestaTexto, "IdRespuesta=?",
+					Cursor cursorRespuesta = db.query("respuestatexto", camposRespuestaTexto, "IdRespuesta=?",
 							args_b, null, null, null);
 
-					while(c2.moveToNext()) {
+					if (cursorRespuesta.moveToNext()) {
 						switch (id_respuesta) {
 							case 46:	//Entre hoy y [acontecimiento 1 mes]
 								respu.setTextoRespuesta("Entre hoy y " + devolverAcontecimiento(257));
@@ -281,11 +278,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 								respu.setTextoRespuesta("Antes de " + devolverAcontecimiento(259));
 								break;
 							default:
-								respu.setTextoRespuesta(c2.getString(0));
+								respu.setTextoRespuesta(cursorRespuesta.getString(0));
 								break;
 						}
 					}
-					c2.close();
+					cursorRespuesta.close();
 				}
 
 				catch (Exception e) {
@@ -319,14 +316,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 						}
 
 						catch (Exception e) {
-							e.printStackTrace();;
+							e.printStackTrace();
 						}
 					}
 					c3.close();
 				}
 
 				catch (Exception e) {
-					e.printStackTrace();;
+					e.printStackTrace();
 				}
 				respuestas.add(respu);
 				cursor.moveToNext();
@@ -336,7 +333,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		}
 
 		catch (Exception e) {
-			e.printStackTrace();;
+			e.printStackTrace();
 		}
 
 		item_relleno.setRespuestas(respuestas);
@@ -357,7 +354,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		if (cursor!=null && cursor.moveToFirst()) {
 			respuesta = cursor.getString(0);
 		}
-		db.close();
 		cursor.close();
 
 		return respuesta;
