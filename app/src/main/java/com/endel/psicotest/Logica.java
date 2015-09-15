@@ -20,7 +20,7 @@ import java.util.List;
  * Created by Javier on 07/09/2015.
  */
 public class Logica {
-    public static int ultimoVicio, vicioActual, idUsuario = 1;
+    public static int ultimoVicio, vicioActual, idUsuario = -1;
     public static boolean hayViciosConDinero = false, esHoraYMinutos = false;
 
     public static int averiguarSiguiente(Item item, int siguiente, boolean algunVicio, Context contexto, View viewById) {
@@ -99,8 +99,20 @@ public class Logica {
                 if (item.getIdPregunta() != ultimoVicio+161) {
                     return buscarSiguienteVicio();
                 }
+                break;
+            case 285:   //Fin de la encuesta
+                copiarCodigoCentroAIdUsuario(contexto);
+                break;
         }
         return siguiente;   //Si no hay ningún cambio 'siguiente' sigue como estaba
+    }
+
+    private static void copiarCodigoCentroAIdUsuario(Context contexto) {
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
+        String codigoCentro = dataBaseHelper.averiguarCodigoCentroActual();
+
+        dataBaseHelper.cambiarIdUsuarioEnUsuarios(codigoCentro);
+        dataBaseHelper.cambiarIdUsuarioEnRespuestasUsuarioNM(codigoCentro);
     }
 
     private static boolean esUltimoVicio(Item item, int ultimoVicio) {

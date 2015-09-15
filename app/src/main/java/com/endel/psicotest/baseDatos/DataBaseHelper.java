@@ -375,7 +375,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		cursor.close();
 
 
-		//ultimaPregunta = 257; //desarrollo
+		//ultimaPregunta = 282; //desarrollo
 		return ultimaPregunta;
 	}
 
@@ -504,6 +504,49 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		Log.i("SALGO", "finalmenteSinVicios");
 		return finalmenteSinVicios;
 	}
+
+	public void cambiarIdUsuarioEnUsuarios(String codigoCentro) {
+		Log.i("ENTRO", "cambiarIdUsuarioEnUsuarios");
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("IdUsuario", codigoCentro);
+		String[] parametros = new String[1];
+		parametros[0] = Integer.toString(Logica.idUsuario);
+		db.update("usuarios", values, "IdUsuario=?", parametros);
+		db.close();
+		Log.i("SALGO", "cambiarIdUsuarioEnUsuarios");
+	}
+
+	public void cambiarIdUsuarioEnRespuestasUsuarioNM(String codigoCentro) {
+		Log.i("ENTRO", "cambiarIdUsuarioEnRespuestasUsuarioNM");
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("IdUsuario", codigoCentro);
+		String[] parametros = new String[1];
+		parametros[0] = Integer.toString(Logica.idUsuario);
+		db.update("respuestasUsuarioNM", values, "IdUsuario=?", parametros);
+		db.close();
+		Log.i("SALGO", "cambiarIdUsuarioEnRespuestasUsuarioNM");
+	}
+
+	public String averiguarCodigoCentroActual() {
+		Log.i("ENTRO", "averiguarCodigoCentroActual");
+		String[] parametrosValores = new String[2];
+		parametrosValores[0] = String.valueOf(285);	//pregunta del centro
+		parametrosValores[1] = String.valueOf(Logica.idUsuario);
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query("respuestasUsuarioNM", new String[]{"valor"}, "IdRespuesta=? AND IdUsuario=?",
+				parametrosValores, null, null, null, null);
+		String codigoCentro = "";
+		if (cursor!=null && cursor.moveToFirst()) {
+			codigoCentro = cursor.getString(0);
+		}
+		db.close();
+		cursor.close();
+		return codigoCentro;
+	}
+
 }
 
    /*
