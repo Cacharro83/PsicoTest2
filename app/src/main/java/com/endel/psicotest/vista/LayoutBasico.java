@@ -1,6 +1,7 @@
 package com.endel.psicotest.vista;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -361,10 +362,30 @@ public class LayoutBasico {
         botonSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Si dio al botón de 'Finalizar test'
-                if (item.getIdPregunta() == 999) {
-                    System.exit(0);
+                switch (item.getIdPregunta()) {
+                    case 219:
+                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta);
+                        break;
+                    case 231:
+                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta);
+                        break;
+                    case 240:
+                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta2);
+                        break;
+                    case 256:
+                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta3);
+                        break;
+                    case 259:
+                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta4);
+                        break;
+                    case 265:
+                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta5);
+                        break;
+                    case 999:   //Si dio al botón de 'Finalizar test'
+                        System.exit(0);
+                        break;
                 }
+
                 if (Logica.validarRespuestas(item, activity, contexto, radioGroup)) {
                     algunVicio = Logica.grabarRespuestas(item, radioGroup, listaRespuestasRadioButton, contexto, activity, algunVicio);
                     pintarNuevaPregunta(item);
@@ -373,6 +394,13 @@ public class LayoutBasico {
         });
 
         relativeLayout.addView(botonSiguiente, parametros);
+    }
+
+    private void crearMensajeAlert(int layoutBasico_mensajeAlerta) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+        alertDialogBuilder.setMessage(layoutBasico_mensajeAlerta);
+        alertDialogBuilder.create();
+        alertDialogBuilder.show();
     }
 
     private void pintarNuevaPregunta(Item item) {
