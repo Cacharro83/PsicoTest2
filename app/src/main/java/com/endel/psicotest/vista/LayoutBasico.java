@@ -399,6 +399,7 @@ public class LayoutBasico {
     private void crearMensajeAlert(int layoutBasico_mensajeAlerta) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
         alertDialogBuilder.setMessage(layoutBasico_mensajeAlerta);
+        alertDialogBuilder.setPositiveButton("Continuar", null);
         alertDialogBuilder.create();
         alertDialogBuilder.show();
     }
