@@ -28,8 +28,7 @@ public class MainActivity extends Activity {
         RelativeLayout relativeLayout;
         LayoutBasico layoutBasico = new LayoutBasico(this);
 
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
-        relativeLayout = layoutBasico.pintarVista(contexto, dataBaseHelper.getUltimaPreguntaSegunUsuario(Logica.idUsuario));
+        relativeLayout = layoutBasico.pintarVista(contexto, 0);
         scrollView.addView(relativeLayout);
 
         super.onCreate(savedInstanceState);

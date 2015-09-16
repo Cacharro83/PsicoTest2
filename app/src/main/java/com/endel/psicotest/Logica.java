@@ -100,23 +100,13 @@ public class Logica {
                     return buscarSiguienteVicio();
                 }
                 break;
-            case 285:   //Fin de la encuesta
-                copiarCodigoCentroAIdUsuario(contexto);
-                break;
         }
         return siguiente;   //Si no hay ningún cambio 'siguiente' sigue como estaba
     }
 
-    private static void copiarCodigoCentroAIdUsuario(Context contexto) {
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
-        String codigoCentro = dataBaseHelper.averiguarCodigoCentroActual();
-
-        dataBaseHelper.cambiarIdUsuarioEnUsuarios(codigoCentro);
-        dataBaseHelper.cambiarIdUsuarioEnRespuestasUsuarioNM(codigoCentro);
-    }
 
     private static boolean esUltimoVicio(Item item, int ultimoVicio) {
-        if (item.getIdPregunta()==ultimoVicio+64) {
+        if (item.getIdPregunta() == ultimoVicio+64) {
             return true;
         } else {
             return false;
@@ -138,6 +128,10 @@ public class Logica {
 
     public static boolean grabarRespuestas(Item item, RadioGroup radioGroup, List<RespuestaValor> listaRespuestasRadioButton, Context contexto, Activity activity, boolean algunVicio) {
         DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
+
+        if (item.getIdPregunta() == 0) {
+            dataBaseHelper.insertarUsuarioNuevo(idUsuario);
+        }
 
         //Si viene de la tabla vida
         if (item.getIdPregunta() == 11) {
@@ -193,7 +187,7 @@ public class Logica {
     }
 
     public static boolean esHoraYMinutos(int idPregunta) {
-        if (idPregunta >= 140 && idPregunta <= 171) {
+        if (idPregunta>=140 && idPregunta<=171) {
             return true;
         } else {
             return false;
@@ -225,7 +219,7 @@ public class Logica {
     }
 
 
-    public static boolean validarRespuestas(Item item, Activity activity, Context contexto, RadioGroup radioGroup) {
+    public static boolean validarRespuestas(Item item, Context contexto, RadioGroup radioGroup) {
         int id_pregunta_tipo = item.getIdTipo();
         int numeroRespuestas = item.getRespuestas().size();
 
