@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class Logica {
     public static int ultimoVicio, vicioActual, idUsuario = -1;
-    public static boolean hayViciosConDinero = false, esHoraYMinutos = false;
+    public static boolean hayViciosConDinero = false;
 
     public static int averiguarSiguiente(Item item, int siguiente, boolean algunVicio, Context contexto, View viewById) {
         String respuestaDada = "";
@@ -149,7 +149,7 @@ public class Logica {
         switch (item.getIdTipo()) {
             case 1:     //Contador
                 Spinner spinner = (Spinner) activity.findViewById(3);  //ojo en el caso de los 2 contadores
-                if (Logica.esHoraYMinutos) {
+                if (Logica.esHoraYMinutos(item.getIdPregunta())) {
                     Spinner spinnerMinutos = (Spinner) activity.findViewById(55);
                     int horas = Integer.valueOf(spinner.getSelectedItem().toString());
                     int minutos = Integer.valueOf(spinnerMinutos.getSelectedItem().toString());
@@ -190,6 +190,21 @@ public class Logica {
 
         dataBaseHelper.aumentarUltimaPregunta(idUsuario, item.getIdPregunta());
         return algunVicio;
+    }
+
+    public static boolean esHoraYMinutos(int idPregunta) {
+        if (idPregunta >= 140 && idPregunta <= 171) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public static boolean esEdad(int idPregunta) {
+        if (idPregunta==1 || (idPregunta>=43 && idPregunta<=74)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 

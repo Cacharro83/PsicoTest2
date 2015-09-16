@@ -144,12 +144,11 @@ public class LayoutBasico {
         Spinner spinner = new Spinner(contexto);
         int valorMinimo, valorMaximo;
 
-        if (idPregunta >= 140 && idPregunta <= 171) {
+        if (Logica.esHoraYMinutos(idPregunta)) {
             //Si vamos a introducir horas y minutos el primer spinner es para las horas
-            Logica.esHoraYMinutos = true;
             valorMinimo = 0;
             valorMaximo = 23;
-        } else if (idPregunta==1 || (idPregunta>=43 && idPregunta<=74)){
+        } else if (Logica.esEdad(idPregunta)){
             //Edades
             valorMinimo = 14;
             valorMaximo = 18;
@@ -159,7 +158,7 @@ public class LayoutBasico {
             valorMaximo = 50;
         }
 
-        String[] valores = rellenarSpinner(valorMinimo, valorMaximo);
+        String[] valores = rellenarSpinner(valorMinimo, valorMaximo, idPregunta);
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
         id_actual = id_anterior + 1;
 
@@ -170,7 +169,7 @@ public class LayoutBasico {
         spinner.setAdapter(adapter);
         relativeLayout.addView(spinner, parametros);
 
-        if (Logica.esHoraYMinutos) {
+        if (Logica.esHoraYMinutos(idPregunta)) {
             relativeLayout = insertarRestoDeHora(relativeLayout);
         }
     }
@@ -194,7 +193,7 @@ public class LayoutBasico {
         Spinner spinner = new Spinner(contexto);
         spinner.setId(55);
         int valorMinimo=0, valorMaximo=59;
-        String[] valores = rellenarSpinner(valorMinimo, valorMaximo);
+        String[] valores = rellenarSpinner(valorMinimo, valorMaximo, idPregunta);
         parametrosMinutos.addRule(RelativeLayout.TEXT_ALIGNMENT_CENTER, 44);
         parametrosMinutos.addRule(RelativeLayout.RIGHT_OF, 44);
         AdaptadorPersonalizado<CharSequence> adapter = new AdaptadorPersonalizado<CharSequence>(contexto, simple_spinner_item, valores);
@@ -220,10 +219,10 @@ public class LayoutBasico {
     }
 
 
-    private String[] rellenarSpinner(int valorMinimo, int valorMaximo) {
+    private String[] rellenarSpinner(int valorMinimo, int valorMaximo, int idPregunta) {
         String[] camposSpinner = new String[(valorMaximo+1)-valorMinimo];
         for (int i=valorMinimo, indice=0; i<=valorMaximo; i++) {
-            if (Logica.esHoraYMinutos && i<10) {
+            if (Logica.esHoraYMinutos(idPregunta) && i<10) {
                 camposSpinner[indice++] = "0" + String.valueOf(i);
             } else {
                 camposSpinner[indice++] = String.valueOf(i);
