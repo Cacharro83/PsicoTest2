@@ -149,14 +149,17 @@ public class LayoutBasico {
             Logica.esHoraYMinutos = true;
             valorMinimo = 0;
             valorMaximo = 23;
+        } else if (idPregunta==1 || (idPregunta>=43 && idPregunta<=74)){
+            //Edades
+            valorMinimo = 14;
+            valorMaximo = 18;
         } else {
-            //Opciones para edades, veces que has hecho algo, etc
+            //Opciones para veces que has hecho algo
             valorMinimo = 0;
             valorMaximo = 50;
         }
 
         String[] valores = rellenarSpinner(valorMinimo, valorMaximo);
-
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
         id_actual = id_anterior + 1;
 
@@ -274,6 +277,7 @@ public class LayoutBasico {
 
     private TableRow pintarFila(String titulo) {
         TableRow fila = new TableRow(contexto);
+        fila.setMinimumHeight(55);
         fila.addView(pintarCabeceraTablaVida(titulo, false), parametrosCeldaDoble);
 
         //Pintar celdas
@@ -354,7 +358,7 @@ public class LayoutBasico {
         } else {
             botonSiguiente.setText(contexto.getResources().getText(R.string.layoutBasico_botonSiguiente));
         }
-        botonSiguiente.setTextColor(COLOR_RESPUESTA);
+        botonSiguiente.setTextColor(Color.WHITE);
         botonSiguiente.setTextSize(TAMANO_RESPUESTA);
         botonSiguiente.setTypeface(null, Typeface.ITALIC);
         botonSiguiente.setLayoutParams(parametros);
@@ -467,7 +471,7 @@ public class LayoutBasico {
             celda.setTextSize(23);
         } else {
             //vicios
-            celda.setTextSize(16);
+            celda.setTextSize(23);
         }
         celda.setText(texto);
         return celda;
