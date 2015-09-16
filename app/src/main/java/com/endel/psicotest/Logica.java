@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -219,9 +220,26 @@ public class Logica {
     }
 
 
-    public static boolean validarRespuestas(Item item, Context contexto, RadioGroup radioGroup) {
+    public static boolean validarRespuestas(Item item, Context contexto, Activity activity, RadioGroup radioGroup) {
         int id_pregunta_tipo = item.getIdTipo();
         int numeroRespuestas = item.getRespuestas().size();
+
+
+        //Código del centro -- IdUsuario
+        if (item.getIdPregunta() == 0) {
+            EditText editText = (EditText) activity.findViewById(3);
+            String codigo = editText.getText().toString();
+
+            for (int i=0; i<codigo.length(); i++) {
+                if (!Character.isDigit(codigo.charAt(i))) {
+                    VariablesGlobales.PublicToast(contexto, "Debe ser un número (sin ningún espacio)");
+                    return false;
+                }
+            }
+            Logica.idUsuario = Integer.parseInt(codigo);
+        }
+
+
 
         for (int numeroRespuesta=0; numeroRespuesta<numeroRespuestas; numeroRespuesta++) {
             //1-Contadores | 2-RadioButton | 3-Fecha | 4-TextView | 5-CheckBox

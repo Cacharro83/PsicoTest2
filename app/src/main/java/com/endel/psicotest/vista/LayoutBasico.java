@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AbsListView;
@@ -31,7 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static android.R.layout.activity_list_item;
 import static android.R.layout.simple_spinner_item;
 
 
@@ -367,10 +367,6 @@ public class LayoutBasico {
             @Override
             public void onClick(View v) {
                 switch (item.getIdPregunta()) {
-                    case 0:
-                        TextView idUsuario = (TextView) activity.findViewById(3);
-                        Logica.idUsuario = Integer.parseInt(idUsuario.getText().toString());
-                        break;
                     case 219:
                         crearMensajeAlert(R.string.layoutBasico_mensajeAlerta);
                         break;
@@ -394,7 +390,7 @@ public class LayoutBasico {
                         break;
                 }
 
-                if (Logica.validarRespuestas(item, contexto, radioGroup)) {
+                if (Logica.validarRespuestas(item, contexto, activity, radioGroup)) {
                     algunVicio = Logica.grabarRespuestas(item, radioGroup, listaRespuestasRadioButton, contexto, activity, algunVicio);
                     pintarNuevaPregunta(item);
                 }
@@ -437,6 +433,7 @@ public class LayoutBasico {
     private void pintarCajaTexto() {
         RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);   //no quitar, casca
         final EditText editText = new EditText(contexto);
+        editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);  //sólo números
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
 
         id_actual = id_anterior + 1;
