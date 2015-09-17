@@ -36,12 +36,39 @@ public class DBMain extends SQLiteOpenHelper {
 
 
     public void crearBD() throws IOException {
-        this.getReadableDatabase();
-        try {
-            copiarBD();
-        } catch (IOException e) {
-            throw new Error("Error copying database");
+        boolean existeBaseDatos = checkDataBase();
+        if(!existeBaseDatos) {
+            this.getReadableDatabase();
+            try {
+                copiarBD();
+            } catch (IOException e) {
+                throw new Error("Error copiando la base de datos");
+            }
         }
+    }
+
+
+    /**
+     * Check if the database already exist to avoid re-copying the file each
+     * time you open the application.
+     *
+     * @return true if it exists, false if it doesn't
+     */
+    private boolean checkDataBase() {
+        SQLiteDatabase checkDB = null;
+        try {
+            String myPath = DB_PATH + DB_NAME;
+            checkDB = SQLiteDatabase.openDatabase(myPath, null,
+                    SQLiteDatabase.OPEN_READONLY);
+
+        } catch (SQLException e) {
+            // database does't exist yet.
+        }
+
+        if (checkDB != null) {
+            checkDB.close();
+        }
+        return checkDB != null ? true : false;
     }
 
 
