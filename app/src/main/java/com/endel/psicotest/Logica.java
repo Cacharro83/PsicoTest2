@@ -225,6 +225,22 @@ public class Logica {
         int numeroRespuestas = item.getRespuestas().size();
 
 
+        switch (item.getIdPregunta()) {
+            case 108:
+                DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
+                Spinner spinner = (Spinner) activity.findViewById(3);
+                int veces1Mes = Integer.parseInt(spinner.getSelectedItem().toString());
+
+                if (dataBaseHelper.masVeces1MesQueDurante12Meses(item.getIdPregunta(), veces1Mes)) {
+                    LayoutBasico layoutBasico = new LayoutBasico(activity);
+                    layoutBasico.crearMensajeAlert12Veces(R.string.layoutBasico_mensajeAlerta12meses);
+                    return false;
+                } else {
+                    return true;
+                }
+        }
+
+
         //Código del centro -- IdUsuario
         if (item.getIdPregunta() == 0) {
             EditText editText = (EditText) activity.findViewById(3);

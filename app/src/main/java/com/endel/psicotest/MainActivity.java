@@ -20,15 +20,14 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Context contexto = getApplicationContext();
+        LayoutBasico.contexto = getApplicationContext();
 
-        DBMain.conectar(contexto);
-
-        ScrollView scrollView = new ScrollView(contexto);
+        DBMain.conectar(LayoutBasico.contexto);
+        ScrollView scrollView = new ScrollView(LayoutBasico.contexto);
         RelativeLayout relativeLayout;
         LayoutBasico layoutBasico = new LayoutBasico(this);
 
-        relativeLayout = layoutBasico.pintarVista(contexto, 0);
+        relativeLayout = layoutBasico.pintarVista(LayoutBasico.contexto, 0);
         scrollView.addView(relativeLayout);
 
         super.onCreate(savedInstanceState);

@@ -3,6 +3,7 @@ package com.endel.psicotest.vista;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -40,11 +41,12 @@ import static android.R.layout.simple_spinner_item;
  */
 public class LayoutBasico {
     public static final int COLOR_RESPUESTA = Color.BLUE, TAMANO_RESPUESTA = 20;
-    public int id_actual = 1, id_anterior = 1, siguiente, idPregunta, contadorIDsTablaVida = 11, idUsuario;
+    public int id_actual = 1, id_anterior = 1, siguiente, contadorIDsTablaVida = 11, idUsuario;
+    public static int idPregunta;
     public boolean algunVicio = false;
     public RelativeLayout relativeLayout;
     public RadioGroup radioGroup;
-    public Context contexto;
+    public static Context contexto;
     public Activity activity;
     public List<RespuestaValor> listaRespuestasRadioButton = new ArrayList();
     public static HashMap<Integer, Integer> mapaRespuestasTablaVida = new HashMap<>();
@@ -408,6 +410,22 @@ public class LayoutBasico {
         alertDialogBuilder.show();
     }
 
+    public void crearMensajeAlert12Veces(int layoutBasico_mensajeAlerta) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+        alertDialogBuilder.setMessage(layoutBasico_mensajeAlerta);
+        alertDialogBuilder.setPositiveButton("Cambiar respuesta de los 12 meses", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                relativeLayout = pintarVista(contexto, idPregunta - 33);
+                ScrollView scrollView = new ScrollView(contexto);
+                scrollView.addView(relativeLayout);
+                activity.setContentView(scrollView);
+            }
+        });
+        alertDialogBuilder.setNegativeButton("Cambiar respuesta del último mes", null);
+        alertDialogBuilder.create();
+        alertDialogBuilder.show();
+    }
+
     private void pintarNuevaPregunta(Item item) {
         LayoutBasico layoutBasico = new LayoutBasico(activity);
 
@@ -421,6 +439,7 @@ public class LayoutBasico {
 
     private void pintarPregunta(Item item) {
         TextView pregunta = new TextView(contexto);
+        idPregunta = item.getIdPregunta();
         pregunta.setId(id_actual);
         //pregunta.setText(item.getIdPregunta() + ") " + item.getTextoPregunta() + " | tipoPregunta: " + item.getIdTipo());
         pregunta.setText(item.getIdPregunta() + ") " + item.getTextoPregunta());

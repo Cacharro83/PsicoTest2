@@ -439,7 +439,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 	public void insertarRespuestaUsuario(int idPregunta, int idUsuario, String valor) {
 		Log.i("ENTRO", "insertarRespuestaUsuario");
-
+		//if (comprobarSiYaExisteValorAnterior
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -502,6 +502,33 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 		Log.i("SALGO", "finalmenteSinVicios");
 		return finalmenteSinVicios;
+	}
+
+	public boolean masVeces1MesQueDurante12Meses(int idPregunta, int veces1Mes) {
+		Log.i("ENTRO", "masVeces1MesQueDurante12Meses");
+		boolean finalmenteMasVeces1MesQueDurante12Meses = false;
+
+		String[] parametros = new String[2];
+		parametros[0] = String.valueOf(idPregunta-33);	//-33 es la distancia entre G12meses y G1mes
+		parametros[1] = String.valueOf(Logica.idUsuario);
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query("respuestasUsuarioNM", new String[]{"valor"}, "IdRespuesta=? AND IdUsuario=?",
+				parametros, null, null, null, null);
+
+		if(cursor.moveToNext()){
+			int veces12Meses = cursor.getInt(0);
+			if (veces1Mes > veces12Meses) {
+				finalmenteMasVeces1MesQueDurante12Meses = true;
+			}
+		}
+
+		db.close();
+		cursor.close();
+
+
+		Log.i("SALGO", "masVeces1MesQueDurante12Meses");
+		return finalmenteMasVeces1MesQueDurante12Meses;
 	}
 }
 
