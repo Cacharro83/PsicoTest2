@@ -522,13 +522,39 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 				finalmenteMasVeces1MesQueDurante12Meses = true;
 			}
 		}
-
 		db.close();
 		cursor.close();
-
-
 		Log.i("SALGO", "masVeces1MesQueDurante12Meses");
 		return finalmenteMasVeces1MesQueDurante12Meses;
+	}
+
+	/*
+	 * Si ha dejado un test a la mitad con ese IdUsuario
+	 */
+	public boolean hayTestAnterior(int idUsuario) {
+		Log.i("ENTRO", "hayTestAnterior");
+		boolean hayTestAnterior = false;
+
+		String[] parametros = new String[1];
+		parametros[0] = String.valueOf(Logica.idUsuario);
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query("respuestasUsuarioNM", new String[]{"valor"}, "IdUsuario=? AND IdPregunta=284",
+				parametros, null, null, null, null);
+
+		if(cursor.moveToNext()){
+			hayTestAnterior = true;
+		} else {
+			borradoDeRespuestasAnterioresSiHay();
+		}
+		db.close();
+		cursor.close();
+		Log.i("SALGO", "hayTestAnterior");
+		return hayTestAnterior;
+	}
+
+	private void borradoDeRespuestasAnterioresSiHay() {
+
 	}
 }
 

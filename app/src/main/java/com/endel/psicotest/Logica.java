@@ -224,8 +224,12 @@ public class Logica {
         int id_pregunta_tipo = item.getIdTipo();
         int numeroRespuestas = item.getRespuestas().size();
 
-
         switch (item.getIdPregunta()) {
+            case 1:
+                //EditText editText = (EditText) activity.findViewById(3);
+                //hayUnTestRepetido(editText.getText().toString());
+                break;
+
             case 108:case 109:case 110:case 111:case 112:case 113:case 114:case 115:case 116:case 117:
             case 118:case 119:case 120:case 121:case 122:case 123:case 124:case 125:case 126:case 127:
             case 128:case 129:case 130:case 131:case 132:case 133:case 134:case 135:case 136:case 137:
@@ -242,7 +246,6 @@ public class Logica {
                     return true;
                 }
         }
-
 
         //Código del centro -- IdUsuario
         if (item.getIdPregunta() == 0) {
@@ -273,6 +276,11 @@ public class Logica {
             }
         }
         return true;    //Si es de tipo fecha siempre coge un valor por defecto
+    }
+
+    private static boolean hayUnTestRepetido() {
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(LayoutBasico.contexto);
+        return dataBaseHelper.hayTestAnterior(idUsuario);
     }
 }
 
