@@ -6,17 +6,19 @@ http://www.c-sharpcorner.com/uploadfile/e14021/importing-database-in-android-stu
 package com.endel.psicotest;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.endel.psicotest.baseDatos.DBMain;
-import com.endel.psicotest.baseDatos.DataBaseHelper;
 import com.endel.psicotest.vista.LayoutBasico;
 
 public class MainActivity extends Activity {
+    private long lastBackPress = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,5 +42,36 @@ public class MainActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            manageCancel();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void manageCancel() {
+        if (getLastBackPress() + VariablesGlobales.DOUBLE_BACK_TIME > System.currentTimeMillis())
+            finish();
+        else {
+            Toast tstBackPress = Toast.makeText(this, com.endel.psicotest.VariablesGlobales.pressTwice, Toast.LENGTH_LONG);
+            TextView v = (TextView) tstBackPress.getView().findViewById(android.R.id.message);
+            v.setTextSize(25);
+            tstBackPress.show();
+            setLastBackPress();
+        }
+    }
+
+
+    private synchronized long getLastBackPress() {
+        return lastBackPress;
+    }
+
+    private synchronized void setLastBackPress() {
+        lastBackPress = System.currentTimeMillis();
     }
 }
