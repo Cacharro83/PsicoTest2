@@ -531,12 +531,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	/*
 	 * Si ha dejado un test a la mitad con ese IdUsuario
 	 */
-	public boolean hayTestAnterior(int idUsuario) {
+	public boolean hayTestAnterior(String idUsuario) {
 		Log.i("ENTRO", "hayTestAnterior");
 		boolean hayTestAnterior = false;
 
 		String[] parametros = new String[1];
-		parametros[0] = String.valueOf(Logica.idUsuario);
+		parametros[0] = String.valueOf(idUsuario);
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.query("respuestasUsuarioNM", new String[]{"valor"}, "IdUsuario=? AND IdPregunta=284",

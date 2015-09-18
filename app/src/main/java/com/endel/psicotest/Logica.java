@@ -225,8 +225,8 @@ public class Logica {
         int numeroRespuestas = item.getRespuestas().size();
 
         switch (item.getIdPregunta()) {
-            case 1:
-                //EditText editText = (EditText) activity.findViewById(3);
+            case 0:
+                EditText editText = (EditText) activity.findViewById(3);
                 //hayUnTestRepetido(editText.getText().toString());
                 break;
 
@@ -278,7 +278,7 @@ public class Logica {
         return true;    //Si es de tipo fecha siempre coge un valor por defecto
     }
 
-    private static boolean hayUnTestRepetido() {
+    private static boolean hayUnTestRepetido(String idUsuario) {
         DataBaseHelper dataBaseHelper = new DataBaseHelper(LayoutBasico.contexto);
         return dataBaseHelper.hayTestAnterior(idUsuario);
     }
