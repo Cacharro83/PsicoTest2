@@ -226,7 +226,10 @@ public class Logica {
 
 
         switch (item.getIdPregunta()) {
-            case 108:
+            case 108:case 109:case 110:case 111:case 112:case 113:case 114:case 115:case 116:case 117:
+            case 118:case 119:case 120:case 121:case 122:case 123:case 124:case 125:case 126:case 127:
+            case 128:case 129:case 130:case 131:case 132:case 133:case 134:case 135:case 136:case 137:
+            case 138:case 139:
                 DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
                 Spinner spinner = (Spinner) activity.findViewById(3);
                 int veces1Mes = Integer.parseInt(spinner.getSelectedItem().toString());

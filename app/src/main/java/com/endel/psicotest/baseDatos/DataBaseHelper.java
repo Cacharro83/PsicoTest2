@@ -14,6 +14,7 @@ import com.endel.psicotest.Colegio;
 import com.endel.psicotest.Item;
 import com.endel.psicotest.Logica;
 import com.endel.psicotest.RespuestaRellenada;
+import com.endel.psicotest.vista.LayoutBasico;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -425,46 +426,45 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 	public void insertarUsuarioNuevo(int idUsuario) {
 		Log.i("ENTRO", "insertarUsuarioNuevo");
-
 		SQLiteDatabase db = this.getWritableDatabase();
-
 		ContentValues campos = new ContentValues();
 		campos.put("IdUsuario", idUsuario);
 		campos.put("ultimaPregunta", 1);
 		db.insert("usuarios", null, campos);
-
 		db.close();
 		Log.i("SALGO", "insertarUsuarioNuevo");
 	}
 
 	public void insertarRespuestaUsuario(int idPregunta, int idUsuario, String valor) {
 		Log.i("ENTRO", "insertarRespuestaUsuario");
-		//if (comprobarSiYaExisteValorAnterior
+		borrarSiYaExisteValorAnterior();
 		SQLiteDatabase db = this.getWritableDatabase();
-
 		ContentValues values = new ContentValues();
 		values.put("IdRespuesta", idPregunta);
 		values.put("IdUsuario", idUsuario);
 		values.put("valor", valor);
 		db.insert("respuestasUsuarioNM", null, values);
-
 		db.close();
 		Log.i("SALGO", "insertarRespuestaUsuario");
 	}
 
+	private void borrarSiYaExisteValorAnterior() {
+		Log.i("ENTRO", "borrarSiYaExisteValorAnterior");
+		SQLiteDatabase db = this.getWritableDatabase();
+		String parametros = "idRespuesta=" + LayoutBasico.idPregunta + " AND IdUsuario=" + Logica.idUsuario;
+		db.delete("respuestasUsuarioNM", parametros, null);
+		db.close();
+		Log.i("SALGO", "borrarSiYaExisteValorAnterior");
+	}
+
 	public void aumentarUltimaPregunta(int idUsuario, int idPregunta) {
 		Log.i("ENTRO", "aumentarUltimaPregunta");
-
 		SQLiteDatabase db = this.getWritableDatabase();
-
 		ContentValues values = new ContentValues();
 		values.put("ultimaPregunta", idPregunta);
-
 		String[] parametros = new String[1];
 		parametros[0] = Integer.toString(idUsuario);
-
 		db.update("usuarios", values, "IdUsuario=?", parametros);
-
 		db.close();
 		Log.i("SALGO", "aumentarUltimaPregunta");
 	}
