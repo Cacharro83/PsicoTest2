@@ -412,7 +412,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 		ArrayList<Colegio> listaColegios = new ArrayList<Colegio>();
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.query(TABLA_CENTROS, new String[] {"IdCentro", "Nombre"}, null, null, null, null, null);
+		Cursor cursor = db.query(TABLA_CENTROS, new String[]{"IdCentro", "Nombre"}, null, null, null, null, null);
 		while(cursor.moveToNext()){
 			listaColegios.add(new Colegio(cursor.getInt(0), cursor.getString(1)));
 		}
@@ -531,21 +531,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	/*
 	 * Si ha dejado un test a la mitad con ese IdUsuario
 	 */
-	public boolean hayTestAnterior(String idUsuario) {
+	public boolean hayTestAnterior() {
 		Log.i("ENTRO", "hayTestAnterior");
 		boolean hayTestAnterior = false;
 
 		String[] parametros = new String[1];
-		parametros[0] = String.valueOf(idUsuario);
+		parametros[0] = String.valueOf(Logica.idUsuario);
 
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.query("respuestasUsuarioNM", new String[]{"valor"}, "IdUsuario=? AND IdPregunta=284",
+		Cursor cursor = db.query("respuestasUsuarioNM", new String[]{"valor"}, "IdUsuario=? AND IdRespuesta=284",
 				parametros, null, null, null, null);
 
 		if(cursor.moveToNext()){
 			hayTestAnterior = true;
-		} else {
-			borradoDeRespuestasAnterioresSiHay();
 		}
 		db.close();
 		cursor.close();
@@ -553,8 +551,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		return hayTestAnterior;
 	}
 
-	private void borradoDeRespuestasAnterioresSiHay() {
 
+	public void borrarPosiblesRespuestas() {
+		Log.i("ENTRO", "borrarPosiblesRespuestas");
+		SQLiteDatabase db = this.getWritableDatabase();
+		String parametros = "IdUsuario=" + Logica.idUsuario;
+		db.delete("respuestasUsuarioNM", parametros, null);
+		db.delete("usuarios", parametros, null);
+		db.close();
+		Log.i("SALGO", "borrarPosiblesRespuestas");
 	}
 }
 

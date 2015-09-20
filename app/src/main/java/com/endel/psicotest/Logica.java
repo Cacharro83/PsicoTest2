@@ -227,7 +227,23 @@ public class Logica {
         switch (item.getIdPregunta()) {
             case 0:
                 EditText editText = (EditText) activity.findViewById(3);
-                //hayUnTestRepetido(editText.getText().toString());
+                String idUsuario = editText.getText().toString();
+                for (int i=0; i<idUsuario.length(); i++) {
+                    if (!Character.isDigit(idUsuario.charAt(i))) {
+                        VariablesGlobales.PublicToast(contexto, "Debe ser un número (sin ningún espacio)");
+                        return false;
+                    }
+                }
+                Logica.idUsuario = Integer.parseInt(idUsuario);
+                if (hayUnTestRepetido()) {
+                    LayoutBasico layoutBasico = new LayoutBasico(activity);
+                    layoutBasico.crearMensajeUsuarioDuplicado();
+                    return false;
+                } else {
+                    //Si no hay un test completo borramos los (posibles) registros anteriores
+                    DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
+                    dataBaseHelper.borrarPosiblesRespuestas();
+                }
                 break;
 
             case 108:case 109:case 110:case 111:case 112:case 113:case 114:case 115:case 116:case 117:
@@ -247,22 +263,6 @@ public class Logica {
                 }
         }
 
-        //Código del centro -- IdUsuario
-        if (item.getIdPregunta() == 0) {
-            EditText editText = (EditText) activity.findViewById(3);
-            String codigo = editText.getText().toString();
-
-            for (int i=0; i<codigo.length(); i++) {
-                if (!Character.isDigit(codigo.charAt(i))) {
-                    VariablesGlobales.PublicToast(contexto, "Debe ser un número (sin ningún espacio)");
-                    return false;
-                }
-            }
-            Logica.idUsuario = Integer.parseInt(codigo);
-        }
-
-
-
         for (int numeroRespuesta=0; numeroRespuesta<numeroRespuestas; numeroRespuesta++) {
             //1-Contadores | 2-RadioButton | 3-Fecha | 4-TextView | 5-CheckBox
             switch (id_pregunta_tipo) {
@@ -278,9 +278,9 @@ public class Logica {
         return true;    //Si es de tipo fecha siempre coge un valor por defecto
     }
 
-    private static boolean hayUnTestRepetido(String idUsuario) {
+    private static boolean hayUnTestRepetido() {
         DataBaseHelper dataBaseHelper = new DataBaseHelper(LayoutBasico.contexto);
-        return dataBaseHelper.hayTestAnterior(idUsuario);
+        return dataBaseHelper.hayTestAnterior();
     }
 }
 

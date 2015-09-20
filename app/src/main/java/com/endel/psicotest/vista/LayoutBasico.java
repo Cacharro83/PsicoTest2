@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.endel.psicotest.Logica;
 import com.endel.psicotest.R;
 import com.endel.psicotest.Item;
+import com.endel.psicotest.VariablesGlobales;
 import com.endel.psicotest.baseDatos.DataBaseHelper;
 
 import java.util.ArrayList;
@@ -422,6 +423,21 @@ public class LayoutBasico {
             }
         });
         alertDialogBuilder.setNegativeButton("Cambiar respuesta del último mes", null);
+        alertDialogBuilder.create();
+        alertDialogBuilder.show();
+    }
+
+    public void crearMensajeUsuarioDuplicado() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+        alertDialogBuilder.setMessage(R.string.layoutBasico_mensajeAlertaUsuarioDuplicado);
+                alertDialogBuilder.setPositiveButton("Borrar test anterior", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
+                        dataBaseHelper.borrarPosiblesRespuestas();
+                        VariablesGlobales.PublicToast(contexto, "Test anterior borrado");
+                    }
+                });
+        alertDialogBuilder.setNegativeButton("Introducir otro código", null);
         alertDialogBuilder.create();
         alertDialogBuilder.show();
     }
