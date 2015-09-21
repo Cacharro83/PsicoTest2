@@ -469,7 +469,9 @@ public class LayoutBasico {
     private void pintarCajaTexto() {
         RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);   //no quitar, casca
         final EditText editText = new EditText(contexto);
-        editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);  //sólo números
+        if (idPregunta == 0) {
+            editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);  //sólo números
+        }
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
         id_actual = id_anterior + 1;
         editText.setId(id_actual);
