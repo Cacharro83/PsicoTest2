@@ -6,15 +6,18 @@ http://www.c-sharpcorner.com/uploadfile/e14021/importing-database-in-android-stu
 package com.endel.psicotest;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.endel.psicotest.baseDatos.DBMain;
+import com.endel.psicotest.vista.Admin;
 import com.endel.psicotest.vista.LayoutBasico;
 
 public class MainActivity extends Activity {
@@ -73,5 +76,18 @@ public class MainActivity extends Activity {
 
     private synchronized void setLastBackPress() {
         lastBackPress = System.currentTimeMillis();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent intent = null;
+        switch(item.getItemId()){
+            case R.id.action_settings:
+                intent = new Intent(getApplicationContext(), Admin.class);
+                startActivity(intent);
+                finish();
+                return true;
+        }
+        return false;
     }
 }
