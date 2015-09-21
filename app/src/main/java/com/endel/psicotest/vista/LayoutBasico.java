@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
@@ -470,13 +471,13 @@ public class LayoutBasico {
         final EditText editText = new EditText(contexto);
         editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);  //sólo números
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
-
         id_actual = id_anterior + 1;
         editText.setId(id_actual);
         editText.setTextColor(COLOR_RESPUESTA);
         editText.setTextSize(TAMANO_RESPUESTA);
         editText.setBackgroundColor(Color.WHITE);
         editText.setTypeface(null, Typeface.ITALIC);
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});    //límite de caracteres
         editText.setLayoutParams(parametros);
         relativeLayout.addView(editText, parametros);
     }
