@@ -201,6 +201,13 @@ public class Logica {
             return false;
         }
     }
+    public static boolean esDinero(int idPregunta) {
+        if (idPregunta>=204 && idPregunta<=219) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
     private static boolean guardarRespuestasTablaVida(Activity activity, boolean algunVicio, HashMap<Integer, Integer> mapaRespuestasTablaVida, Context contexto) {

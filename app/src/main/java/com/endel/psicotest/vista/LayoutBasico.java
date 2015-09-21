@@ -177,6 +177,10 @@ public class LayoutBasico {
         if (Logica.esHoraYMinutos(idPregunta)) {
             relativeLayout = insertarRestoDeHora(relativeLayout);
         }
+
+        if (Logica.esDinero(idPregunta)) {
+            relativeLayout = insertarEuros(relativeLayout);
+        }
     }
 
     private RelativeLayout insertarRestoDeHora(RelativeLayout relativeLayout) {
@@ -220,6 +224,20 @@ public class LayoutBasico {
         id_anterior=3;id_actual=3;  //hace referencia al campo de las horas
         relativeLayout.addView(tvLeyenda, parametrosLeyenda);
 
+        return relativeLayout;
+    }
+
+    private RelativeLayout insertarEuros(RelativeLayout relativeLayout) {
+        final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        TextView tvEuros = new TextView(contexto);
+        tvEuros.setId(44);
+        tvEuros.setText("€");
+        tvEuros.setTextColor(COLOR_RESPUESTA);
+        tvEuros.setTextSize(33);
+        parametros.addRule(RelativeLayout.TEXT_ALIGNMENT_CENTER, 3);
+        parametros.addRule(RelativeLayout.RIGHT_OF, 3);
+        relativeLayout.addView(tvEuros, parametros);
+        id_anterior=3;id_actual=3;  //hace referencia al campo de las '€'
         return relativeLayout;
     }
 
