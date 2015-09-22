@@ -18,5 +18,13 @@
 
     <string name="layoutBasico_mensajeAlerta12meses">Hay un error en tu respuesta. La cantidad de veces jugada en el último mes no puede ser mayor que la que jugaste en el último año.\nPor favor, escoge una opción.</string>
     <string name="layoutBasico_mensajeAlertaUsuarioDuplicado">Con ese código ya hay registrado un test. ¿Quieres borrar el anterior test o introducir un nuevo código?</string>
+
+    <!-- ERRORES -->
+    <string name="error_CampoVacio">No puede estar el campo vacío</string>
+    <string name="error_Numero">Debe ser un número (sin ningún espacio)</string>
+    <string name="error_TiempoMayorQueCero">Debes de escoger un valor de tiempo mayor que cero</string>
+    <string name="error_TextoMinimo3caracteres">Mínimo tres caracteres</string>
+    <string name="error_RadioVacio">Debes escoger una de las opciones</string>
+
     <string name="action_settings1">Settings</string>
 </resources>

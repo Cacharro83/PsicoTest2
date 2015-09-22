@@ -234,9 +234,13 @@ public class Logica {
             case 0:
                 EditText editText = (EditText) activity.findViewById(3);
                 String idUsuario = editText.getText().toString();
+                if (idUsuario.equals("")) {
+                    VariablesGlobales.PublicToast(contexto, contexto.getResources().getText(R.string.error_CampoVacio).toString());
+                    return false;
+                }
                 for (int i=0; i<idUsuario.length(); i++) {
                     if (!Character.isDigit(idUsuario.charAt(i))) {
-                        VariablesGlobales.PublicToast(contexto, "Debe ser un número (sin ningún espacio)");
+                        VariablesGlobales.PublicToast(contexto, contexto.getResources().getText(R.string.error_Numero).toString());
                         return false;
                     }
                 }
@@ -273,14 +277,14 @@ public class Logica {
                 Spinner hora = (Spinner) activity.findViewById(3);
                 Spinner minutos = (Spinner) activity.findViewById(55);
                 if (hora.getSelectedItem().toString().equals("00") && minutos.getSelectedItem().toString().equals("00")) {
-                    VariablesGlobales.PublicToast(contexto, "Debes de escoger un valor de tiempo mayor que cero");
+                    VariablesGlobales.PublicToast(contexto, contexto.getResources().getText(R.string.error_TiempoMayorQueCero).toString());
                     return false;
                 }
                 break;
             case 257:case 258:case 259:     //acontecimientos
                 EditText etAcontecimiento = (EditText) activity.findViewById(3);
                 if (etAcontecimiento.length() < 3) {
-                    VariablesGlobales.PublicToast(contexto, "Mínimo tres caracteres");
+                    VariablesGlobales.PublicToast(contexto, contexto.getResources().getText(R.string.error_TextoMinimo3caracteres).toString());
                     return false;
                 }
         }
@@ -290,7 +294,7 @@ public class Logica {
             switch (id_pregunta_tipo) {
                 case 2: //RadioButton
                     if (radioGroup.getCheckedRadioButtonId() == -1) {
-                        VariablesGlobales.PublicToast(contexto, "Debes escoger una de las opciones");
+                        VariablesGlobales.PublicToast(contexto, contexto.getResources().getText(R.string.error_RadioVacio).toString());
                         return false;
                     } else {
                         return true;
