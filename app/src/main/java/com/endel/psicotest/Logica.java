@@ -140,7 +140,6 @@ public class Logica {
             return algunVicio;
         }
 
-
         switch (item.getIdTipo()) {
             case 1:     //Contador
                 Spinner spinner = (Spinner) activity.findViewById(3);  //ojo en el caso de los 2 contadores
@@ -259,7 +258,6 @@ public class Logica {
                 DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
                 Spinner spinner = (Spinner) activity.findViewById(3);
                 int veces1Mes = Integer.parseInt(spinner.getSelectedItem().toString());
-
                 if (dataBaseHelper.masVeces1MesQueDurante12Meses(item.getIdPregunta(), veces1Mes)) {
                     LayoutBasico layoutBasico = new LayoutBasico(activity);
                     layoutBasico.crearMensajeAlert12Veces(R.string.layoutBasico_mensajeAlerta12meses);
@@ -267,6 +265,18 @@ public class Logica {
                 } else {
                     return true;
                 }
+            //Hora y minutos: no puede ser '0'
+            case 140:case 141:case 142:case 143:case 144:case 145:case 146:case 147:case 148:case 149:
+            case 150:case 151:case 152:case 153:case 154:case 155:case 156:case 157:case 158:case 159:
+            case 160:case 161:case 162:case 163:case 164:case 165:case 166:case 167:case 168:case 169:
+            case 170:case 171:
+                Spinner hora = (Spinner) activity.findViewById(3);
+                Spinner minutos = (Spinner) activity.findViewById(55);
+                if (hora.getSelectedItem().toString().equals("00") && minutos.getSelectedItem().toString().equals("00")) {
+                    VariablesGlobales.PublicToast(contexto, "Debes de escoger un valor de tiempo mayor que cero");
+                    return false;
+                }
+                break;
             case 257:case 258:case 259:     //acontecimientos
                 EditText etAcontecimiento = (EditText) activity.findViewById(3);
                 if (etAcontecimiento.length() < 3) {

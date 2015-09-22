@@ -159,7 +159,7 @@ public class LayoutBasico {
             valorMaximo = 18;
         } else {
             //Opciones para veces que has hecho algo
-            valorMinimo = 0;
+            valorMinimo = 1;
             valorMaximo = 50;
         }
 
@@ -199,18 +199,18 @@ public class LayoutBasico {
 
         //Spinner de los minutos
         RelativeLayout.LayoutParams parametrosMinutos = new RelativeLayout.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT, AbsListView.LayoutParams.WRAP_CONTENT);   //no quitar, casca
-        Spinner spinner = new Spinner(contexto);
-        spinner.setId(55);
+        Spinner spinnerMinutos = new Spinner(contexto);
+        spinnerMinutos.setId(55);
         int valorMinimo=0, valorMaximo=59;
         String[] valores = rellenarSpinner(valorMinimo, valorMaximo, idPregunta);
         parametrosMinutos.addRule(RelativeLayout.TEXT_ALIGNMENT_CENTER, 44);
         parametrosMinutos.addRule(RelativeLayout.RIGHT_OF, 44);
         AdaptadorPersonalizado<CharSequence> adapter = new AdaptadorPersonalizado<CharSequence>(contexto, simple_spinner_item, valores);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setMinimumWidth(100);
-        spinner.setAdapter(adapter);
+        spinnerMinutos.setMinimumWidth(100);
+        spinnerMinutos.setAdapter(adapter);
         id_actual++;id_anterior++;
-        relativeLayout.addView(spinner, parametrosMinutos);
+        relativeLayout.addView(spinnerMinutos, parametrosMinutos);
 
         //Leyenda
         final RelativeLayout.LayoutParams parametrosLeyenda = new RelativeLayout.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT, AbsListView.LayoutParams.WRAP_CONTENT);
@@ -449,13 +449,13 @@ public class LayoutBasico {
     public void crearMensajeUsuarioDuplicado() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
         alertDialogBuilder.setMessage(R.string.layoutBasico_mensajeAlertaUsuarioDuplicado);
-                alertDialogBuilder.setPositiveButton("Borrar test anterior", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
-                        dataBaseHelper.borrarPosiblesRespuestas();
-                        VariablesGlobales.PublicToast(contexto, "Test anterior borrado");
-                    }
-                });
+        alertDialogBuilder.setPositiveButton("Borrar test anterior", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
+            dataBaseHelper.borrarPosiblesRespuestas();
+            VariablesGlobales.PublicToast(contexto, "Test anterior borrado");
+        }
+        });
         alertDialogBuilder.setNegativeButton("Introducir otro código", null);
         alertDialogBuilder.create();
         alertDialogBuilder.show();
