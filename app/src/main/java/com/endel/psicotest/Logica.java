@@ -305,4 +305,3 @@ public class Logica {
         return dataBaseHelper.hayTestAnterior();
     }
 }
-
