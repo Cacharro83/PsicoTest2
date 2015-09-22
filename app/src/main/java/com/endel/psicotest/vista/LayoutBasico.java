@@ -42,7 +42,7 @@ import static android.R.layout.simple_spinner_item;
  * Created by JavierH on 25/08/2015.
  */
 public class LayoutBasico {
-    public static final int COLOR_RESPUESTA = Color.BLUE, TAMANO_RESPUESTA = 20;
+    public static final int COLOR_RESPUESTA = Color.BLUE, TAMANO_RESPUESTA = 20, TAMANO_COMBO = 114;
     public int id_actual = 1, id_anterior = 1, siguiente, contadorIDsTablaVida = 11, idUsuario;
     public static int idPregunta;
     public boolean algunVicio = false;
@@ -169,7 +169,7 @@ public class LayoutBasico {
 
         AdaptadorPersonalizado<CharSequence> adapter = new AdaptadorPersonalizado<CharSequence>(contexto, simple_spinner_item, valores);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setMinimumWidth(100);
+        spinner.setMinimumWidth(TAMANO_COMBO);
         spinner.setId(id_actual);
         spinner.setAdapter(adapter);
         relativeLayout.addView(spinner, parametros);
@@ -207,7 +207,7 @@ public class LayoutBasico {
         parametrosMinutos.addRule(RelativeLayout.RIGHT_OF, 44);
         AdaptadorPersonalizado<CharSequence> adapter = new AdaptadorPersonalizado<CharSequence>(contexto, simple_spinner_item, valores);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerMinutos.setMinimumWidth(100);
+        spinnerMinutos.setMinimumWidth(TAMANO_COMBO);
         spinnerMinutos.setAdapter(adapter);
         id_actual++;id_anterior++;
         relativeLayout.addView(spinnerMinutos, parametrosMinutos);
@@ -243,14 +243,25 @@ public class LayoutBasico {
 
 
     private String[] rellenarSpinner(int valorMinimo, int valorMaximo, int idPregunta) {
-        String[] camposSpinner = new String[(valorMaximo+1)-valorMinimo];
-        for (int i=valorMinimo, indice=0; i<=valorMaximo; i++) {
+        int numeroCampos = (valorMaximo+1)-valorMinimo;
+        if (valorMaximo == 50) {
+            numeroCampos = numeroCampos + 2;
+        }
+        String[] camposSpinner = new String[numeroCampos];
+        int indice = 0;
+        for (int i=valorMinimo; i<=valorMaximo; i++) {
             if (Logica.esHoraYMinutos(idPregunta) && i<10) {
                 camposSpinner[indice++] = "0" + String.valueOf(i);
             } else {
                 camposSpinner[indice++] = String.valueOf(i);
             }
         }
+        //Si puede llegar a 50 hay que añadir los casos especiales
+        if (valorMaximo == 50) {
+            camposSpinner[indice++] = "51-99";
+            camposSpinner[indice++] = "100 ó más";
+        }
+
         return camposSpinner;
     }
 
