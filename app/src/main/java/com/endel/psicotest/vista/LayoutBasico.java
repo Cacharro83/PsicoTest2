@@ -158,6 +158,13 @@ public class LayoutBasico {
             //Edades
             valorMinimo = 14;
             valorMaximo = 18;
+
+            //Si son preguntas "del pasado"
+            if (idPregunta>=43 && idPregunta<=74) {
+                valorMinimo = 11;
+                valorMaximo = Logica.USUARIO_EDAD;
+            }
+
         } else {
             //Opciones para veces que has hecho algo
             valorMinimo = 1;
@@ -254,7 +261,11 @@ public class LayoutBasico {
             if (Logica.esHoraYMinutos(idPregunta) && i<10) {
                 camposSpinner[indice++] = "0" + String.valueOf(i);
             } else {
-                camposSpinner[indice++] = String.valueOf(i);
+                if (Logica.esEdad(idPregunta) && i==11) {
+                    camposSpinner[indice++] = String.valueOf(i) + " o menos";
+                } else {
+                    camposSpinner[indice++] = String.valueOf(i);
+                }
             }
         }
         //Si puede llegar a 50 hay que añadir los casos especiales
