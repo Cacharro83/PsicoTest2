@@ -32,6 +32,7 @@ import com.endel.psicotest.VariablesGlobales;
 import com.endel.psicotest.baseDatos.DataBaseHelper;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -333,6 +334,14 @@ public class LayoutBasico {
         final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         id_actual = id_anterior + 1;
         datePicker.setId(id_actual);
+
+        //Inicializamos el calendario con el supuesto año de nacimiento y la fecha actual (x años justos)
+        Calendar cal = Calendar.getInstance();  //fecha de hoy
+        cal.set(datePicker.getYear() - Logica.USUARIO_EDAD, datePicker.getMonth(), datePicker.getDayOfMonth());
+        long fechaMinima = cal.getTimeInMillis();
+        long fechaMaxima = fechaMinima + 31449600000L;  //364 días
+        datePicker.setMinDate(fechaMinima);
+        datePicker.setMaxDate(fechaMaxima);
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
         relativeLayout.addView(datePicker, parametros);
     }

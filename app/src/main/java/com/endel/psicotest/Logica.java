@@ -21,7 +21,7 @@ import java.util.List;
  * Created by Javier on 07/09/2015.
  */
 public class Logica {
-    public static int ultimoVicio, vicioActual, idUsuario = -1;
+    public static int ultimoVicio, vicioActual, idUsuario = -1, USUARIO_EDAD;
     public static boolean hayViciosConDinero = false;
 
     public static int averiguarSiguiente(Item item, int siguiente, boolean algunVicio, Context contexto, View viewById) {
@@ -130,14 +130,17 @@ public class Logica {
     public static boolean grabarRespuestas(Item item, RadioGroup radioGroup, List<RespuestaValor> listaRespuestasRadioButton, Context contexto, Activity activity, boolean algunVicio) {
         DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
 
-        if (item.getIdPregunta() == 0) {
-            dataBaseHelper.insertarUsuarioNuevo(idUsuario);
-        }
-
-        //Si viene de la tabla vida
-        if (item.getIdPregunta() == 11) {
-            algunVicio = guardarRespuestasTablaVida(activity, algunVicio, LayoutBasico.mapaRespuestasTablaVida, contexto);
-            return algunVicio;
+        switch (item.getIdPregunta()) {
+            case 0:     //idUsuario
+                dataBaseHelper.insertarUsuarioNuevo(idUsuario);
+                break;
+            case 1:     //edad
+                Spinner edad = (Spinner) activity.findViewById(3);
+                USUARIO_EDAD = Integer.parseInt(edad.getSelectedItem().toString());
+                break;
+            case 11:    //tabla vida
+                algunVicio = guardarRespuestasTablaVida(activity, algunVicio, LayoutBasico.mapaRespuestasTablaVida, contexto);
+                return algunVicio;
         }
 
         switch (item.getIdTipo()) {
