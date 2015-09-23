@@ -12,9 +12,11 @@
     <string name="layoutBasico_mensajeAlerta">A continuación aparecerán nuevas preguntas relativas al ultimo año. Por favor haz click para continuar</string>
     <string name="layoutBasico_mensajeAlerta1">A continuación aparecerán nuevas preguntas relativas al ultimo año. Por favor dale click a continuar</string>
     <string name="layoutBasico_mensajeAlerta2">A continuación aparecerá una serie de motivos por los que es posible que juegues. Por favor, señala con que frecuencia juegas por cada uno de los siguientes motivos. Haz click para continuar</string>
-    <string name="layoutBasico_mensajeAlerta3">A continuación te vamos a pedir que pienses y escribas varios acontecimientos que hayan ocurrido en tu vida en diferentes mmomentos. Por favor haz click para continuar</string>
+    <string name="layoutBasico_mensajeAlerta3">A continuación te vamos a pedir que pienses y escribas varios acontecimientos que hayan ocurrido en tu vida en diferentes momentos. Por favor haz click para continuar</string>
     <string name="layoutBasico_mensajeAlerta4">A continuación aparecerá una serie de preguntas. Para cada una de ellas tendrás que responder si han ocurrido en el último mes, hace 2-3 meses, hace 4-12 meses, más de 1 año, o nunca. Ayudate de los tres acontecimientos en los que ha pensado para orientarte en el tiempo"</string>
-    <string name="layoutBasico_mensajeAlerta5">¿Cuando fue la ultima ves que hiciste las siguientes cosas dos o más veces?</string>
+    <string name="layoutBasico_mensajeAlerta5">¿Cuando fue la ultima vez que hiciste las siguientes cosas dos o más veces?</string>
+    <string name="layoutBasico_mensajeAlerta6">¿Cuando fue la ultima vez que hiciste las siguientes cosas dos o más veces?</string>
+    <string name="layoutBasico_mensajeAlerta7">¿Cuándo fue la ultima vez que....</string>
 
     <string name="layoutBasico_mensajeAlerta12meses">Hay un error en tu respuesta. La cantidad de veces jugada en el último mes no puede ser mayor que la que jugaste en el último año.\nPor favor, escoge una opción.</string>
     <string name="layoutBasico_mensajeAlertaUsuarioDuplicado">Con ese código ya hay registrado un test. ¿Quieres borrar el anterior test o introducir un nuevo código?</string>

@@ -414,10 +414,13 @@ public class LayoutBasico {
                         break;
                     case 259:
                         crearMensajeAlert(R.string.layoutBasico_mensajeAlerta4);
-                        break;
-                    case 265:
                         crearMensajeAlert(R.string.layoutBasico_mensajeAlerta5);
                         break;
+                    case 265:
+                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta6);
+                        break;
+                    case 277:
+                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta7);
                     case 999:   //Si dio al botón de 'Finalizar test'
                         System.exit(0);
                         break;
