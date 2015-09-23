@@ -413,11 +413,11 @@ public class LayoutBasico {
                         crearMensajeAlert(R.string.layoutBasico_mensajeAlerta3);
                         break;
                     case 259:
+                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta6);
                         crearMensajeAlert(R.string.layoutBasico_mensajeAlerta4);
-                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta5);
                         break;
                     case 265:
-                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta6);
+                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta5);
                         break;
                     case 277:
                         crearMensajeAlert(R.string.layoutBasico_mensajeAlerta7);
