@@ -516,6 +516,7 @@ public class LayoutBasico {
         relativeLayout.addView(editText, parametros);
         //En el caso de ser 257-259 se pinta un calendario debajo como "guía", sin funcionalidad
         if (idPregunta>=257 && idPregunta<=259) {
+            id_actual++;id_anterior++;
             pintarFecha();
         }
     }
