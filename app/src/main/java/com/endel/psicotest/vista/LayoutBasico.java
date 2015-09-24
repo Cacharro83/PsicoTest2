@@ -32,7 +32,6 @@ import com.endel.psicotest.VariablesGlobales;
 import com.endel.psicotest.baseDatos.DataBaseHelper;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -345,17 +344,11 @@ public class LayoutBasico {
         final RelativeLayout.LayoutParams parametros = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         id_actual = id_anterior + 1;
         datePicker.setId(id_actual);
-
-        //Inicializamos el calendario con el supuesto año de nacimiento y la fecha actual (x años justos)
-        Calendar cal = Calendar.getInstance();  //fecha de hoy
-        cal.set(datePicker.getYear() - Logica.USUARIO_EDAD, datePicker.getMonth(), datePicker.getDayOfMonth());
-        long fechaMinima = cal.getTimeInMillis();
-        long fechaMaxima = fechaMinima + 31449600000L;  //364 días
-        datePicker.setMinDate(fechaMinima);
-        datePicker.setMaxDate(fechaMaxima);
+        datePicker = Logica.calendarioSegunIdPregunta(datePicker);
         parametros.addRule(RelativeLayout.BELOW, id_anterior);
         relativeLayout.addView(datePicker, parametros);
     }
+
 
     private void pintarRadioButton(int numeroRespuesta, Item item) {
         parametros.addRule(RelativeLayout.BELOW, 1);
@@ -367,11 +360,8 @@ public class LayoutBasico {
         //radioButton.setText("radioButton ID:" + id_actual + " VALOR: " + valor + " | " + item.getRespuestas().get(numeroRespuesta).getTextoRespuesta());
         radioButton.setText(item.getRespuestas().get(numeroRespuesta).getTextoRespuesta());
         radioButton.setTextSize(TAMANO_RESPUESTA);
-
         RespuestaValor respuestaValor = new RespuestaValor(radioButton.getId(), valor, siguiente);
-
         listaRespuestasRadioButton.add(respuestaValor);
-
         radioGroup.addView(radioButton, parametros);
     }
 
@@ -441,6 +431,7 @@ public class LayoutBasico {
                         break;
                     case 277:
                         crearMensajeAlert(R.string.layoutBasico_mensajeAlerta7);
+                        break;
                     case 999:   //Si dio al botón de 'Finalizar test'
                         System.exit(0);
                         break;
@@ -545,7 +536,6 @@ public class LayoutBasico {
         final GradientDrawable gd = new GradientDrawable();
         gd.setCornerRadius(5);
         gd.setStroke(1, 0xFF000000);
-
         texto = "\t\t\t\t\t\t\t" + texto;
         TextView celda = new TextView(contexto);
         celda.setTypeface(null, Typeface.BOLD_ITALIC);
@@ -561,7 +551,6 @@ public class LayoutBasico {
         TextView celda = new TextView(contexto);
         celda.setTypeface(null, Typeface.BOLD_ITALIC);
         celda.setTextColor(COLOR_RESPUESTA);
-
         //con/sin dinero
         if (esCabecera) {
             celda.setTextSize(23);

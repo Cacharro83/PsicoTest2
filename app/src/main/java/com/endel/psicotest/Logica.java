@@ -14,6 +14,7 @@ import com.endel.psicotest.baseDatos.DataBaseHelper;
 import com.endel.psicotest.vista.LayoutBasico;
 import com.endel.psicotest.vista.RespuestaValor;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -310,5 +311,30 @@ public class Logica {
     private static boolean hayUnTestRepetido() {
         DataBaseHelper dataBaseHelper = new DataBaseHelper(LayoutBasico.contexto);
         return dataBaseHelper.hayTestAnterior();
+    }
+
+    public static DatePicker calendarioSegunIdPregunta(DatePicker datePicker) {
+        Calendar cal = Calendar.getInstance();  //fecha de hoy
+        switch (LayoutBasico.idPregunta) {
+            case 3:     //fecha de nacimiento en relación a la edad que metió en la pregunta anterior
+                cal.set(datePicker.getYear() - Logica.USUARIO_EDAD, datePicker.getMonth(), datePicker.getDayOfMonth());
+                long fechaMinima = cal.getTimeInMillis();
+                long fechaMaxima = fechaMinima + 31449600000L;  //364 días
+                datePicker.setMinDate(fechaMinima);
+                datePicker.setMaxDate(fechaMaxima);
+                return datePicker;
+            //Calendarios "de apoyo" a los acontecimientos
+            case 257:   //un mes atrás
+                cal.set(datePicker.getYear(), datePicker.getMonth()-1, datePicker.getDayOfMonth());
+                break;
+            case 258:   //tres meses atrás
+                cal.set(datePicker.getYear(), datePicker.getMonth()-3, datePicker.getDayOfMonth());
+                break;
+            case 259:   //un año atrás
+                cal.set(datePicker.getYear()-1, datePicker.getMonth(), datePicker.getDayOfMonth());
+                break;
+        }
+        datePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), null);
+        return datePicker;
     }
 }
