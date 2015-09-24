@@ -502,7 +502,7 @@ public class LayoutBasico {
         idPregunta = item.getIdPregunta();
         pregunta.setId(id_actual);
         //pregunta.setText(item.getIdPregunta() + ") " + item.getTextoPregunta() + " | tipoPregunta: " + item.getIdTipo());
-        pregunta.setText(item.getIdPregunta() + ") " + item.getTextoPregunta());
+        pregunta.setText(item.getTextoPregunta());
         pregunta.setTextColor(Color.BLACK);
         pregunta.setTextSize(30);
         pregunta.setTypeface(null, Typeface.BOLD);
