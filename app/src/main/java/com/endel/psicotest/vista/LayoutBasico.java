@@ -166,7 +166,7 @@ public class LayoutBasico {
 
         } else {
             //Opciones para veces que has hecho algo
-            valorMinimo = 1;
+            valorMinimo = 0;
             valorMaximo = 50;
         }
 
