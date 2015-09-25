@@ -49,7 +49,7 @@ public class LayoutBasico {
     public RelativeLayout relativeLayout;
     public RadioGroup radioGroup;
     public static Context contexto;
-    public Activity activity;
+    public static Activity activity;
     public List<RespuestaValor> listaRespuestasRadioButton = new ArrayList();
     public static HashMap<Integer, Integer> mapaRespuestasTablaVida = new HashMap<>();
 
@@ -476,15 +476,33 @@ public class LayoutBasico {
         alertDialogBuilder.setMessage(R.string.layoutBasico_mensajeAlertaUsuarioDuplicado);
         alertDialogBuilder.setPositiveButton("Borrar test anterior", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-            DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
-            dataBaseHelper.borrarPosiblesRespuestas();
-            VariablesGlobales.PublicToast(contexto, "Test anterior borrado");
-        }
+                DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
+                dataBaseHelper.borrarPosiblesRespuestas();
+                VariablesGlobales.PublicToast(contexto, "Test anterior borrado");
+            }
         });
         alertDialogBuilder.setNegativeButton("Introducir otro código", null);
         alertDialogBuilder.create();
         alertDialogBuilder.show();
     }
+
+    public void crearMensajeSinViciosEnTablaVida() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+        alertDialogBuilder.setMessage(R.string.layoutBasico_mensajeAlertaSinVicios);
+        alertDialogBuilder.setPositiveButton("Sí, estoy seguro", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                LayoutBasico layoutBasico = new LayoutBasico(activity);
+                relativeLayout = layoutBasico.pintarVista(contexto, 107);
+                ScrollView scrollView = new ScrollView(contexto);
+                scrollView.addView(relativeLayout);
+                activity.setContentView(scrollView);
+            }
+        });
+        alertDialogBuilder.setNegativeButton("No, quiero modificar la tabla", null);
+        alertDialogBuilder.create();
+        alertDialogBuilder.show();
+    }
+
 
     private void pintarNuevaPregunta(Item item) {
         LayoutBasico layoutBasico = new LayoutBasico(activity);

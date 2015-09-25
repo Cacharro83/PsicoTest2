@@ -244,6 +244,7 @@ public class Logica {
     public static boolean validarRespuestas(Item item, Context contexto, Activity activity, RadioGroup radioGroup) {
         int id_pregunta_tipo = item.getIdTipo();
         int numeroRespuestas = item.getRespuestas().size();
+        LayoutBasico layoutBasico = new LayoutBasico(activity);
 
         switch (item.getIdPregunta()) {
             case 0:
@@ -261,13 +262,19 @@ public class Logica {
                 }
                 Logica.idUsuario = Integer.parseInt(idUsuario);
                 if (hayUnTestRepetido()) {
-                    LayoutBasico layoutBasico = new LayoutBasico(activity);
                     layoutBasico.crearMensajeUsuarioDuplicado();
                     return false;
                 } else {
                     //Si no hay un test completo borramos los (posibles) registros anteriores
                     DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
                     dataBaseHelper.borrarPosiblesRespuestas();
+                }
+                break;
+
+            case 11:    //Tabla vida. Que avise si no tiene vicios
+                if (sinVicios()) {
+                    layoutBasico.crearMensajeSinViciosEnTablaVida();
+                    return false;
                 }
                 break;
             case 108:case 109:case 110:case 111:case 112:case 113:case 114:case 115:case 116:case 117:
@@ -278,7 +285,6 @@ public class Logica {
                 Spinner spinner = (Spinner) activity.findViewById(3);
                 int veces1Mes = Integer.parseInt(spinner.getSelectedItem().toString());
                 if (dataBaseHelper.masVeces1MesQueDurante12Meses(item.getIdPregunta(), veces1Mes)) {
-                    LayoutBasico layoutBasico = new LayoutBasico(activity);
                     layoutBasico.crearMensajeAlert12Veces(R.string.layoutBasico_mensajeAlerta12meses);
                     return false;
                 } else {
@@ -317,6 +323,16 @@ public class Logica {
             }
         }
         return true;    //Si es de tipo fecha siempre coge un valor por defecto
+    }
+
+    private static boolean sinVicios() {
+        for (int i=11; i<43; i++) {
+            CheckBox checkBox = (CheckBox) LayoutBasico.activity.findViewById(i);
+            if (checkBox.isChecked()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static boolean hayUnTestRepetido() {
