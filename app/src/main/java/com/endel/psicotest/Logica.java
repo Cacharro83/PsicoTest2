@@ -90,15 +90,26 @@ public class Logica {
                 break;
 
             /*
-             * Si llega al 'Gambling Compañía' (172-203) no debe saltar a la siguiente sección
-             * 'Gambling Motives' a no ser que sea el último vicio, debería recorrer el siguiente
-             * vicio
+             * Si llega al 'Gambling Compañía' (172-203) y es el último vicio hay que valorar que
+             * previamente si hay algún vicio con dinero salte a los 'SOGS-RA' y 'DSM-IV-MR-J' y no a
+             * 'Gambling Motives'
              */
-            case 172:case 173:case 174:case 175:case 176:case 177:case 178:case 179:case 180:
-            case 181:case 182:case 183:case 184:case 185:case 186:case 187:case 188:case 189:
-            case 190:case 191:case 192:case 193:case 194:case 195:case 196:case 197:case 198:
-            case 199:case 200:case 201:case 202:case 203:
-                if (item.getIdPregunta() != ultimoVicio+161) {
+            case 173:case 175:case 177:case 179:case 181:case 183:case 185:case 187:case 189:case 191:
+            case 193:case 195:case 197:case 199:case 201:case 203:
+                if (vicioActual != ultimoVicio) {
+                    return buscarSiguienteVicio();
+                }
+                if (vicioActual==ultimoVicio && hayViciosConDinero) {
+                    return 220;
+                }
+                break;
+            /*
+             * Si está en 'Gambling Dinero' (204-219) no debería ir al 'siguiente' natural (220)
+              * si hay más vicios
+             */
+            case 204:case 205:case 206:case 207:case 208:case 209:case 210:case 211:case 212:case 213:
+            case 214:case 215:case 216:case 217:case 218:case 219:
+                if (vicioActual != ultimoVicio) {
                     return buscarSiguienteVicio();
                 }
                 break;
