@@ -269,8 +269,8 @@ public class LayoutBasico {
         }
         //Si puede llegar a 50 hay que añadir los casos especiales
         if (valorMaximo == 50) {
-            camposSpinner[indice++] = "51-99";
-            camposSpinner[indice++] = "100 ó más";
+            camposSpinner[indice++] = contexto.getResources().getText(R.string.numero_51_99).toString();
+            camposSpinner[indice++] = contexto.getResources().getText(R.string.numero_100_ó_más).toString();
         }
 
         return camposSpinner;

@@ -283,7 +283,15 @@ public class Logica {
             case 138:case 139:
                 DataBaseHelper dataBaseHelper = new DataBaseHelper(contexto);
                 Spinner spinner = (Spinner) activity.findViewById(3);
-                int veces1Mes = Integer.parseInt(spinner.getSelectedItem().toString());
+                String respuestaVeces = spinner.getSelectedItem().toString();
+                //Casos especiales, para evitar un problema al comparar valores
+                if (respuestaVeces.equals(contexto.getResources().getText(R.string.numero_51_99).toString())) {
+                    respuestaVeces = "51";
+                }
+                if (respuestaVeces.equals(contexto.getResources().getText(R.string.numero_100_ó_más).toString())) {
+                    respuestaVeces = "100";
+                }
+                int veces1Mes = Integer.parseInt(respuestaVeces);
                 if (dataBaseHelper.masVeces1MesQueDurante12Meses(item.getIdPregunta(), veces1Mes)) {
                     layoutBasico.crearMensajeAlert12Veces(R.string.layoutBasico_mensajeAlerta12meses);
                     return false;
