@@ -44,9 +44,9 @@ import static android.R.layout.simple_spinner_item;
 public class LayoutBasico {
     public static final int COLOR_RESPUESTA = Color.BLUE, TAMANO_RESPUESTA = 20, TAMANO_COMBO = 114;
     public int id_actual = 1, id_anterior = 1, siguiente, contadorIDsTablaVida = 11, idUsuario;
-    public static int idPregunta;
+    public static int idPregunta, idPreguntaAnterior;
     public boolean algunVicio = false;
-    public RelativeLayout relativeLayout;
+    public static RelativeLayout relativeLayout;
     public RadioGroup radioGroup;
     public static Context contexto;
     public static Activity activity;
@@ -517,6 +517,7 @@ public class LayoutBasico {
 
     private void pintarPregunta(Item item) {
         TextView pregunta = new TextView(contexto);
+        idPreguntaAnterior = idPregunta;
         idPregunta = item.getIdPregunta();
         pregunta.setId(id_actual);
         pregunta.setText(item.getIdPregunta() + ") " + item.getTextoPregunta() + " | tipoPregunta: " + item.getIdTipo());

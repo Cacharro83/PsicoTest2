@@ -58,9 +58,17 @@ public class MainActivity extends Activity {
     }
 
     private void manageCancel() {
-        if (getLastBackPress() + VariablesGlobales.DOUBLE_BACK_TIME > System.currentTimeMillis())
+        if (getLastBackPress() + VariablesGlobales.DOUBLE_BACK_TIME > System.currentTimeMillis()) {
+            /*
+            LayoutBasico layoutBasico = new LayoutBasico(LayoutBasico.activity);
+            LayoutBasico.relativeLayout = layoutBasico.pintarVista(LayoutBasico.contexto, LayoutBasico.idPreguntaAnterior);
+            ScrollView scrollView = new ScrollView(LayoutBasico.contexto);
+            scrollView.addView(LayoutBasico.relativeLayout);
+            LayoutBasico.activity.setContentView(scrollView);
+            */
             finish();
-        else {
+        } else {
+            //Toast tstBackPress = Toast.makeText(this, com.endel.psicotest.VariablesGlobales.pressTwice + " idPregunta: " + LayoutBasico.idPregunta + " | idPreguntaAnterior: " + LayoutBasico.idPreguntaAnterior, Toast.LENGTH_LONG);
             Toast tstBackPress = Toast.makeText(this, com.endel.psicotest.VariablesGlobales.pressTwice, Toast.LENGTH_LONG);
             TextView v = (TextView) tstBackPress.getView().findViewById(android.R.id.message);
             v.setTextSize(25);
