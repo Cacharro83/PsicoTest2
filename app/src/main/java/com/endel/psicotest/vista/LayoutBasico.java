@@ -509,6 +509,43 @@ public class LayoutBasico {
 
         //Casos especiales
         siguiente = Logica.averiguarSiguiente(item, siguiente, algunVicio, contexto, activity.findViewById(3));
+        if(siguiente == 220)
+        {
+            crearMensajeAlert(R.string.layoutBasico_mensajeAlerta);
+        }
+        if(siguiente == 231)
+        {
+            crearMensajeAlert(R.string.layoutBasico_mensajeAlerta);
+        }
+        if(siguiente == 241)
+        {
+            crearMensajeAlert(R.string.layoutBasico_mensajeAlerta2);
+        }
+        if(siguiente == 257)
+        {
+            crearMensajeAlert(R.string.layoutBasico_mensajeAlerta3);
+        }
+        if(siguiente == 260)
+        {
+            crearMensajeAlert(R.string.layoutBasico_mensajeAlerta5);
+            crearMensajeAlert(R.string.layoutBasico_mensajeAlerta4);
+        }
+        if(siguiente == 266)
+        {
+            crearMensajeAlert(R.string.layoutBasico_mensajeAlerta6);
+        }
+        if(siguiente == 273)
+        {
+            crearMensajeAlert(R.string.layoutBasico_mensajeAlerta7);
+        }
+        if(siguiente == 278)
+        {
+            crearMensajeAlert(R.string.layoutBasico_mensajeAlerta7);
+        }
+        if(siguiente == 999) {
+            crearMensajeAlert(R.string.layoutBasico_mensajeAlerta8);
+        }
+
         relativeLayout = layoutBasico.pintarVista(contexto, siguiente);
         ScrollView scrollView = new ScrollView(contexto);
         scrollView.addView(relativeLayout);

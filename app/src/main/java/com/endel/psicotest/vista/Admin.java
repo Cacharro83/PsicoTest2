@@ -36,13 +36,10 @@ public class Admin extends Activity {
 			@Override
 			public void onClick(View v) {
 				if(et1.getText().toString().equals("admin") && et2.getText().toString().equals("uni2013")){
-					//Intent i = new Intent(Admin.this, Sincronizacion.class);
-					//
-					//
-					//startActivity(i);
+					Intent i = new Intent(Admin.this, Sincronizacion.class);
+					startActivity(i);
 					finish();
-				}
-				else{
+				} else{
 					VariablesGlobales.PublicToast(getApplicationContext(), "WRONG USER OR PASSWORD");
 				}
 			}
