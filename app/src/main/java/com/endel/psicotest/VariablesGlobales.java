@@ -38,7 +38,7 @@ public class VariablesGlobales {
 	
 	public Integer anterior = 0;
 	
-	public static String pressTwice = "Press twice back";
+	public static String pressTwice = "Presiona de nuevo para volver a la pregunta anterior";
 	
 	public static final int DOUBLE_BACK_TIME = 2000;
 

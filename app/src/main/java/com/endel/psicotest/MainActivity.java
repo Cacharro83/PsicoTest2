@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.endel.psicotest.baseDatos.DBMain;
+import com.endel.psicotest.baseDatos.DataBaseHelper;
 import com.endel.psicotest.vista.Admin;
 import com.endel.psicotest.vista.LayoutBasico;
 
@@ -58,22 +59,30 @@ public class MainActivity extends Activity {
     }
 
     private void manageCancel() {
-        if (getLastBackPress() + VariablesGlobales.DOUBLE_BACK_TIME > System.currentTimeMillis()) {
-            /*
+        //VariablesGlobales.PublicToast(LayoutBasico.contexto, "idPregunta: " + LayoutBasico.idPregunta + " | idPreguntaAnterior: " + LayoutBasico.idPreguntaAnterior);
+        //Casos especiales prohibidos
+        if (LayoutBasico.idPreguntaAnterior==0 || LayoutBasico.idPreguntaAnterior==11) {
+            return;
+        }
+        if ((getLastBackPress() + VariablesGlobales.DOUBLE_BACK_TIME > System.currentTimeMillis()) && LayoutBasico.idPreguntaAnterior != LayoutBasico.idPregunta) {
             LayoutBasico layoutBasico = new LayoutBasico(LayoutBasico.activity);
-            LayoutBasico.relativeLayout = layoutBasico.pintarVista(LayoutBasico.contexto, LayoutBasico.idPreguntaAnterior);
+            LayoutBasico.idPregunta = LayoutBasico.idPreguntaAnterior;
+            LayoutBasico.relativeLayout = layoutBasico.pintarVista(LayoutBasico.contexto, LayoutBasico.idPregunta);
             ScrollView scrollView = new ScrollView(LayoutBasico.contexto);
             scrollView.addView(LayoutBasico.relativeLayout);
             LayoutBasico.activity.setContentView(scrollView);
-            */
-            finish();
+
+            //Al dar para atrás puede ser que tenga valores guardados antiguos
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(LayoutBasico.contexto);
+            dataBaseHelper.borrarSiYaExisteValorAnterior();
         } else {
-            //Toast tstBackPress = Toast.makeText(this, com.endel.psicotest.VariablesGlobales.pressTwice + " idPregunta: " + LayoutBasico.idPregunta + " | idPreguntaAnterior: " + LayoutBasico.idPreguntaAnterior, Toast.LENGTH_LONG);
-            Toast tstBackPress = Toast.makeText(this, com.endel.psicotest.VariablesGlobales.pressTwice, Toast.LENGTH_LONG);
-            TextView v = (TextView) tstBackPress.getView().findViewById(android.R.id.message);
-            v.setTextSize(25);
-            tstBackPress.show();
-            setLastBackPress();
+            if (LayoutBasico.idPreguntaAnterior != LayoutBasico.idPregunta) {
+                Toast tstBackPress = Toast.makeText(this, com.endel.psicotest.VariablesGlobales.pressTwice, Toast.LENGTH_LONG);
+                TextView v = (TextView) tstBackPress.getView().findViewById(android.R.id.message);
+                v.setTextSize(25);
+                tstBackPress.show();
+                setLastBackPress();
+            }
         }
     }
 

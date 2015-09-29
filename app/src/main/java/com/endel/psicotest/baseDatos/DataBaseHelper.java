@@ -448,11 +448,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		Log.i("SALGO", "insertarRespuestaUsuario");
 	}
 
-	private void borrarSiYaExisteValorAnterior() {
+	public void borrarSiYaExisteValorAnterior() {
 		Log.i("ENTRO", "borrarSiYaExisteValorAnterior");
 		SQLiteDatabase db = this.getWritableDatabase();
 		String parametros = "idRespuesta=" + LayoutBasico.idPregunta + " AND IdUsuario=" + Logica.idUsuario;
-		db.delete("respuestasUsuarioNM", parametros, null);
+		int borrado = db.delete("respuestasUsuarioNM", parametros, null);
+		if (borrado == 1) {
+			Log.i("ENTRO", "borrarSiYaExisteValorAnterior: borrado");
+		} else  {
+			Log.i("ENTRO", "borrarSiYaExisteValorAnterior: no borrado");
+		}
 		db.close();
 		Log.i("SALGO", "borrarSiYaExisteValorAnterior");
 	}

@@ -102,10 +102,8 @@ public class LayoutBasico {
     private void pintarRespuestas(Item item) {
         //Sacamos las respuestas por el ID de la pregunta
         idPregunta = item.getIdPregunta();
-
         int numeroRespuestas = item.getRespuestas().size();
 
-        //Respuestas
         //1-Contadores | 2-RadioButton | 3-Fecha | 4-TextView | 5-CheckBox
         int id_pregunta_tipo = item.getIdTipo();
         radioGroup = new RadioGroup(contexto);
@@ -163,7 +161,6 @@ public class LayoutBasico {
                 valorMinimo = 11;
                 valorMaximo = Logica.USUARIO_EDAD;
             }
-
         } else {
             //Opciones para veces que has hecho algo
             valorMinimo = 0;
@@ -409,37 +406,13 @@ public class LayoutBasico {
         botonSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (item.getIdPregunta()) {
-                    case 219:
-                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta);
-                        break;
-                    case 231:
-                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta);
-                        break;
-                    case 240:
-                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta2);
-                        break;
-                    case 256:
-                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta3);
-                        break;
-                    case 259:
-                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta6);
-                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta4);
-                        break;
-                    case 265:
-                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta5);
-                        break;
-                    case 277:
-                        crearMensajeAlert(R.string.layoutBasico_mensajeAlerta7);
-                        break;
-                    case 999:   //Si dio al botón de 'Finalizar test'
-                        System.exit(0);
-                        break;
-                }
-
                 if (Logica.validarRespuestas(item, contexto, activity, radioGroup)) {
                     algunVicio = Logica.grabarRespuestas(item, radioGroup, listaRespuestasRadioButton, contexto, activity, algunVicio);
                     pintarNuevaPregunta(item);
+                }
+                //Caso 'fin de test'
+                if (item.getIdPregunta() == 999) {
+                    System.exit(0);
                 }
             }
         });
