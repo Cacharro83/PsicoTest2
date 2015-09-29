@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
     private void manageCancel() {
         //VariablesGlobales.PublicToast(LayoutBasico.contexto, "idPregunta: " + LayoutBasico.idPregunta + " | idPreguntaAnterior: " + LayoutBasico.idPreguntaAnterior);
         //Casos especiales prohibidos
-        if (LayoutBasico.idPreguntaAnterior==0 || LayoutBasico.idPreguntaAnterior==11) {
+        if (LayoutBasico.idPreguntaAnterior>=11) {
             return;
         }
         if ((getLastBackPress() + VariablesGlobales.DOUBLE_BACK_TIME > System.currentTimeMillis()) && LayoutBasico.idPreguntaAnterior != LayoutBasico.idPregunta) {
