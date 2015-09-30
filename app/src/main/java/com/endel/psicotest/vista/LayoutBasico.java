@@ -533,7 +533,7 @@ public class LayoutBasico {
         idPreguntaAnterior = idPregunta;
         idPregunta = item.getIdPregunta();
         pregunta.setId(id_actual);
-        pregunta.setText(item.getIdPregunta() + ") " + item.getTextoPregunta() + " | tipoPregunta: " + item.getIdTipo());
+        pregunta.setText(item.getTextoPregunta());
         //pregunta.setText(item.getTextoPregunta());
         pregunta.setTextColor(Color.BLACK);
         pregunta.setTextSize(30);
