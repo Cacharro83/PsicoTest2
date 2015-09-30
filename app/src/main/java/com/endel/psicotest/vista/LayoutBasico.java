@@ -532,8 +532,8 @@ public class LayoutBasico {
         TextView pregunta = new TextView(contexto);
         idPreguntaAnterior = idPregunta;
         idPregunta = item.getIdPregunta();
-        pregunta.setId(id_actual);
-        //pregunta.setText(idPregunta + ") " + item.getTextoPregunta());
+        //pregunta.setId(id_actual);
+        pregunta.setText(idPregunta + ") " + item.getTextoPregunta());
         pregunta.setText(item.getTextoPregunta());
         pregunta.setTextColor(Color.BLACK);
         pregunta.setTextSize(30);
