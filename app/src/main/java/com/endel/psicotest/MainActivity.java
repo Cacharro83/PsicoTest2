@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
 
     private void manageCancel() {
         //Sólo permitimos dar atrás antes de la tabla vida
-        if (LayoutBasico.idPreguntaAnterior>=11) {
+        if (LayoutBasico.idPreguntaAnterior >= 11) {
             return;
         }
         if ((getLastBackPress() + VariablesGlobales.DOUBLE_BACK_TIME > System.currentTimeMillis()) && LayoutBasico.idPreguntaAnterior != LayoutBasico.idPregunta) {
