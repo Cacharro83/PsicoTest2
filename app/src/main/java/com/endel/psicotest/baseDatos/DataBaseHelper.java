@@ -581,14 +581,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
 
-SELECT r.IdRespuestaUsuario, r.IdRespuesta, r.IdUsuario, r.valor
+SELECT r.IdUsuario, r.IdRespuesta, r.valor
 FROM
 	respuestasUsuarioNM r
 		JOIN usuarios u
 			ON u.IdUsuario = r.idUsuario
 WHERE
 	u.enviado = '0'
-GROUP BY
-		r.IdUsuario;
+ORDER BY
+		r.IdUsuario, r.IdRespuesta;
 
    */
