@@ -59,8 +59,7 @@ public class MainActivity extends Activity {
     }
 
     private void manageCancel() {
-        //VariablesGlobales.PublicToast(LayoutBasico.contexto, "idPregunta: " + LayoutBasico.idPregunta + " | idPreguntaAnterior: " + LayoutBasico.idPreguntaAnterior);
-        //Casos especiales prohibidos
+        //Sólo permitimos dar atrás antes de la tabla vida
         if (LayoutBasico.idPreguntaAnterior>=11) {
             return;
         }
@@ -74,7 +73,11 @@ public class MainActivity extends Activity {
 
             //Al dar para atrás puede ser que tenga valores guardados antiguos
             DataBaseHelper dataBaseHelper = new DataBaseHelper(LayoutBasico.contexto);
-            dataBaseHelper.borrarSiYaExisteValorAnterior();
+            if (LayoutBasico.idPregunta == 0) {                 //Si está en la pregunta de 'IdUsuario'
+                dataBaseHelper.borrarPosiblesRespuestas();      //borrado de hasta de 'usuarios'
+            } else {                                            //si no
+                dataBaseHelper.borrarSiYaExisteValorAnterior(); //borrado sólo del valor anterior
+            }
         } else {
             if (LayoutBasico.idPreguntaAnterior != LayoutBasico.idPregunta) {
                 Toast tstBackPress = Toast.makeText(this, com.endel.psicotest.VariablesGlobales.pressTwice, Toast.LENGTH_LONG);
