@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
         RelativeLayout relativeLayout;
         LayoutBasico layoutBasico = new LayoutBasico(this);
 
-        relativeLayout = layoutBasico.pintarVista(LayoutBasico.contexto, 0);
+        relativeLayout = layoutBasico.pintarVista(LayoutBasico.contexto, 285);
         scrollView.addView(relativeLayout);
 
         super.onCreate(savedInstanceState);
