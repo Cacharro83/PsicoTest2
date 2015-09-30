@@ -578,4 +578,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             null,  //Condición HAVING para GROUP BY
             null  //Clausula ORDER BY
       );
+
+
+
+      	SELECT r.IdRespuestaUsuario, r.IdRespuesta, r.IdUsuario, r.valor
+		FROM
+			respuestasUsuarioNM r, usuarios u
+		WHERE
+			u.enviado = '0';
+
    */
