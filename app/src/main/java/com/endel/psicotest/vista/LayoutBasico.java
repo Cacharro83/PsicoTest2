@@ -162,8 +162,11 @@ public class LayoutBasico {
                 valorMaximo = Logica.USUARIO_EDAD;
             }
         } else {
-            //Opciones para veces que has hecho algo
-            valorMinimo = 0;
+            if (Logica.esDinero(idPregunta)) {
+                valorMinimo = 1;
+            } else {
+                valorMinimo = 0;    //Opciones para veces que has hecho algo, casos generales
+            }
             valorMaximo = 50;
         }
 
