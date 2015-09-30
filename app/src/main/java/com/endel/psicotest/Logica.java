@@ -31,8 +31,6 @@ public class Logica {
             Spinner spinner = (Spinner) viewById;
             respuestaDada = spinner.getSelectedItem().toString();
         }
-
-
         Integer respuesta;
 
         switch (item.getIdPregunta()) {
