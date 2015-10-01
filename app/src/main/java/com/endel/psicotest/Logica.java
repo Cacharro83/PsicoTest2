@@ -349,7 +349,7 @@ public class Logica {
     public static DatePicker calendarioSegunIdPregunta(DatePicker datePicker) {
         Calendar cal = Calendar.getInstance();  //fecha de hoy
         switch (LayoutBasico.idPregunta) {
-            case 3:     //fecha de nacimiento en relación a la edad que metió en la pregunta anterior
+            case 2:     //fecha de nacimiento en relación a la edad que metió en la pregunta anterior
                 cal.set(datePicker.getYear() - Logica.USUARIO_EDAD, datePicker.getMonth(), datePicker.getDayOfMonth());
                 long fechaMinima = cal.getTimeInMillis();
                 long fechaMaxima = fechaMinima + 31449600000L;  //364 días
