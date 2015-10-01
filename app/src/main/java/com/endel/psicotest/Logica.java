@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class Logica {
     public static int ultimoVicio, vicioActual, idUsuario = -1, USUARIO_EDAD;
-    public static boolean hayViciosConDinero = false;
+    public static boolean hayViciosConDineroY12meses = false;
 
     public static int averiguarSiguiente(Item item, int siguiente, boolean algunVicio, Context contexto, View viewById) {
         String respuestaDada = "";
@@ -44,12 +44,6 @@ public class Logica {
                         respuesta = LayoutBasico.mapaRespuestasTablaVida.get(Integer.valueOf(i));
                         if (respuesta.intValue() > 0) {
                             vicioActual = i;
-
-                            //Si hay vicio impar hay que hacer preguntas 220-240
-                            if (vicioActual%2!=0) {
-                                hayViciosConDinero = true;
-                            }
-
                             return i + 32;  //Gambling edad
                         }
                     }
@@ -69,17 +63,21 @@ public class Logica {
                     return 107;
                 }
 
+                //Si pone en un vicio con dinero que jugó algo en 12 meses saltará a la 220
+                if (vicioActual%2!=0 && !respuestaDada.equals("0")) {
+                    hayViciosConDineroY12meses = true;
+                }
+
                 //Si responde '0' no tiene sentido llevar a la siguiente asignada (108-139)
                 //Se le lleva al próximo vicio
                 if (respuestaDada.equals("0")) {
                     if (esUltimoVicio(item, ultimoVicio)) {
                         //Si hay vicios con dinero hay que ir a los SOGS-RA y DSM-IV-MR-J
-                        if (hayViciosConDinero) {
+                        if (hayViciosConDineroY12meses) {
                             return 220; //SOGS-RA y DSM-IV-MR-J
                         } else {
                             return 241; //Gambling motives
                         }
-
                     } else {
                         return buscarSiguienteVicio();
                     }
@@ -97,7 +95,7 @@ public class Logica {
                 if (vicioActual != ultimoVicio) {
                     return buscarSiguienteVicio();
                 }
-                if (vicioActual==ultimoVicio && hayViciosConDinero) {
+                if (vicioActual==ultimoVicio && hayViciosConDineroY12meses) {
                     return 220;
                 }
                 break;
