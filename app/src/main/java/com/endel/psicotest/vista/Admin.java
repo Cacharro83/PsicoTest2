@@ -35,7 +35,7 @@ public class Admin extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				if(et1.getText().toString().equals("admin") && et2.getText().toString().equals("uni2013")){
+				if(et1.getText().toString().equals("") && et2.getText().toString().equals("")){
 					Intent i = new Intent(Admin.this, Sincronizacion.class);
 					startActivity(i);
 					finish();

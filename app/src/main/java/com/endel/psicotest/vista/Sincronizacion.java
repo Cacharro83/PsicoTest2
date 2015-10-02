@@ -21,6 +21,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.endel.psicotest.Logica;
+import com.endel.psicotest.WebService;
 import com.endel.psicotest.baseDatos.DataBaseHelper;
 import com.endel.psicotest.baseDatos.DBMain;
 import com.endel.psicotest.VariablesGlobales;
@@ -68,7 +71,7 @@ public class Sincronizacion extends Activity {
         btCerrar = (Button) findViewById(R.id.button5);
 
         ipText = (EditText) findViewById(R.id.editText1);
-        ipText.setText("192.168.0.100:8080");
+        ipText.setText(WebService.ip);
 //		ipText.setText("psicologia.seineko.com");
 
         tvIdiomaTableta = (TextView) findViewById(R.id.textView3);
@@ -94,11 +97,12 @@ public class Sincronizacion extends Activity {
         //tvIdiomaTableta.setText("Language of the test: " + myDbHelper.getNombreIdioma());
         //tvResultados.setText("Pending results: " + myDbHelper.getNumeroResultados());
         myDbHelper.close();
-        /*
+
         bTest.setOnClickListener(new android.view.View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+
                 WebService wb = new WebService(ipText.getText().toString(), getApplicationContext());
                 Boolean estado = wb.EstaDisponible(ipText.getText().toString());
                 if(estado == true){
@@ -109,7 +113,7 @@ public class Sincronizacion extends Activity {
                 }
             }
         });
-        */
+
 
         bActualizarIdioma
                 .setOnClickListener(new View.OnClickListener() {
@@ -202,6 +206,7 @@ public class Sincronizacion extends Activity {
 
             @Override
             public void onClick(View v) {
+                Logica.obtenerListaRespuestasSinEnviar();
 
                 DataBaseHelper myDbHelper = new DataBaseHelper(getApplicationContext());
                 try {
@@ -214,6 +219,14 @@ public class Sincronizacion extends Activity {
                     myDbHelper.openDataBase();
                 } catch (SQLException sqle) {
                     throw sqle;
+                }
+
+
+                Logica.listaRespuestasPorUsuario();
+                if (WebService.enviarTests(Logica.listaRespuestas)) {
+                    VariablesGlobales.PublicToast(LayoutBasico.contexto, "correcto");
+                } else {
+                    VariablesGlobales.PublicToast(LayoutBasico.contexto, "incorrecto");
                 }
                 /*
                 Boolean correcto = myDbHelper.sincronizarRespuestas(ipText.getText().toString());

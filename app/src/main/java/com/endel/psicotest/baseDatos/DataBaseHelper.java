@@ -27,7 +27,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 	// The Android's default system path of your application database.
 	// Context.getFilesDir().getPath()
-	private static String DB_PATH = "/data/data/com.example.psicotestv1/databases/";
+	//private static String DB_PATH = "/data/data/com.example.psicotestv1/databases/";
 	//private static String DB_NAME = "psico";
 
 	private SQLiteDatabase myDataBase;
@@ -113,7 +113,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 		SQLiteDatabase checkDB = null;
 		try {
-			String myPath = DB_PATH + DBMain.DB_NAME;
+			String myPath = DBMain.DB_PATH + DBMain.DB_NAME;
 			checkDB = SQLiteDatabase.openDatabase(myPath, null,
 					SQLiteDatabase.OPEN_READONLY);
 
@@ -136,7 +136,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		// Open your local db as the input stream
 		InputStream myInput = myContext.getAssets().open(DBMain.DB_NAME);
 		// Path to the just created empty db
-		String outFileName = DB_PATH + DBMain.DB_NAME;
+		String outFileName = DBMain.DB_PATH + DBMain.DB_NAME;
 		// Open the empty db as the output stream
 		OutputStream myOutput = new FileOutputStream(outFileName);
 		// transfer bytes from the inputfile to the outputfile
@@ -154,7 +154,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 	public void openDataBase() throws SQLException {
 		// Open the database
-		String myPath = DB_PATH + DBMain.DB_NAME;
+		String myPath = DBMain.DB_PATH + DBMain.DB_NAME;
 		myDataBase = SQLiteDatabase.openDatabase(myPath, null,
 				SQLiteDatabase.OPEN_READONLY);
 

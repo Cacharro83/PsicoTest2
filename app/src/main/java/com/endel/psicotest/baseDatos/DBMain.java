@@ -18,7 +18,7 @@ import java.io.OutputStream;
  * Created by vivek on 6/24/13.
  */
 public class DBMain extends SQLiteOpenHelper {
-    private static String DB_PATH; //= "data/data/com.endel.psicotest/databases/";
+    public static String DB_PATH; //= "data/data/com.endel.psicotest/databases/";
     public static String DB_NAME = "psico";
     public static int DB_VERSION = 177;
     private SQLiteDatabase dbObj;
