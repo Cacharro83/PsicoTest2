@@ -10,7 +10,7 @@ import java.util.Vector;
 /**
  * Created by JavierH on 02/10/2015.
  */
-public class RespuestasUsuarioNM_VO extends Vector implements KvmSerializable {
+public class RespuestasUsuarioNM_VO implements KvmSerializable {
     private int IdRespuestaUsuario;
     private int IdRespuesta;
     private int IdUsuario;

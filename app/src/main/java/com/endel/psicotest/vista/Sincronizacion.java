@@ -206,8 +206,6 @@ public class Sincronizacion extends Activity {
 
             @Override
             public void onClick(View v) {
-                Logica.obtenerListaRespuestasSinEnviar();
-
                 DataBaseHelper myDbHelper = new DataBaseHelper(getApplicationContext());
                 try {
                     myDbHelper.createDataBase();
@@ -223,7 +221,7 @@ public class Sincronizacion extends Activity {
 
 
                 Logica.obtenerListaRespuestasSinEnviar();
-                if (WebService.enviarTests(Logica.listaRespuestas)) {
+                if (WebService.enviarTests()) {
                     VariablesGlobales.PublicToast(LayoutBasico.contexto, "correcto");
                 } else {
                     VariablesGlobales.PublicToast(LayoutBasico.contexto, "incorrecto");

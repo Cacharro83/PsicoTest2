@@ -131,7 +131,7 @@ public class WebService {
     }
 
 
-    public static boolean enviarTests (ArrayList<RespuestasUsuarioNM_VO> listaRespuestas) {
+    public static boolean enviarTests () {
         String NAMESPACE ="http://"+ip+"/psicologoservice/";
         String URL = "http://"+ip+"/psicologoservice/service1.asmx";
 
@@ -148,7 +148,7 @@ public class WebService {
             DocumentsIDs documentIdVector = new DocumentsIDs();
             RespuestasUsuarioNM_VO respuestasUsuarioNM_vo;
             for (int i = 0; i < Logica.listaRespuestas.size(); i++) {
-                respuestasUsuarioNM_vo = listaRespuestas.get(i);
+                respuestasUsuarioNM_vo = Logica.listaRespuestas.get(i);
 
                 request.addProperty("IdUsuario", respuestasUsuarioNM_vo.getIdUsuario());
                 request.addProperty("IdRespuesta", respuestasUsuarioNM_vo.getIdRespuesta());
@@ -163,23 +163,18 @@ public class WebService {
 
                 request.addProperty(documentIdsPropertyInfo);
 
-
                 SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                 envelope.dotNet = true;
                 envelope.setOutputSoapObject(request);
 
                 int Timeout = 60000;
-
                 HttpTransportSE androidHttpTransport = new HttpTransportSE(URL, Timeout);
-
                 androidHttpTransport.call(SOAP_ACTION1, envelope);
 
                 //SoapObject  result = (SoapObject) envelope.getResponse();
                 SoapObject  result = (SoapObject) envelope.bodyIn;
                 Vector response = (Vector) envelope.getResponse();
             }
-
-
             return true;
         } catch (Exception e) {
             e.printStackTrace();
