@@ -1,9 +1,16 @@
 package com.endel.psicotest.vo;
 
+import org.ksoap2.serialization.KvmSerializable;
+import org.ksoap2.serialization.PropertyInfo;
+
+import java.io.Serializable;
+import java.util.Hashtable;
+import java.util.Vector;
+
 /**
  * Created by JavierH on 02/10/2015.
  */
-public class RespuestasUsuarioNM_VO {
+public class RespuestasUsuarioNM_VO extends Vector implements KvmSerializable {
     private int IdRespuestaUsuario;
     private int IdRespuesta;
     private int IdUsuario;
@@ -54,5 +61,25 @@ public class RespuestasUsuarioNM_VO {
 
     public void setEnviado(int enviado) {
         this.enviado = enviado;
+    }
+
+    @Override
+    public Object getProperty(int i) {
+        return null;
+    }
+
+    @Override
+    public int getPropertyCount() {
+        return 0;
+    }
+
+    @Override
+    public void setProperty(int i, Object o) {
+
+    }
+
+    @Override
+    public void getPropertyInfo(int i, Hashtable hashtable, PropertyInfo propertyInfo) {
+
     }
 }
