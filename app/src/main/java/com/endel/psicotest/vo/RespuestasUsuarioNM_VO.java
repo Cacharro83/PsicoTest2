@@ -23,6 +23,10 @@ public class RespuestasUsuarioNM_VO extends Vector implements KvmSerializable {
         this.valor = valor;
     }
 
+    public RespuestasUsuarioNM_VO() {
+
+    }
+
     public int getIdRespuestaUsuario() {
         return IdRespuestaUsuario;
     }

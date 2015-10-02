@@ -2,6 +2,8 @@ package com.endel.psicotest;
 
 
 import java.util.ArrayList;
+import java.util.Vector;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -144,30 +146,40 @@ public class WebService {
             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME1);
 
             DocumentsIDs documentIdVector = new DocumentsIDs();
-            for (int i = 0; i < listaRespuestas.size(); i++) {
-                documentIdVector.add(listaRespuestas.get(i));
+            RespuestasUsuarioNM_VO respuestasUsuarioNM_vo;
+            for (int i = 0; i < Logica.listaRespuestas.size(); i++) {
+                respuestasUsuarioNM_vo = listaRespuestas.get(i);
+
+                request.addProperty("IdUsuario", respuestasUsuarioNM_vo.getIdUsuario());
+                request.addProperty("IdRespuesta", respuestasUsuarioNM_vo.getIdRespuesta());
+                request.addProperty("valor", respuestasUsuarioNM_vo.getValor());
+
+                //documentIdVector.add(respuestasUsuarioNM_vo.getIdUsuario(), respuestasUsuarioNM_vo.getIdRespuesta(), respuestasUsuarioNM_vo.getValor());
+                PropertyInfo documentIdsPropertyInfo;
+                documentIdsPropertyInfo = new PropertyInfo();
+                documentIdsPropertyInfo.setName("resultados");
+                documentIdsPropertyInfo.setValue(documentIdVector);
+                documentIdsPropertyInfo.setType(documentIdVector.getClass());
+
+                request.addProperty(documentIdsPropertyInfo);
+
+
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.setOutputSoapObject(request);
+
+                int Timeout = 60000;
+
+                HttpTransportSE androidHttpTransport = new HttpTransportSE(URL, Timeout);
+
+                androidHttpTransport.call(SOAP_ACTION1, envelope);
+
+                //SoapObject  result = (SoapObject) envelope.getResponse();
+                SoapObject  result = (SoapObject) envelope.bodyIn;
+                Vector response = (Vector) envelope.getResponse();
             }
 
-            PropertyInfo documentIdsPropertyInfo;
-            documentIdsPropertyInfo = new PropertyInfo();
-            documentIdsPropertyInfo.setName("resultados");
-            documentIdsPropertyInfo.setValue(documentIdVector);
-            documentIdsPropertyInfo.setType(documentIdVector.getClass());
 
-            request.addProperty(documentIdsPropertyInfo);
-
-
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-
-            int Timeout = 60000;
-
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL, Timeout);
-
-            androidHttpTransport.call(SOAP_ACTION1, envelope);
-
-            result1 = (SoapPrimitive) envelope.getResponse();
             return true;
         } catch (Exception e) {
             e.printStackTrace();

@@ -574,8 +574,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		ArrayList<RespuestasUsuarioNM_VO> listaRespuestas = new ArrayList<>();
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.query("respuestasUsuarioNM", new String[]{"IdRespuesta", "IdUsuario", "valor"}, "enviado=0", null, null, null, null);
+		RespuestasUsuarioNM_VO respuestasUsuarioNM_vo;
 		while(cursor.moveToNext()){
-			listaRespuestas.add(new RespuestasUsuarioNM_VO(cursor.getInt(0), cursor.getInt(1), cursor.getString(2)));
+			respuestasUsuarioNM_vo = new RespuestasUsuarioNM_VO(cursor.getInt(0), cursor.getInt(1), cursor.getString(2));
+			listaRespuestas.add(respuestasUsuarioNM_vo);
 		}
 		db.close();
 		cursor.close();

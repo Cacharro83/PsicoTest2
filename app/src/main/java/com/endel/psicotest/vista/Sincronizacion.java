@@ -222,7 +222,7 @@ public class Sincronizacion extends Activity {
                 }
 
 
-                Logica.listaRespuestasPorUsuario();
+                Logica.obtenerListaRespuestasSinEnviar();
                 if (WebService.enviarTests(Logica.listaRespuestas)) {
                     VariablesGlobales.PublicToast(LayoutBasico.contexto, "correcto");
                 } else {
