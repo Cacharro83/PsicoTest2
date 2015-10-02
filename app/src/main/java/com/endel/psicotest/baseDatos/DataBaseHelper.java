@@ -10,11 +10,12 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.endel.psicotest.Colegio;
-import com.endel.psicotest.Item;
+import com.endel.psicotest.vo.Colegio;
+import com.endel.psicotest.vo.Item;
 import com.endel.psicotest.Logica;
-import com.endel.psicotest.RespuestaRellenada;
+import com.endel.psicotest.vo.RespuestaRellenada;
 import com.endel.psicotest.vista.LayoutBasico;
+import com.endel.psicotest.vo.RespuestasUsuarioNM_VO;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -566,6 +567,32 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		db.close();
 		Log.i("SALGO", "borrarPosiblesRespuestas");
 	}
+
+
+	public void getListaRespuestasNM(){
+		Log.i("ENTRO", "getListaRespuestasNM");
+		ArrayList<RespuestasUsuarioNM_VO> listaRespuestas = new ArrayList<>();
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query("respuestasUsuarioNM", new String[]{"IdRespuesta", "IdUsuario", "valor"}, "enviado=0", null, null, null, null);
+		while(cursor.moveToNext()){
+			listaRespuestas.add(new RespuestasUsuarioNM_VO(cursor.getInt(0), cursor.getInt(1), cursor.getString(2)));
+		}
+		db.close();
+		cursor.close();
+		Log.i("SALGO", "getListaRespuestasNM");
+		Logica.listaRespuestas = listaRespuestas;
+	}
+
+	public void marcarRespuestasComoEnviadas() {
+		Log.i("ENTRO", "marcarRespuestasComoEnviadas");
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues valores = new ContentValues();
+		valores.put("enviado", 1);
+		db.update("respuestasUsuarioNM", valores, null, null);
+		db.close();
+		Log.i("SALGO", "marcarRespuestasComoEnviadas");
+	}
+
 }
 
    /*
@@ -578,17 +605,4 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             null,  //Condición HAVING para GROUP BY
             null  //Clausula ORDER BY
       );
-
-
-
-SELECT r.IdUsuario, r.IdRespuesta, r.valor
-FROM
-	respuestasUsuarioNM r
-		JOIN usuarios u
-			ON u.IdUsuario = r.idUsuario
-WHERE
-	u.enviado = '0'
-ORDER BY
-		r.IdUsuario, r.IdRespuesta;
-
    */

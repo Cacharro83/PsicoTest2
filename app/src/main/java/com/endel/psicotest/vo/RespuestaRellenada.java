@@ -1,4 +1,4 @@
-package com.endel.psicotest;
+package com.endel.psicotest.vo;
 
 public class RespuestaRellenada {
 	

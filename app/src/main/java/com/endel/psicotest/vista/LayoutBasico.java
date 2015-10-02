@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import com.endel.psicotest.Logica;
 import com.endel.psicotest.R;
-import com.endel.psicotest.Item;
+import com.endel.psicotest.vo.Item;
 import com.endel.psicotest.VariablesGlobales;
 import com.endel.psicotest.baseDatos.DataBaseHelper;
 

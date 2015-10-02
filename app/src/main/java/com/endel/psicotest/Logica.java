@@ -13,7 +13,10 @@ import android.widget.TextView;
 import com.endel.psicotest.baseDatos.DataBaseHelper;
 import com.endel.psicotest.vista.LayoutBasico;
 import com.endel.psicotest.vista.RespuestaValor;
+import com.endel.psicotest.vo.Item;
+import com.endel.psicotest.vo.RespuestasUsuarioNM_VO;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +27,7 @@ import java.util.List;
 public class Logica {
     public static int ultimoVicio, vicioActual, idUsuario = -1, USUARIO_EDAD;
     public static boolean hayViciosConDineroY12meses = false;
+    public static ArrayList<RespuestasUsuarioNM_VO> listaRespuestas;
 
     public static int averiguarSiguiente(Item item, int siguiente, boolean algunVicio, Context contexto, View viewById) {
         String respuestaDada = "";
@@ -266,7 +270,6 @@ public class Logica {
                     dataBaseHelper.borrarPosiblesRespuestas();
                 }
                 break;
-
             case 11:    //Tabla vida. Que avise si no tiene vicios
                 if (sinVicios()) {
                     layoutBasico.crearMensajeSinViciosEnTablaVida();
@@ -367,5 +370,24 @@ public class Logica {
         }
         datePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), null);
         return datePicker;
+    }
+
+    public static void obtenerListaRespuestasSinEnviar() {
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(LayoutBasico.contexto);
+        dataBaseHelper.getListaRespuestasNM();
+    }
+
+    public static void marcarRespuestasComoEnviadas() {
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(LayoutBasico.contexto);
+        dataBaseHelper.marcarRespuestasComoEnviadas();
+    }
+
+    public static void listaRespuestasPorUsuario() {
+        for (int i=0; i<Logica.listaRespuestas.size(); i++) {
+            RespuestasUsuarioNM_VO respuesta = Logica.listaRespuestas.get(i);
+            respuesta.getIdUsuario();
+            respuesta.getIdRespuesta();
+            respuesta.getValor();
+        }
     }
 }
