@@ -508,6 +508,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 		Log.i("SALGO", "finalmenteSinVicios");
 		return finalmenteSinVicios;
+
+
 	}
 
 	public boolean masVeces1MesQueDurante12Meses(int idPregunta, int veces1Mes) {

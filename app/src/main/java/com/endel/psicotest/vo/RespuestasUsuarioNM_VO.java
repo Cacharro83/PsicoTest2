@@ -55,6 +55,7 @@ public class RespuestasUsuarioNM_VO extends Vector implements KvmSerializable {
         return valor;
     }
 
+
     public void setValor(String valor) {
         this.valor = valor;
     }

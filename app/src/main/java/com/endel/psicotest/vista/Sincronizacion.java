@@ -258,6 +258,7 @@ public class Sincronizacion extends Activity {
 
                 //myDbHelper.dropAllResults();
                 //tvResultados.setText("Pending results: " + myDbHelper.getNumeroResultados());
+
                 myDbHelper.close();
 
             }
